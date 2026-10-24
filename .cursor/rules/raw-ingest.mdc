@@ -1,0 +1,16 @@
+---
+description: raw 新增文件的自动收录约定
+alwaysApply: true
+---
+
+# raw 自动收录
+
+监视脚本是 `scripts/watch_raw.ps1`，实际处理在 `scripts/ingest_raw.py`。
+
+- 只把 `raw/` 里相对 `wiki/_meta/ingest-ledger.json` 的新文件或内容变化当成一轮收录。
+- 疑似口令、私钥、token 的文件：停止整轮，不写 wiki，不提交，不推送。
+- Markdown / 纯文本生成带 `ingest: auto` 的草稿页，只保留标题、小节和少量短句。Agent 后续可以把它提炼成正式页，但必须保留 `sources`，并在复核后去掉 `ingest: auto`。
+- PDF 和其他非文本只追加到对应主题的 `incoming-sources.md`，不编造正文。
+- 不修改 `raw/` 原件，不写入 `publish/`。
+- 收录完成后运行 `python scripts/build_llm_index.py`，再提交并推送本地 `master` 到 `origin/main`。
+- `.gitignore` 已排除的安装包、压缩包、录像和嵌套仓库不要重新加入。

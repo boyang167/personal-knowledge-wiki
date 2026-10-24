@@ -19,3 +19,4 @@
 6. 只有经过人工审核的内容才能进入 publish/。
 7. 禁止自动发布私人资料、公司内部资料或秘密信息。
 8. 更新 wiki 页面后运行 `python scripts/build_llm_index.py` 刷新索引。
+9. `raw/` 的新文件由 `scripts/watch_raw.ps1` 收录。自动页带 `ingest: auto`，复核后应改写成正式结论并去掉该字段。疑似口令的文件不得写入 wiki 或提交。
