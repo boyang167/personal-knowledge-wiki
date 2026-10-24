@@ -1,9 +1,11 @@
 # raw → wiki 主题对照
 
-`raw/2-StudyMaterials/` 下目录与 wiki 路径的推荐映射（新建页面时优先放入对应 wiki 目录）。
+`raw/1-Note/` 与 `raw/2-StudyMaterials/` 下目录和 wiki 路径的推荐映射（新建页面时优先放入对应 wiki 目录）。
 
 | raw 目录 | wiki 目录 | 说明 |
 |----------|---------|------|
+| `1-Note/2-MachineLearning` | `wiki/ml/` | 个人机器学习与采样笔记 |
+| `1-Note/3-DeepLearning` | `wiki/ml/` | 深度学习、NLP、图谱、生成模型和 LLM 笔记 |
 | `1-Biological` | `wiki/biological/` | 生物、生信、CMC 等 |
 | `2-MachineLearning` | `wiki/ml/` | 机器学习 |
 | `3-ReinforcementLearning` | `wiki/ml/` | 强化学习（可用 tags 区分） |

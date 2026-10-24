@@ -15,7 +15,7 @@ sources:
 
 ## 结论摘要
 
-- `4-DeepLearning` 里没有 Markdown 笔记，只有推荐系统课件和论文 PDF。
+- `4-DeepLearning` 里没有 Markdown 笔记，只有推荐系统课件和论文 PDF。个人笔记在 [个人学习笔记地图](./personal-notes-map.md)。
 - 本页只根据文件名建立检索入口，不复述课件或论文正文。
 - 强化学习示例在 [PyTorch 强化学习示例目录](./pytorch-reinforcement-learning-notes.md)。
 
@@ -39,4 +39,6 @@ sources:
 
 ## 相关
 
+- [NLP 表示学习与预训练模型](./nlp-representation-and-pretrained-models.md)
+- [生成模型](./generative-models.md)
 - [MOC](../MOC.md)

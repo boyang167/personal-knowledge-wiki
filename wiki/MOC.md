@@ -30,6 +30,16 @@
 
 ## 机器学习
 
+- [个人学习笔记地图](./ml/personal-notes-map.md)
+- [机器学习项目流程与算法地图](./ml/machine-learning-map.md)
+- [MCMC、M-H 与 Gibbs 采样](./ml/mcmc-sampling.md)
+- [深度学习网络构件](./ml/deep-learning-building-blocks.md)
+- [NLP 表示学习与预训练模型](./ml/nlp-representation-and-pretrained-models.md)
+- [强化学习的基本划分](./ml/reinforcement-learning-concepts.md)
+- [图表示学习方法索引](./ml/graph-representation-learning.md)
+- [自编码器、VAE、GAN 与扩散模型](./ml/generative-models.md)
+- [Function calling 与 MCP](./ml/llm-function-calling-and-mcp.md)
+- [视觉模型笔记索引](./ml/computer-vision-models.md)
 - [PyTorch 强化学习示例目录](./ml/pytorch-reinforcement-learning-notes.md)
 - [深度学习与推荐系统资料索引](./ml/deep-learning-source-index.md)
 
@@ -47,4 +57,5 @@
 
 ## 知识图谱
 
+- [知识图谱中的实体链接与 RDF 表示](./kg/knowledge-graph-representation.md)
 - [知识图谱资料索引](./kg/knowledge-graph-source.md)

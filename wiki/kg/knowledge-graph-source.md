@@ -18,4 +18,5 @@ sources:
 
 ## 相关
 
+- [知识图谱中的实体链接与 RDF 表示](./knowledge-graph-representation.md)
 - [MOC](../MOC.md)

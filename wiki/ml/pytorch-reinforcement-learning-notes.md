@@ -40,4 +40,6 @@ sources:
 
 ## 相关
 
+- [强化学习的基本划分](./reinforcement-learning-concepts.md)
+- [个人学习笔记地图](./personal-notes-map.md)
 - [MOC](../MOC.md)

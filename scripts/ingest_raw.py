@@ -24,9 +24,12 @@ MOC_PATH = ROOT / "wiki" / "MOC.md"
 LOCK_PATH = ROOT / ".git" / "ingest.lock"
 
 TEXT_EXT = {".md", ".txt", ".rst", ".csv"}
+MEDIA_EXT = {".png", ".jpg", ".jpeg", ".gif", ".webp", ".svg", ".bmp", ".ico"}
 SKIP_DIR_NAMES = {".git"}
 
 TOPIC_BY_PREFIX = (
+    ("1-Note/2-MachineLearning", "ml", "机器学习", "ml"),
+    ("1-Note/3-DeepLearning", "ml", "机器学习", "ml"),
     ("2-StudyMaterials/1-Biological", "biological", "生物 / 生信", "biological"),
     ("2-StudyMaterials/2-MachineLearning", "ml", "机器学习", "ml"),
     ("2-StudyMaterials/3-ReinforcementLearning", "ml", "机器学习", "ml"),
@@ -498,6 +501,12 @@ def process(dry_run: bool, do_commit: bool, do_push: bool) -> int:
     for path in fresh:
         topic = topic_for(rel_posix(path)) or ("tech", "技术杂项", "tech")
         folder, heading, tag = topic
+        if path.suffix.lower() in MEDIA_EXT:
+            if not dry_run:
+                files = ledger["files"]
+                assert isinstance(files, dict)
+                files[rel_posix(path)] = file_record(path)
+            continue
         if dry_run:
             kind = "摘录" if path.suffix.lower() in TEXT_EXT else "登记"
             print(f"{kind} {rel_posix(path)} -> wiki/{folder}/")
