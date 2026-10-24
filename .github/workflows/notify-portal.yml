@@ -1,0 +1,26 @@
+name: Notify portal on publish update
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'publish/**'
+  workflow_dispatch:
+
+jobs:
+  dispatch-portal-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repository dispatch to personal site
+        env:
+          PORTAL_REPO_TOKEN: ${{ secrets.PORTAL_REPO_TOKEN }}
+        run: |
+          if [ -z "$PORTAL_REPO_TOKEN" ]; then
+            echo "::warning::PORTAL_REPO_TOKEN is not set. Skip notifying boyang167.github.io."
+            exit 0
+          fi
+          curl -fsSL -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $PORTAL_REPO_TOKEN" \
+            https://api.github.com/repos/boyang167/boyang167.github.io/dispatches \
+            -d "{\"event_type\":\"wiki-publish-updated\",\"client_payload\":{\"wiki_sha\":\"${{ github.sha }}\",\"wiki_ref\":\"${{ github.ref_name }}\"}}"
