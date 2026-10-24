@@ -1,0 +1,172 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+// Genbank flatfile
+// Table INSDSet {
+//   INSDSeq INSDSeq
+
+// }
+
+Table INSDSeq {
+  INSDSeq_locus TEXT
+  INSDSeq_length INTEGER
+  INSDSeq_strandedness TEXT
+  INSDSeq_moltype TEXT
+  INSDSeq_topology TEXT
+  INSDSeq_division TEXT //ENUM
+  "INSDSeq_update-date" TEXT // date 23-JAN-2015
+  "INSDSeq_create-date" TEXT // date 23-JAN-2015
+  "INSDSeq_update-release" TEXT
+  "INSDSeq_create-release" TEXT
+  INSDSeq_definition TEXT
+  "INSDSeq_primary-accession" TEXT
+  "INSDSeq_entry-version" TEXT
+  "INSDSeq_accession-version" TEXT [PK]
+  "INSDSeq_other-seqids" INSDSeqid // TEXT
+  "INSDSeq_secondary-accessions" "INSDSecondary-accn" // TEXT
+  INSDSeq_project TEXT
+  INSDSeq_keywords INSDKeyword // TEXT
+  INSDSeq_segment TEXT
+  INSDSeq_source TEXT
+  INSDSeq_organism TEXT
+  INSDSeq_taxonomy TEXT
+  INSDSeq_references INSDReference
+  INSDSeq_comment TEXT
+  "INSDSeq_comment-set" INSDComment
+  "INSDSeq_struc-comments" INSDStrucComment
+  INSDSeq_primary TEXT
+  "INSDSeq_source-db" TEXT
+  "INSDSeq_database-reference" TEXT
+  "INSDSeq_feature-table" INSDFeature
+  "INSDSeq_feature-set" INSDFeatureSet
+  INSDSeq_sequence TEXT
+  INSDSeq_contig TEXT
+  "INSDSeq_alt-seq" "INSDAltSeqData" 
+  INSDSeq_xrefs INSDXref
+}
+
+Table INSDSeqid {
+  "INSDSeq_accession-version" TEXT [REF: > INSDSeq."INSDSeq_accession-version"]
+  INSDSeqid TEXT
+}
+
+Table "INSDSecondary-accn" {
+  "INSDSeq_accession-version" TEXT [REF: > INSDSeq."INSDSeq_accession-version"]
+  "INSDSecondary-accn" TEXT
+}
+
+Table INSDKeyword {
+  "INSDSeq_accession-version" TEXT [REF: > INSDSeq."INSDSeq_accession-version"]
+  INSDKeyword TEXT
+}
+
+Table INSDReference {
+    "INSDSeq_accession-version" TEXT [REF: > INSDSeq."INSDSeq_accession-version"]
+    INSDReference_reference TEXT
+    INSDReference_position TEXT
+    INSDReference_authors INSDAuthor // TEXT
+    INSDReference_consortium TEXT
+    INSDReference_title TEXT
+    INSDReference_journal TEXT
+    INSDReference_xref INSDXref
+    INSDReference_pubmed INTEGER
+    INSDReference_remark TEXT
+}
+
+Table INSDAuthor {
+    // "INSDSeq_accession-version" TEXT [REF: > INSDSeq."INSDSeq_accession-version"]
+    INSDReference_reference TEXT [REF: > INSDReference.INSDReference_reference]
+    INSDAuthor TEXT
+}
+
+Table INSDXref {
+    // id INTEGER [PK] 
+    INSDXref_dbname TEXT
+    INSDXref_id TEXT
+
+    Note: 'three sources: INSDSeq_xref,INSDReference_xref,INSDFeature_xref'
+}
+
+Table INSDComment {
+    "INSDSeq_accession-version" TEXT [REF: > INSDSeq."INSDSeq_accession-version"]
+    INSDComment_type TEXT
+    INSDComment_paragraphs INSDCommentParagraph // TEXT
+}
+
+Table INSDCommentParagraph {
+    INSDComment_type TEXT [REF: > INSDComment.INSDComment_type, note: '0 or 1 comment type']  
+    INSDCommentParagraph TEXT
+}
+
+Table INSDStrucComment {
+    "INSDSeq_accession-version" TEXT [REF: > INSDSeq."INSDSeq_accession-version"]
+    INSDStrucComment_name TEXT
+    INSDStrucComment_items INSDStrucCommentItem
+}
+
+Table INSDStrucCommentItem {
+    INSDStrucComment_name TEXT [REF: > INSDStrucComment.INSDStrucComment_name]
+    INSDStrucCommentItem_tag TEXT
+    INSDStrucCommentItem_value TEXT
+    INSDStrucCommentItem_url TEXT
+}
+
+Table INSDFeatureSet {
+    "INSDSeq_accession-version" TEXT [REF: > INSDSeq."INSDSeq_accession-version"]
+    "INSDFeatureSet_annot-source" TEXT
+    INSDFeatureSet_features INSDFeature
+}
+
+Table INSDFeature {
+    "INSDSeq_accession-version" TEXT [REF: > INSDSeq."INSDSeq_accession-version"]
+    INSDFeature_key TEXT
+    INSDFeature_location TEXT
+    INSDFeature_intervals INSDIterval
+    INSDFeature_operator TEXT
+    INSDFeature_partial5 BOOLEAN [NOT NULL]
+    INSDFeature_partial3 BOOLEAN [NOT NULL]
+    INSDFeature_quals INSDQualifier
+    INSDFeature_xrefs INSDXref
+}
+
+Table INSDInterval {
+    // INSDFeature_location TEXT [REF: > INSDFeature.INSDFeature_location] // check
+    INSDInterval_from INTEGER
+    INSDInterval_to INTEGER
+    INSDInterval_point INTEGER
+    INSDInterval_iscomp BOOLEAN [NOT NULL]
+    INSDInterval_interbp BOOLEAN [NOT NULL]
+    INSDInterval_accession TEXT
+
+    Note: 'two sources: INSDFeature_intervals,INSDAltSeqItem_interval'
+}
+
+Table INSDQualifier {
+    INSDFeature_location TEXT [REF: > INSDFeature.INSDFeature_location , note: 'depends on INSDFeature.INSDFeature_location?']
+    INSDQualifier_name TEXT
+    INSDQualifier_value TEXT 
+}
+
+Table INSDAltSeqData {
+    "INSDSeq_accession-version" TEXT [REF: > INSDSeq."INSDSeq_accession-version"]
+    INSDAltSeqData_name TEXT
+    INSDAltSeqData_items INSDAltSeqItem
+}
+
+Table INSDAltSeqItem {
+    INSDAltSeqData_name TEXT [REF: > INSDAltSeqData.INSDAltSeqData_name]
+    // INSDAltSeqItem_interval INSDInterval
+    INSDAltSeqItem_isgap BOOLEAN [NOT NULL]
+    INSDAltSeqItem_gap_length INTEGER
+    INSDAltSeqItem_gap_type TEXT
+    INSDAltSeqItem_gap_linkage TEXT
+    INSDAltSeqItem_gap_comment TEXT
+    INSDAltSeqItem_first_accn TEXT
+    INSDAltSeqItem_last_accn TEXT
+    INSDAltSeqItem_value TEXT
+}
+
+
+Ref: "INSDSeqid"."INSDSeqid" < "INSDSeq"."INSDSeq_xrefs"
+
+Ref: "INSDSeqid"."INSDSeqid" < "INSDSeq"."INSDSeq_contig"

@@ -1,0 +1,35 @@
+__pycache__/
+*.py[cod]
+.env
+.env.*
+.venv/
+venv/
+
+.DS_Store
+Thumbs.db
+
+# 本地向量库等（若将来做 RAG）
+.chroma/
+.lance/
+*.sqlite3
+
+# 安装包、压缩归档和课程录像。单文件可达数百 MB，不纳入版本库。
+raw/2-StudyMaterials/12-InstallPackage/
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.7z
+*.rar
+*.mp4
+*.mkv
+*.avi
+*.mov
+
+# 这些目录自带独立 .git。忽略后不会被记成没有 .gitmodules 的 gitlink。
+raw/2-StudyMaterials/11-OpneSource/ants/
+raw/2-StudyMaterials/3-ReinforcementLearning/Reinforcement-learning-with-PyTorch/
+raw/2-StudyMaterials/9-Tech/技术博客/
+
+# 含第三方站点登录口令，勿入库
+raw/2-StudyMaterials/1-Biological/Bioinformatics/Bioinfo_Data/Tabs/Tabs_investigation.md

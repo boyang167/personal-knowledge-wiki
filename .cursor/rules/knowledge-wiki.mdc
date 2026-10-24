@@ -1,0 +1,32 @@
+---
+description: LLM 个人知识库工作流与 wiki 写作规范
+alwaysApply: true
+---
+
+# Knowledge Wiki（25-wiki）
+
+## 工作流
+
+1. **raw/**：只读原件；未经用户明确允许不得修改或覆盖。
+2. **wiki/**：在此写入提炼后的知识；必须带 YAML frontmatter（见 `wiki/_meta/conventions.md`）。
+3. **publish/**：仅当用户明确完成「人工审核」后才复制或迁移内容；禁止自动发布敏感/内部资料。
+
+## 写作要求
+
+- 关键结论必须写 `sources`，指向 `raw/` 内具体路径。
+- 不确定处用正文标记 **待核实**，并将 frontmatter `status` 设为 `uncertain`。
+- 更新 wiki 页面后运行 `python scripts/build_llm_index.py` 刷新 `wiki/INDEX.llm.md`。
+- 新主题先查 `wiki/MOC.md` 与 `wiki/_meta/topic-map.md`，避免重复建页。
+
+## Agent 检索顺序
+
+1. `wiki/INDEX.llm.md` — 页面清单与摘要
+2. `wiki/MOC.md` — 主题地图
+3. 相关 `wiki/**/*.md` 正文
+4. 需要细节时再读 `raw/` 对应文件
+
+## 禁止
+
+- 编造事实或来源
+- 将未审核内容写入 `publish/`
+- 批量复制 raw 全文到 wiki（应提炼 + 引用）

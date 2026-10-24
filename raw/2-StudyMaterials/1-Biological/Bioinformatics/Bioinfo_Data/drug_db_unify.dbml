@@ -1,0 +1,898 @@
+// ttd
+Table ttd_biomarker_disease{
+biomarker_id text
+biomarker_name text
+disease_entry text
+icd_11 text
+icd_10 text
+icd_9 text
+}
+Table ttd_drug_crossmatch{
+drug_id text [ref:- ttd_drug.drug_id]
+drug_name text
+drug_formular text
+pubchem_cid text
+pubchem_sid text
+cas_number text
+chebi_id text
+superdrug_atc text
+superdrug_cas text
+}
+Table ttd_drug_disease{
+drug_id text [ref:> ttd_drug.drug_id]
+disease_entry text
+icd_11 text [ref:<> ttd_biomarker_disease."icd_11"]
+clinical_status text
+}
+Table ttd_drug{
+drug_id text 
+trade_name text
+drug_company text
+thera_class text
+drug_type text
+drug_inchi text
+drug_inchikey text
+drug_cano_smiles text
+clinical_status text
+compound_class text
+drug_name text
+}
+Table ttd_drug_synonym{
+drug_id text [ref:> ttd_drug.drug_id]
+drug_synonyms text
+}
+Table ttd_drug_target{
+target_id text [ref:> ttd_target.target_id]
+drug_id text [ref:> ttd_drug.drug_id]
+clinical_status text
+moa text
+}
+Table ttd_target_compound_activity{
+target_id text [ref:> ttd_target.target_id]
+drug_id text
+pubchem_cid integer
+activity text
+}
+Table ttd_target_disease{
+target_id text [ref:> ttd_target.target_id]
+clinical_status text
+disease_entry text
+icd_11 text [ref:<> ttd_biomarker_disease."icd_11"]
+}
+Table ttd_target_kegg{
+target_id text [ref:> ttd_target.target_id]
+kegg_pathway_id text
+kegg_pathway_name text
+}
+Table ttd_target{
+target_id text
+target_name text
+uniprot_id text
+gene_name text
+target_type text
+target_synonyms text
+pdb_struc text
+bioclass text
+ec_number text
+function text
+aa_seq text
+}
+Table ttd_target_wiki{
+target_id text [ref:> ttd_target.target_id]
+wiki_pathway_id text
+wiki_pathway_name text
+}
+
+// drugs@fda
+Table drugsfda_actiontypes_lookup{
+actiontypes_lookupid integer
+actiontypes_lookupdescription text
+supplcategorylevel1code text
+supplcategorylevel2code text
+}
+Table drugsfda_applicationdocs{
+applicationdocsid integer
+applicationdocstypeid integer
+applno integer  [ref: > drugsfda_applications.applno]
+submissiontype text
+submissionno integer
+applicationdocstitle text
+applicationdocsurl text
+applicationdocsdate date
+}
+Table drugsfda_applications{
+applno integer [ref: < drugsfda_products.applno]
+appltype text
+applpublicnotes text
+sponsorname text
+}
+Table drugsfda_applicationsdocstype_lookup{
+applicationdocstypeid integer [ref: < drugsfda_applicationdocs.applicationdocstypeid]
+applicationdocstypedescription text
+}
+Table drugsfda_marketingstatus_lookup{
+marketingstatusid integer [ref: < drugsfda_marketingstatus.marketingstatusid]
+marketingstatusdescription text
+}
+Table drugsfda_marketingstatus{
+marketingstatusid integer
+applno integer
+productno integer [ref: > drugsfda_products.productno]
+}
+Table drugsfda_products{
+applno integer
+productno integer
+form text
+strength text
+referencedrug integer
+drugname text
+activeingredient text
+referencestandard integer
+}
+Table drugsfda_submissionclass_lookup{
+submissionclasscodeid integer [ref: < drugsfda_submissions.submissionclasscodeid]
+submissionclasscode text
+submissionclasscodedescription text
+}
+Table drugsfda_submissionpropertytype{
+applno integer
+submissiontype text
+submissionno integer  [ref: > drugsfda_submissions.submissionno]
+submissionpropertytypecode text
+submissionpropertytypeid integer
+}
+Table drugsfda_submissions{
+applno integer  [ref: > drugsfda_applications.applno]
+submissionclasscodeid integer
+submissiontype text
+submissionno integer
+submissionstatus text
+submissionstatusdate date
+submissionspublicnotes text
+reviewpriority text
+}
+Table drugsfda_te{
+applno integer
+productno integer [ref: > drugsfda_products.productno]
+marketingstatusid integer
+tecode text
+}
+
+// dgidb
+Table dgidb_categories{
+name text [ref: <> dgidb_genes.name]
+category text
+source_db_name text
+source_db_version text
+}
+Table dgidb_drugs{
+drug_claim_name text
+nomenclature text
+concept_id text [ref: <> dgidb_interactions.drug_concept_id]
+drug_name text
+approved boolean
+immunotherapy boolean
+anti_neoplastic boolean
+source_db_name text
+source_db_version text
+}
+Table dgidb_genes{
+name text
+nomenclature text
+concept_id text [ref: <> dgidb_interactions.gene_concept_id]
+gene_claim_name text
+source_db_name text
+source_db_version text
+}
+Table dgidb_interactions{
+gene_claim_name text
+gene_concept_id text
+gene_name text
+interaction_source_db_name text
+interaction_source_db_version text
+interaction_type text
+interaction_score decimal
+drug_claim_name text
+drug_concept_id text
+drug_name text
+approved boolean
+immunotherapy boolean
+anti_neoplastic boolean
+}
+
+// chembl
+Table chembl_action_type{
+action_type varchar2(50)
+description varchar2(200)
+parent_type varchar2(50)
+}
+Table chembl_activities{
+activity_id number
+assay_id number
+doid number
+record_id number
+molregno number
+standard_relation varchar2(50)
+standard_value number
+standard_units varchar2(100)
+standard_flag number
+standard_type varchar2(250)
+activity_comment varchar2(4000)
+data_validity_comment varchar2(30)
+potential_duplicate number
+pchembl_value number
+bao_endpoint varchar2(11)
+uo_units varchar2(10)
+qudt_units varchar2(70)
+toid integer
+upper_value number
+standard_upper_value number
+srid number
+type varchar2(250)
+relation varchar2(50)
+value number
+units varchar2(100)
+text_value varchar2(1000)
+standard_text_value varchar2(1000)
+action_type varchar2(50)
+}
+Table chembl_activity_properties{
+ap_id number
+activity_id number
+type varchar2(250)
+relation varchar2(50)
+value number
+units varchar2(100)
+text_value varchar2(2000)
+standard_type varchar2(250)
+standard_relation varchar2(50)
+standard_value number
+standard_units varchar2(100)
+standard_text_value varchar2(2000)
+comments varchar2(2000)
+result_flag number
+}
+Table chembl_activity_smid{
+smid number
+}
+Table chembl_activity_stds_lookup{
+std_act_id number
+standard_type varchar2(250)
+definition varchar2(500)
+standard_units varchar2(100)
+normal_range_min number
+normal_range_max number
+}
+Table chembl_activity_supp_map{
+actsm_id number
+activity_id number
+smid number
+}
+Table chembl_activity_supp{
+as_id number
+rgid number
+smid number
+type varchar2(250)
+relation varchar2(50)
+value number
+units varchar2(100)
+text_value varchar2(1000)
+standard_type varchar2(250)
+standard_relation varchar2(50)
+standard_value number
+standard_units varchar2(100)
+standard_text_value varchar2(1000)
+comments varchar2(4000)
+}
+Table chembl_assay_class_map{
+ass_cls_map_id number
+assay_id number
+assay_class_id number
+}
+Table chembl_assay_classification{
+assay_class_id number
+l1 varchar2(100)
+l2 varchar2(100)
+l3 varchar2(1000)
+class_type varchar2(50)
+source varchar2(50)
+}
+Table chembl_assay_parameters{
+assay_param_id number
+assay_id number
+type varchar2(250)
+relation varchar2(50)
+value number
+units varchar2(100)
+text_value varchar2(4000)
+standard_type varchar2(250)
+standard_relation varchar2(50)
+standard_value number
+standard_units varchar2(100)
+standard_text_value varchar2(4000)
+comments varchar2(4000)
+}
+Table chembl_assay_type{
+assay_type varchar2(1)
+assay_desc varchar2(250)
+}
+Table chembl_assays{
+assay_id number
+doid number
+description varchar2(4000)
+assay_type varchar2(1)
+assay_test_type varchar2(20)
+assay_category varchar2(20)
+assay_organism varchar2(250)
+assay_tax_id number
+assay_strain varchar2(200)
+assay_tissue varchar2(100)
+assay_cell_type varchar2(100)
+assay_subcellular_fraction varchar2(100)
+tid number
+relationship_type varchar2(1)
+confidence_score number
+curated_by varchar2(32)
+srid number
+srassay_id varchar2(50)
+chembl_id varchar2(20)
+cell_id number
+bao_format varchar2(11)
+tissue_id number
+variant_id number
+aidx varchar2(200)
+}
+Table chembl_atc_classification{
+who_name varchar2(2000)
+level1 varchar2(10)
+level2 varchar2(10)
+level3 varchar2(10)
+level4 varchar2(10)
+level5 varchar2(10)
+level1_description varchar2(2000)
+level2_description varchar2(2000)
+level3_description varchar2(2000)
+level4_description varchar2(2000)
+}
+Table chembl_binding_sites{
+site_id number
+site_name varchar2(200)
+tid number
+}
+Table chembl_bio_component_sequences{
+component_id number
+component_type varchar2(50)
+description varchar2(200)
+sequence clob
+sequence_md5sum varchar2(32)
+tax_id number
+organism varchar2(150)
+}
+Table chembl_bioassay_ontology{
+bao_id varchar2(11)
+label varchar2(100)
+}
+Table chembl_biotherapeutic_components{
+biocomp_id number
+molregno number
+component_id number
+}
+Table chembl_biotherapeutics{
+molregno number
+description varchar2(2000)
+helm_notation varchar2(4000)
+}
+Table chembl_cell_dictionary{
+cell_id number
+cell_name varchar2(50)
+cell_description varchar2(200)
+cell_source_tissue varchar2(50)
+cell_source_organism varchar2(150)
+cell_source_tax_id number
+clo_id varchar2(11)
+efo_id varchar2(12)
+cellosaurus_id varchar2(15)
+cl_lincs_id varchar2(8)
+chembl_id varchar2(20)
+cell_ontology_id varchar2(10)
+}
+Table chembl_chembl_id_lookup{
+chembl_id varchar2(20)
+entity_type varchar2(50)
+entity_id number
+status varchar2(10)
+last_active number
+}
+Table chembl_chembl_release{
+chembl_release_id integer
+chembl_release varchar2(20)
+creation_date date
+}
+Table chembl_component_class{
+component_id number
+protein_class_id number
+comp_class_id number
+}
+Table chembl_component_domains{
+compd_id number
+domain_id number
+component_id number
+start_position number
+end_position number
+}
+Table chembl_component_go{
+comp_go_id number
+component_id number
+go_id varchar2(10)
+}
+Table chembl_component_sequences{
+component_id number
+component_type varchar2(50)
+accession varchar2(25)
+sequence clob
+sequence_md5sum varchar2(32)
+description varchar2(200)
+tax_id number
+organism varchar2(150)
+db_source varchar2(25)
+db_version varchar2(10)
+}
+Table chembl_component_synonyms{
+compsyn_id number
+component_id number
+component_synonym varchar2(500)
+syn_type varchar2(20)
+}
+Table chembl_compound_properties{
+molregno number
+mw_freebase number
+alogp number
+hba number
+hbd number
+psa number
+rtb number
+ro3_pass varchar2(3)
+num_ro5_violations number
+cx_most_apka number
+cx_most_bpka number
+cx_logp number
+cx_logd number
+molecular_species varchar2(50)
+full_mwt number
+aromatirings number
+heavy_atoms number
+qed_weighted number
+mw_monoisotopic number
+full_molformula varchar2(100)
+hba_lipinski number
+hbd_lipinski number
+num_lipinski_ro5_violations number
+np_likeness_score number
+}
+Table chembl_compound_records{
+record_id number
+molregno number
+doid number
+compound_key varchar2(250)
+compound_name varchar2(4000)
+srid number
+srcompound_id varchar2(150)
+cidx varchar2(200)
+}
+Table chembl_compound_structural_alerts{
+cpd_str_alert_id number
+molregno number
+alert_id number
+}
+Table chembl_compound_structures{
+molregno number
+molfile clob
+standard_inchi varchar2(4000)
+standard_inchi_key varchar2(27)
+canonical_smiles varchar2(4000)
+}
+Table chembl_confidence_score_lookup{
+confidence_score number
+description varchar2(100)
+target_mapping varchar2(30)
+}
+Table chembl_curation_lookup{
+curated_by varchar2(32)
+description varchar2(100)
+}
+Table chembl_data_validity_lookup{
+data_validity_comment varchar2(30)
+description varchar2(200)
+}
+Table chembl_defined_daily_dose{
+atcode varchar2(10)
+ddd_units varchar2(200)
+ddd_admr varchar2(1000)
+ddd_comment varchar2(2000)
+ddd_id number
+ddd_value number
+}
+Table chembl_docs{
+doid number
+journal varchar2(50)
+year number
+volume varchar2(50)
+issue varchar2(50)
+first_page varchar2(50)
+last_page varchar2(50)
+pubmed_id number
+doi varchar2(100)
+chembl_id varchar2(20)
+title varchar2(500)
+dotype varchar2(50)
+authors varchar2(4000)
+abstract clob
+patent_id varchar2(20)
+ridx varchar2(200)
+srid integer
+chembl_release_id integer
+}
+Table chembl_domains{
+domain_id number
+domain_type varchar2(20)
+source_domain_id varchar2(20)
+domain_name varchar2(20)
+domain_description varchar2(500)
+}
+Table chembl_drug_indication{
+drugind_id number
+record_id number
+molregno number
+max_phase_for_ind number
+mesh_id varchar2(20)
+mesh_heading varchar2(200)
+efo_id varchar2(20)
+efo_term varchar2(200)
+}
+Table chembl_drug_mechanism{
+meid number
+record_id number
+molregno number
+mechanism_of_action varchar2(250)
+tid number
+site_id number
+action_type varchar2(50)
+direct_interaction number
+molecular_mechanism number
+disease_efficacy number
+mechanism_comment varchar2(2000)
+selectivity_comment varchar2(1000)
+binding_site_comment varchar2(1000)
+variant_id number
+}
+Table chembl_drug_warning{
+warning_id number
+record_id number
+molregno number
+warning_type varchar2(20)
+warning_class varchar2(100)
+warning_description varchar2(4000)
+warning_country varchar2(1000)
+warning_year number
+efo_term varchar2(200)
+efo_id varchar2(20)
+efo_id_for_warning_class varchar2(20)
+}
+Table chembl_formulations{
+product_id varchar2(30)
+ingredient varchar2(200)
+strength varchar2(300)
+record_id number
+molregno number
+formulation_id number
+}
+Table chembl_frac_classification{
+fraclass_id number
+active_ingredient varchar2(500)
+level1 varchar2(2)
+level1_description varchar2(2000)
+level2 varchar2(2)
+level2_description varchar2(2000)
+level3 varchar2(6)
+level3_description varchar2(2000)
+level4 varchar2(7)
+level4_description varchar2(2000)
+level5 varchar2(8)
+fracode varchar2(4)
+}
+Table chembl_go_classification{
+go_id varchar2(10)
+parent_go_id varchar2(10)
+pref_name varchar2(200)
+class_level number
+aspect varchar2(1)
+path varchar2(1000)
+}
+Table chembl_indication_refs{
+indref_id number
+drugind_id number
+ref_type varchar2(50)
+ref_id varchar2(4000)
+ref_url varchar2(4000)
+}
+Table chembl_irac_classification{
+iraclass_id number
+active_ingredient varchar2(500)
+level1 varchar2(1)
+level1_description varchar2(2000)
+level2 varchar2(3)
+level2_description varchar2(2000)
+level3 varchar2(6)
+level3_description varchar2(2000)
+level4 varchar2(8)
+iracode varchar2(3)
+}
+Table chembl_ligand_eff{
+activity_id number
+bei number
+sei number
+le number
+lle number
+}
+Table chembl_mechanism_refs{
+mecref_id number
+meid number
+ref_type varchar2(50)
+ref_id varchar2(200)
+ref_url varchar2(400)
+}
+Table chembl_metabolism{
+met_id number
+drug_record_id number
+substrate_record_id number
+metabolite_record_id number
+pathway_id number
+pathway_key varchar2(50)
+enzyme_name varchar2(200)
+enzyme_tid number
+met_conversion varchar2(200)
+organism varchar2(100)
+tax_id number
+met_comment varchar2(1000)
+}
+Table chembl_metabolism_refs{
+metref_id number
+met_id number
+ref_type varchar2(50)
+ref_id varchar2(200)
+ref_url varchar2(400)
+}
+Table chembl_molecule_atc_classification{
+mol_atid number
+level5 varchar2(10)
+molregno number
+}
+Table chembl_molecule_dictionary{
+molregno number
+pref_name varchar2(255)
+chembl_id varchar2(20)
+max_phase number
+therapeutiflag number
+dosed_ingredient number
+structure_type varchar2(10)
+chebi_par_id number
+molecule_type varchar2(30)
+first_approval number
+oral number
+parenteral number
+topical number
+black_box_warning number
+first_in_class number
+chirality number
+prodrug number
+inorganiflag number
+usan_year number
+availability_type number
+usan_stem varchar2(50)
+polymer_flag number
+usan_substem varchar2(50)
+usan_stem_definition varchar2(1000)
+indication_class varchar2(1000)
+withdrawn_flag number
+chemical_probe number
+natural_product number
+}
+Table chembl_molecule_frac_classification{
+mol_fraid number
+fraclass_id number
+molregno number
+}
+Table chembl_molecule_hierarchy{
+molregno number
+parent_molregno number
+active_molregno number
+}
+Table chembl_molecule_hrac_classification{
+mol_hraid number
+hraclass_id number
+molregno number
+}
+Table chembl_molecule_irac_classification{
+mol_iraid number
+iraclass_id number
+molregno number
+}
+Table chembl_molecule_synonyms{
+molregno number
+syn_type varchar2(50)
+molsyn_id number
+res_stem_id number
+synonyms varchar2(200)
+}
+Table chembl_organism_class{
+oid number
+tax_id number
+l1 varchar2(200)
+l2 varchar2(200)
+l3 varchar2(200)
+}
+Table chembl_patent_use_codes{
+patent_use_code varchar2(8)
+definition varchar2(500)
+}
+Table chembl_predicted_binding_domains{
+predbind_id number
+activity_id number
+site_id number
+prediction_method varchar2(50)
+confidence varchar2(10)
+}
+Table chembl_product_patents{
+prod_pat_id number
+product_id varchar2(30)
+patent_no varchar2(20)
+patent_expire_date date
+drug_substance_flag number
+drug_product_flag number
+patent_use_code varchar2(10)
+delist_flag number
+submission_date date
+}
+Table chembl_products{
+dosage_form varchar2(200)
+route varchar2(200)
+trade_name varchar2(200)
+approval_date date
+ad_type varchar2(5)
+oral number
+topical number
+parenteral number
+black_box_warning number
+applicant_full_name varchar2(200)
+innovator_company number
+product_id varchar2(30)
+nda_type varchar2(10)
+}
+Table chembl_protein_class_synonyms{
+protclasssyn_id number
+protein_class_id number
+protein_class_synonym varchar2(1000)
+syn_type varchar2(20)
+}
+Table chembl_protein_classification{
+protein_class_id number
+parent_id number
+pref_name varchar2(500)
+short_name varchar2(50)
+protein_class_desc varchar2(410)
+definition varchar2(4000)
+class_level number
+}
+Table chembl_rac_classification{
+hraclass_id number
+active_ingredient varchar2(500)
+level1 varchar2(2)
+level1_description varchar2(2000)
+level2 varchar2(3)
+level2_description varchar2(2000)
+level3 varchar2(5)
+hracode varchar2(2)
+}
+Table chembl_relationship_type{
+relationship_type varchar2(1)
+relationship_desc varchar2(250)
+}
+Table chembl_research_companies{
+co_stem_id number
+res_stem_id number
+company varchar2(100)
+country varchar2(50)
+previous_company varchar2(100)
+}
+Table chembl_research_stem{
+res_stem_id number
+research_stem varchar2(20)
+}
+Table chembl_site_components{
+sitecomp_id number
+site_id number
+component_id number
+domain_id number
+site_residues varchar2(2000)
+}
+Table chembl_source{
+srid number
+srdescription varchar2(500)
+srshort_name varchar2(20)
+}
+Table chembl_structural_alert_sets{
+alert_set_id number
+set_name varchar2(100)
+priority number
+}
+Table chembl_structural_alerts{
+alert_id number
+alert_set_id number
+alert_name varchar2(100)
+smarts varchar2(4000)
+}
+Table chembl_target_components{
+tid number
+component_id number
+targcomp_id number
+homologue number
+}
+Table chembl_target_dictionary{
+tid number
+target_type varchar2(30)
+pref_name varchar2(200)
+tax_id number
+organism varchar2(150)
+chembl_id varchar2(20)
+species_group_flag number
+}
+Table chembl_target_relations{
+tid number
+relationship varchar2(20)
+related_tid number
+targrel_id number
+}
+Table chembl_target_type{
+target_type varchar2(30)
+target_desc varchar2(250)
+parent_type varchar2(25)
+}
+Table chembl_tissue_dictionary{
+tissue_id number
+uberon_id varchar2(15)
+pref_name varchar2(200)
+efo_id varchar2(20)
+chembl_id varchar2(20)
+bto_id varchar2(20)
+caloha_id varchar2(7)
+}
+Table chembl_usan_stems{
+usan_stem_id number
+stem varchar2(100)
+subgroup varchar2(100)
+annotation varchar2(2000)
+stem_class varchar2(100)
+major_class varchar2(100)
+}
+Table chembl_variant_sequences{
+variant_id number
+mutation varchar2(2000)
+accession varchar2(25)
+version number
+isoform number
+sequence clob
+organism varchar2(200)
+tax_id number
+}
+Table chembl_version{
+name varchar2(20)
+creation_date date
+comments varchar2(2000)
+}
+Table chembl_warning_refs{
+warnref_id number
+warning_id number
+ref_type varchar2(50)
+ref_id varchar2(4000)
+ref_url varchar2(4000)
+}

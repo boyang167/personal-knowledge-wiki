@@ -1,0 +1,7 @@
+/* Localized versions of Info.plist keys */
+
+CFBundleName = "Jalview";
+CFBundleShortVersionString = "InstallAnywhere 2017 Installer";
+CFBundleGetInfoString = "InstallAnywhere 2017 Installer";
+NSHumanReadableCopyright = "Copyright © 2016 Flexera Software LLC.";
+CFBundleIdentifier = "iainstall.fe7d6410-1ed5-11b2-a662-f4777f28dbfc";

@@ -1,0 +1,345 @@
+// UniParc
+Table t_uniparc_entry {
+  c_accession text [ref: - t_unified_source.c_sourcedb_accession]
+  c_length integer
+  c_checksum text
+}
+
+Table t_uniparc_dbreference {
+  c_accession text [ref: > t_uniparc_entry.c_accession]
+  c_type text 
+  c_id text 
+  c_version_i integer 
+  c_active text
+  c_version integer
+  c_created date
+  c_last date
+}
+
+Table t_uniparc_property {
+  c_type text [ref: > t_uniparc_dbreference.c_type]
+  c_id text [ref: > t_uniparc_dbreference.c_id]
+  c_property_type text
+  c_value text [ref: > t_genbank_taxonid_nodes.c_tax_id]
+}
+
+// JGI
+Table t_jgi_gold_study {
+  c_study_gold_id text
+  c_study_name text
+  c_study_description text
+  c_study_contacts text
+}
+
+Table t_jgi_gold_biosample {
+  c_biosample_gold_id text  
+  c_biosample_name text  
+  c_biosample_ncbi_tax_id text  [ref: > t_genbank_taxonid_nodes.c_tax_id]
+  c_biosample_ncbi_tax_name text  
+  c_biosample_sample_collection_site text  
+  c_biosample_sample_collection_date date  
+  c_biosample_geographic_location text  
+  c_biosample_latitude decimal  
+  c_biosample_longitude decimal  
+  c_biosample_ecosystem_path_id integer  
+  c_biosample_ecosystem text  
+  c_biosample_ecosystem_category text  
+  c_biosample_ecosystem_type text  
+  c_biosample_ecosystem_subtype text  
+  c_biosample_specific_ecosystem text
+}
+
+Table t_jgi_gold_organism {
+c_organism_gold_id text  
+c_organism_name text  
+c_organism_ncbi_tax_id integer  [ref: > t_genbank_taxonid_nodes.c_tax_id]
+c_organism_type_strain text  
+c_organism_ncbi_superkingdom text  
+c_organism_ncbi_kingdom text  
+c_organism_gold_phylum text  
+c_organism_genus text  
+c_organism_species text  
+c_organism_subspecies text  
+c_organism_strain text  
+c_organism_servoar_cultivar text  
+c_organism_culture_collection_id text  
+c_organism_biotic_relationships text  
+c_organism_oxygen_requirement text  
+c_organism_metabolism text  
+c_organism_energy_sources text  
+c_organism_gram_stain text  
+c_organism_isolation_pubmed_id integer  
+c_organism_habitat text  
+c_organism_sample_collection_site text  
+c_organism_sample_collection_date date  
+c_organism_geographic_location text  
+c_organism_latitude decimal  
+c_organism_longitude decimal  
+c_organism_ecosystem_path_id integer  
+c_organism_ecosystem text  
+c_organism_ecosystem_category text  
+c_organism_ecosystem_type text  
+c_organism_ecosystem_subtype text  
+c_organism_specific_ecosystem text  
+c_organism_isolation_host_name text  
+c_organism_host_taxonomy_id integer  
+c_organism_host_body_site text  
+c_organism_host_body_subsite text  
+c_organism_salinity text  
+c_organism_salinity_concentration text  
+c_organism_cell_diameter text  
+c_organism_cell_shape text  
+c_organism_color text  
+c_organism_motility text  
+c_organism_ph text  
+c_organism_pressure text  
+c_organism_sporulation text  
+c_organism_carbon_source text  
+c_organism_growth_temperature text  
+c_organism_temperature_range text  
+c_organism_sample_collection_temperature integer  
+c_organism_cell_length text  
+c_organism_cultured bool
+}
+
+Table t_jgi_sequencing_project {
+c_project_gold_id text
+c_project_name text
+c_sequencing_strategy text
+c_its_proposal_id integer
+c_its_sequencing_project_id integer
+c_its_sample_id integer
+c_pmo_project_id integer
+c_ncbi_bioproject_accession text
+c_ncbi_biosample_accession text
+c_sra_experiment_ids text
+c_project_genome_publication_pubmed_id integer
+c_project_other_publication_pubmed_id integer
+c_project_status text
+c_sequencing_status text
+c_sequencing_centers text
+c_project_funding text
+c_project_legacy_gold_id text
+c_study_gold_id text [ref: > t_jgi_gold_study.c_study_gold_id]
+c_organism_gold_id text [ref: > t_jgi_gold_organism.c_organism_gold_id]
+c_biosample_gold_id text [ref: > t_jgi_gold_biosample.c_biosample_gold_id]
+c_project_contacts text
+c_project_jgi_data_utilization_status_at_jgi_only text
+c_project_jgi_award_dois_at_jgi_only text
+}
+
+Table t_jgi_gold_analysis_project_organism {
+c_ap_gold_id text  
+c_ap_name text  
+c_ap_type text  
+c_ap_its_ap_id integer  
+c_ap_img_taxon_id integer  
+c_ap_img_completion_date date  
+c_ap_genbank text  
+c_ap_ncbi_sra_ids text  
+c_ap_study_gold_id text [ref: - t_jgi_gold_study.c_study_gold_id] 
+c_ap_organism_gold_id text  [ref: > t_jgi_gold_organism.c_organism_gold_id]
+c_ap_project_gold_ids text  [ref: > t_jgi_sequencing_project.c_project_gold_id]
+c_ap_contacts text  
+c_ap_jgi_data_utilization_status_at_jgi_only text  
+c_ap_jgi_award_dois_at_jgi_only text  
+c_ap_gene_count integer  
+c_ap_estimated_size integer  
+}
+
+Table t_jgi_gold_analysis_project_biosample {
+c_ap_gold_id text  
+c_ap_name text  
+c_ap_type text  
+c_ap_img_submission_id integer  
+c_ap_img_taxon_id integer  
+c_ap_img_pipeline_version text  
+c_ap_ncbi_sra_ids text  
+c_ap_study_gold_id text [ref: > t_jgi_gold_study.c_study_gold_id]
+c_ap_project_gold_ids text  [ref: - t_jgi_sequencing_project.c_project_gold_id]
+c_biosample_ecosystem_path_id integer  [ref: > t_jgi_gold_biosample.c_biosample_ecosystem_path_id]
+c_biosample_ecosystem text  
+c_biosample_ecosystem_category text  
+c_biosample_ecosystem_type text  
+c_biosample_ecosystem_subtype text  
+c_biosample_specific_ecosystem text
+}
+
+Table t_jgi_entry {
+  c_ap_gold_id integer [ref: > t_jgi_gold_analysis_project_biosample.c_ap_gold_id]
+  c_fasta_header text
+  c_jgi_sequence_id integer [ref: - t_unified_source.c_sourcedb_accession]
+}
+
+// MGnify
+Table t_mgnify_entry {
+  c_sequence_accession text [ref: - t_unified_source.c_sourcedb_accession]
+  c_assembly_accession text [ref: > t_mgnify_assembly.c_assembly_accession]
+}
+
+Table t_mgnify_pfam_hmmer {
+  c_sequence_accession text [ref: > t_mgnify_entry.c_sequence_accession]
+  c_pfam_hmmer_accession text
+  c_i_evalue decimal
+  c_bit_score_for_the_domain decimal
+  c_from_hmm_coord text
+  c_to_hmm_coord text
+  c_from_env_coord text
+  c_to_env_coord text
+}
+
+Table t_mgnify_pfam_protenn {
+  c_sequence_accession text [ref: > t_mgnify_entry.c_sequence_accession]
+  c_pfam_protenn_accession text
+  c_start_position text
+  c_end_position text
+}
+
+Table t_mgnify_sample {
+c_sample_accession text
+c_analysis_completed text
+c_biome text
+c_biosample text
+c_collection_date date
+c_environment_biome text
+c_environment_feature text
+c_environment_material text
+c_geo_loc_name text
+c_host_tax_id text
+c_last_update timestamp
+c_latitude decimal
+c_longitude decimal
+c_runs text
+c_sample_alias text
+c_sample_desc text
+c_sample_name text
+c_species text
+c_studies_id text [ref: > t_mgnify_study.c_study_accession]
+c_studies_links_self text
+c_studies_type text
+c_url text
+}
+
+Table t_mgnify_sample_metadata {
+c_sample_accession text [ref: > t_mgnify_sample.c_sample_accession]
+c_sample_metadata_key text
+c_sample_metadata_unit text
+c_sample_metadata_value text
+}
+
+Table t_mgnify_assembly {
+c_assembly_accession text
+c_analyses text
+c_coverage integer
+c_experiment_type text
+c_is_private bool
+c_legacy_accession text
+c_min_gap_length text
+c_pipelines_id text
+c_pipelines_links_self text
+c_pipelines_type text
+c_runs_id text
+c_runs_links_self text
+c_runs_type text
+c_samples_id text [ref: < t_mgnify_sample.c_sample_accession]
+c_samples_links_self text
+c_samples_type text
+c_url text
+c_wgs_accession text
+}
+
+Table t_mgnify_study {
+c_study_accession text 
+c_analyses text
+c_biomes_id text
+c_biomes_links_self text
+c_biomes_type text
+c_bioproject text
+c_centre_name text
+c_data_origination text
+c_downloads text
+c_is_private bool
+c_last_update timestamp
+c_public_release_date date
+c_publications text
+c_samples text
+c_samples_count integer
+c_secondary_accession text
+c_study_abstract text
+c_study_name text
+c_url text
+}
+
+// GenBank
+Table t_genbank_entry {
+    c_accession_version       text [ref: - t_unified_source.c_sourcedb_accession]
+    c_locus   text
+    c_length  integer
+    c_moltype text
+    c_topology        text
+    c_division        text
+    c_update_date     text
+    c_definition      text
+    c_keywords        text
+    c_segment text
+    c_source  text
+    c_organism        text
+    c_comment text
+    c_source_db       text
+    c_contig  text
+    c_xrefs   text
+}
+
+Table t_genbank_reference {
+    c_accession_version       text [ref: > t_genbank_entry.c_accession_version]
+    c_ref_serial      integer
+    c_position        text
+    c_authors text
+    c_consortium      text
+    c_title   text
+    c_journal text
+    c_pubmed  integer
+    c_remark  text
+}
+
+Table t_genbank_feature {
+    c_accession_version       text [ref: > t_genbank_entry.c_accession_version]
+    c_key     text
+    c_location        text
+    c_qual_name       text
+    c_qual_value      text [ref: > t_genbank_taxonid_nodes.c_tax_id]
+}
+
+Table t_genbank_taxonid_nodes {
+    c_tax_id  integer [ref: < t_genbank_taxonid_names.c_tax_id]
+    c_parent_tax_id   integer 
+    c_rank    text
+    c_embl_code       text
+    c_division_id     integer
+    c_inherited_div_flag      integer
+    c_geneticode_id   integer
+    c_inherited_gflag integer
+    c_genbank_hidden_flag     integer
+    c_hidden_subtree_root_flag        integer
+    c_comments        text
+}
+
+Table t_genbank_taxonid_names {
+    c_tax_id  integer 
+    c_name_txt        text
+    c_unique_name     text
+    c_name_class      text
+}
+
+// unified
+Table t_unified_entry {
+  c_sequence_id integer
+  c_checksum text
+  c_sequence text
+}
+
+Table t_unified_source {
+  c_sequence_id integer [ref: > t_unified_entry.c_sequence_id]
+  c_sourcedb text 
+  c_sourcedb_accession text
+}
