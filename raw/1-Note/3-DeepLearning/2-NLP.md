@@ -1,231 +1,82 @@
 # NLP
 
-## basic concept
+个人 NLP 笔记
+
+## 目录
+
+- [基础概念](#基础概念)
+- [表示学习与预训练模型谱系](#表示学习与预训练模型谱系)
+- [NLP 任务与应用](#nlp-任务与应用)
+- [论文检索](#论文检索)
+- [参考资料](#参考资料)
+
+## 基础概念
 
 ![image-20210601210129479](../img/image-20210601210129479.png)
 
-语言模型：（一句话语法上是否通顺）
+### 预处理与表示层次
 
-过滤词 ，停用词 ， 出现频率很低的词
+| 层次 | 要点 |
+| --- | --- |
+| 语言模型 | 判断句子是否通顺、为生成/理解提供概率基础 |
+| 文本清洗 | 停用词、极低频词过滤 |
+| 词 / 句表示 | One-hot（稀疏）、TF-IDF、分布式向量 |
+| 上下文表示 | 静态词向量 → ELMo → BERT / XLNet 等 |
 
-word Representation
+**静态词向量**：Word2Vec（Skip-gram、CBOW）、GloVe。  
+**上下文相关**：ELMo、BERT、XLNet、GPT 系列。
 
-sentence Representation
+### 语义表示：从符号到向量
 
-Sentence Similarity
+- **知识库**：WordNet 上位词（is-a）等，规则驱动。
+- **语料驱动**：分布假设——「义近词上下文相似」。
 
-one-hot  :  Sparsity  稀疏
+**One-hot**：维数 = 词表大小，相似度难算。  
+**共现矩阵**：
 
-TF-idf Representaion
+| 构造方式 | 特点 |
+| --- | --- |
+| 词-文档 | 偏主题（LSA 等） |
+| 词-窗口 | 偏句法 / 局部语义 |
 
-    Distributed Representation （vector）
+问题：矩阵大、高维、稀疏。  
+**路线 1**：SVD 等降维 \(X \approx USV^T\)，贵且新词难加。  
+**路线 2**：直接学习低维 **word embedding**（Word2Vec 2013、GloVe 2014；更早 NNLM 2003 等）。
 
-Learn Word Embeddings:
+词向量用途：余弦相似度、下游特征、与神经网络联合微调。
 
-Model:
+### 语言模型演进
 
-传统：  skipGram , Glove , CBow
+| 阶段 | 核心 |
+| --- | --- |
+| N-gram | 用 \((n-1)\) 阶马尔科夫近似；链式法则 \(P(w_{1:n})=\prod_i P(w_i\mid w_{1:i-1})\)；**计数 + 平滑** |
+| FNN LM | 固定窗口，用 NN 预测下一词 |
+| RNN LM | 理论上 conditioning 全部历史；长依赖仍难 |
+| Transformer + 预训练 | 自注意力；GPT（AR）、BERT（AE）等 |
 
-考虑上下文： ELmo , BERT , XLNet
+N-gram **问题**：数据稀疏 → 平滑；**固定窗口** → RNN/Transformer。
 
-### Meaning Representation in Computs
+### Word2Vec（静态嵌入）
 
-Hypernyms (is-a) relationships of wordNet
+- **Skip-gram**：中心词 \(w_t\) 预测窗口内上下文  
+  \(P(w_{t-m},\ldots,w_{t-1},w_{t+1},\ldots,w_{t+m}\mid w_t)\)
+- **CBOW**：上下文预测中心词 \(P(w_t\mid \text{context})\)
+- 训练加速：**层次 Softmax**、**负采样**
 
-knowledge based representation (基于规则)
+### 注意力与 Seq2Seq
 
-corpus-based representation （基于语料）
+认知类比：感官 → 工作记忆（**注意力**）→ 长时记忆。
 
-Atomic symbols: one-hot reprention
+| 问题 | 思路 |
+| --- | --- |
+| 输入过长 | 每步只关注部分输入（Attention） |
+| RNN 记忆参数多 | 外部记忆 / Attention 读写在不变参数量下扩大有效记忆 |
 
-**issues**:  difficult to compute the similarity of two (sentence ,word)
+**机器翻译**：Seq2Seq，输入输出长度可不同；`<END>` 结束符；RNN + Attention。  
+**Attention 矩阵形式**：\(\mathrm{Attention}(Q,K,V)=\mathrm{softmax}(QK^T)V\)。  
+其它：语音识别、图像/视频描述、阅读理解等。
 
-**idea** : words with similar meaning often have similar neighbor
-
-co-occurrence matrix constructed via neighbors
-
-**neighbors** definition: full document VS windows
-
-full docement: word-document co-occurrence matrix gives general topics (latent semantic analysis)
-
-**windows**: context windows for each word capture syntactic (POS) and sematic information
-
-issues: 1:matrix size increases with vocabulary   2: hith dimensional 3:sparsity 稀疏
-
-**idea: low dimensional word vector**
-
-method1 : SVD   X = USV
-
-semantic relations : 语言联系 syntactic relation : 句法联系
-
-issues: 1:computationally expensive2: difficult to add new words
-
-**idea: directly learn low-dimensional word vectors**
-
-method2 : directly learn low dimensional word vectors
-
-learning representations by back-propagation 1986
-
-a neural probabilistic language model 2003
-
-nlp from scrath 2008
-
-recent and most popular models : word2vec 2013 and glove  2014
-
-as known as word embeddings
-
-outline
-
-- Language Modeling
-- N-gram language Model
-- Feed-Forward Neural Language Model
-- Recurrent Neural Network Language Model
-
-**language modeling**
-
-Goal : estimate the probability of  a word sequence
-
-$$
-P(w_1,w_2,...w_n) \\
-$$
-
-example task : determinate (决定) whether a sequence is grammatical or makes more sense
-
-**N-gram language model :**
-
-probability is **conditional** on a window of (n-1) previous words   **count**
-
-$$
-p(w_1,w_2,...w_n) = \sum_{i=1}^m P(w_i|w_1,..,w_{n-1})
-$$
-
-**issue**: some sequences may not **appear** in the training data(the phenomenon happens because we cannot collect all the possible text in the word as training data)
-
-give some small probability -> Smoothing
-
-idea: estimate
-
-$$
-P(w_i |w_{i-(n-1)},...,w_{i-1})
-$$
-
-**not from count ,but from NN prediction**
-
-**issue** : fixed context window for conditioning 用于条件的固定上下文窗口
-
-**idea** : condition the neural network on all previous words and tie the weights at each time step
-
-assumption: temporal information matters 时间信息很重要
-
-### **Attention and Memory**
-
-information from sensors
-
-  ->sensory memory    attention
-
-->working memory     encoding
-
--> long-term memory  retrieval
-
-**problem**: very long sequence or an image
-
-**solution**: pay attention on the **partial** input object each time
-
-**Problem**: larger memory implies more parameters in RNN
-
-**solution**: long-term memory increases memory size without increasing parameters
-
-**Machine Translation**
-
-Sequence-to-Sequence learning : both input and output are both sequences with different lengths
-
-`<END>` 标识符
-
-RNN+ Attention 实现
-
- Dot-Product Attention in Matrix A(Q,K,V) =soft(QK^T) V
-
-Speech Recognition with Attention  语言辨识
-
-Image captioning with attention
-
-video captioning
-
-Reading comprehension
-
-### Corpus  based representation
-
-**atomic  symbols: one-hot  representation**
-
-**issues** : difficult to compute the similarity
-
-**idea** : 	words with similar meanings often have similar neighbors
-
- **Neighbors :**
-
-1. high-dimensional spare word  vector
-2. low-dimensional dense word vector
-   1. method 1 : dimension reduction
-   2. method 2 : direct learning
-
-### **window-based co-occurrence matrix**
-
-**issues :**
-
-1. matrix size increases with vocabulary
-2. high dimensional
-3. sparsity -> poor robustness
-
-**idea : low dimensional word vector  降维**
-
-SVD  矩阵分解
-
-**issues:**
-
-1. computationally expensive : o(mn^2)
-2. when n < m for n x m matrix
-3. difficult to add a new words
-
-### direct learning  word embedding  词嵌入
-
-Word Embedding Benefit
-
-Given an unlabeled training corpus ， produce a vector for each word that encodes its semantic information 。 these vectors are useful because：
-
-1. **semantic similarit**y between two words can be calculated as the cosine similarity between their corresponding word vectors
-2. word vectors as **powerful features** for various supervised NLP tasks **since** the vectors contain semantic information
-3. propagate any information into them via neural networks and update during training
-
-### WordEmbeding
-
-LM （language modeling） ： 开始的时候
-
-predicting the next words given the proceeding contexts
-
-$$
-P(w_{t+1}|w_t)
-$$
-
- Skip-Gram Model  （提升）
-
-Goal : predict surrounding words within a window of each word
-
-$$
-P(w_{t-m},...w_{t-1},w_{t+1},...,w_{t+m}|w_t)
-$$
-
-CBOW (Continue Bags of Words ) :
-
-Goal: predicting the target word given the surrounding words
-
-$$
-P(w_t|w_{t-m},...w_{t-1},w_{t+1},...,w_{t+m})
-$$
-
-1. 层次softmax
-2. negative sampling
-
-## Reprensentation
+## 表示学习与预训练模型谱系
 
 ![image-20210601212650814](../img/image-20210601212650814.png)
 
@@ -323,15 +174,16 @@ TagLM  pre-ELMO
 
 paper : Semi-supervised sequence tagging with bidirectional language models
 
-### BPE
+### BPE（Byte Pair Encoding）
 
-https://huggingface.co/docs/transformers/tokenizer_summary
+子词切分，缓解 OOV；Hugging Face 各 tokenizer 说明：[tokenizer_summary](https://huggingface.co/docs/transformers/tokenizer_summary)
 
-### FasterText
+### FastText / TextCNN
 
-### Text2CNN
+- **FastText**：子词 n-gram + 词向量，适合形态丰富语言。
+- **TextCNN**：用卷积提取 n-gram 特征做文本分类（Kim 2014 一类模型）。
 
-### EMLO
+### ELMo
 
 idea : contextualized word Embeddings
 
@@ -395,7 +247,13 @@ Model:
 
 ![image-20210331143535394](../img/image-20210331143535394.png)
 
-### Tramsformer-XL
+#### RoPE（旋转位置编码，补充）
+
+- 用复平面旋转变换编码位置，**相对位置**信息更自然；可预计算，易并入现有 Transformer。
+- 与「绝对位置向量直接加在 embedding 上」相比，更强调改变向量**方向**而非仅改变模长（笔记中的直观理解）。
+- 长序列、LLaMA 等架构中广泛使用。
+
+### Transformer-XL
 
 idea: segment-level recurrence
 
@@ -418,31 +276,15 @@ transformer-xl:
 
 ![image-20220512105740184](../img/image-20220512105740184.png)
 
-### NCE
+### NCE / 对比估计
 
-### GPT
+Noise Contrastive Estimation 等：用噪声对比估计归一化常数或互信息下界（与 Word2Vec 负采样、InfoNCE 同族思想）。原笔记此处未展开。
 
-给定一个无标签的序列
+### GPT 系列（Decoder-only）
 
-$$
-u = ({u_1,u_2,...u_n}),
-$$
+**统一目标**：自回归语言建模 \(L_1(u)=\sum_i \log P(u_i\mid u_{i-k},\ldots,u_{i-1};\theta)\)。下文按 GPT-1 → GPT-3 → Instruct/Chat 展开。
 
- 最大化优化目标：
-
-$$
-L_1(u)= \sum_i logP(u_i|u_{i-k},...u_{i-1};\theta)
-$$
-
-k : 滑动窗口的大小，P： 条件概率，
-
-$$
-\theta
-$$
-
- : 模型参数  ， SGD优化
-
-#### GPT 1
+#### GPT-1
 
 《Improving Language Understanding by Generative Pre-training 》
 
@@ -571,7 +413,7 @@ GPT-1证明了transformer对学习词向量的强大能力，在GPT-1得到的�
 
 <img src="../img/image-20230207212910968.png" alt="image-20230207212910968" style="zoom:50%;" />
 
-#### GPT2
+#### GPT-2
 
 《Lanauage Models are Unsupervised Multitask Learners》
 
@@ -622,7 +464,7 @@ Input representation:
 
 Transformer 层堆积到48层， 隐层的维度1600，参数量15亿
 
-#### GPT3
+#### GPT-3
 
 《Language Models are Few-Shot Learners》
 
@@ -678,35 +520,11 @@ Prompt是激发语言模型的补全能力，例如根据上半句生成下半�
 提示学习：给女朋友买了这个项链，她很喜欢，这个项链太____了。
 指示学习：判断这句话的情感：给女朋友买了这个项链，她很喜欢。选项：A=好；B=一般；C=差。
 
-```
-https://github.com/v2fly/fhs-install-v2ray
-
-
-curl https://api.openai.com/v1/models \
-  -H 'Authorization: Bearer $OPENAI_API_KEY' \
-  -H 'OpenAI-Organization: $OPENAI_ORG_ID'
-```
-
-Reinforcement learning from human feedback (RHLF)
-
-Lamam1 :
+**RLHF**（Reinforcement Learning from Human Feedback）：SFT → 奖励模型 → PPO 等对齐人类偏好（原笔记图：InstructGPT / ChatGPT 流程）。
 
 ![在这里插入图片描述](../img/c969c0001a2545d28dfd1e2cbec309e6.png)
 
-![img](../img/format,png)
-
 ![在这里插入图片描述](../img/9f9f1d665d034d74994b538b5517967b.png)
-
-2： reward model training
-
-为什么旋转位置嵌入有效？
-
-捕捉相对位置信息：传统的位置嵌入方法通常仅编码绝对位置，这可能在处理长序列或需要捕捉相对位置信息的任务中表现不佳。而RoPE通过旋转变换自然地引入了相对位置信息，使得模型能够更好地理解序列中各个位置之间的相对关系。
-    由于RoPE通过复数域的旋转变换来编码位置，这种变换能够捕捉更加丰富的位置信息。相比于简单的线性变换，旋转变换提供了更强的非线性表达能力，使得模型在处理复杂任务时具有更好的表现力。
-    RoPE的计算相对简单，不需要复杂的矩阵运算。预计算频率向量和应用旋转变换的过程可以高效地实现，适合在实际应用中大规模部署。
-    RoPE能够无缝集成到现有的Transformer架构中，不需要对模型结构进行大的修改。这种兼容性使得RoPE成为一种易于应用和推广的位置编码方法。
-    在长序列处理任务中，传统的位置编码方法可能会遇到信息稀释或计算复杂度增加的问题。RoPE通过引入旋转变换，可以更好地保持长序列中的位置信息，使得模型在长序列任务中表现更加稳定和高效。
-    (这一点是我的猜想)在高维向量中，方向是比模长更重要的量，常规位置编码直接在词嵌入上加上位置编码，相当于改变了模长，旋转位置编码改变了方向，实际上比常规位置编码多获得了一部分信息。
 
 ### BERT
 
@@ -754,7 +572,7 @@ idea: language understanding is bidirectional while LM  only uses left or right 
 
 ![image-20240525223155163](../img/image-20240525223155163.png)
 
-### AIBERT
+### ALBERT
 
  compact Model
 
@@ -794,9 +612,9 @@ Sentence Order Prediction（SOP）
 
 SOP 目标补偿了一部分因为 embedding 和 FFN 共享而损失的性能。Bert 原版的 NSP 目标过于简单了，它把”topic prediction”和“coherence prediction”融合了起来。SOP 对其加强，将负样本换成了同一篇文章中的两个逆序的句子，进而消除“topic prediction”。
 
-### RoBERT
+### RoBERTa
 
-Dynamic masking  动态Mask
+Dynamic masking（动态 Mask）
 
 each sequence is masked in 10 different ways over the 40 epochs if training
 
@@ -868,35 +686,14 @@ predict the entire masked span using only the spans's boundary
 
 **（2）加入SBO 训练目标**
 
-Span Boundary Objective 是该论文加入的新训练目标，希望被遮盖 Span 边界的词向量，能学习到 Span 的内容。或许作者想通过这个目标，让模型在一些需要 Span 的下游任务取得更好表现。具体做法是，在训练时取 Span 前后边界的两个词，这两个词不在 Span 内，然后用这两个词向量加上 Span 中被遮盖掉词的位置向量，来预测原词。
+**SBO**：用 Span **边界**词向量 + 被 mask 词的位置向量，预测 Span 内原词（利于抽取式 QA 等）。
 
-这样做的目的是：增强了 BERT 的性能，为了让模型让模型在一些需要 Span 的下游任务取得更好表现，特别在一些与 Span 相关的任务，如抽取式问答。
+| 对比 | BERT | SpanBERT |
+| --- | --- | --- |
+| 预训练任务 | MLM + NSP | MLM + SBO，**无 NSP** |
+| Mask | 随机单 token | 随机 **连续 span**（几何分布长度） |
 
-适用于指代消解 ，**在抽取式问答上表现好**
-
-提出了**更好的 Span Mask 方案**，也再次展示了随机遮盖连续一段字要比随机遮盖掉分散字好；
-
-通过**加入 Span Boundary Objective (SBO) 训练目标**，增强了 BERT 的性能，特别在一些与 Span 相关的任务，如抽取式问答；
-
-用实验获得了和 XLNet 类似的结果，发现**不加入 Next Sentence Prediction (NSP) 任务，直接用连续一长句训练效果更好**。
-
-相同点：模型架构相同
-
-不同点：bert训练任务用了  **Masked LM，Next Sentence Prediction (NSP)**
-
-spanbert训练用了 **Masked LM，Span Boundary Objective (SBO)**
-
-**span masking**
-
-**A random process to mask spans of tokens**
-
-Single sentence training
-
-**a single contiguous segment of text for each training sample**
-
-**Span boudary objectiove  SBO**
-
-对于为什么 NSP 没有用，这里，SpanBERT 作者们给出了下面两个解释：
+对于为什么 NSP 没有用，SpanBERT 作者解释：
 
 1. 相比起两句拼接，一句长句，**模型可以获得更长上下文**（类似 XLNet 的一部分效果）；
 2. 在 NSP 的负例情况下，基于另一个文档的句子来预测词，会**给 MLM 任务带来很大噪音**。
@@ -909,13 +706,7 @@ Bert是随机mask输入序列中的字，这样能很简单地推测出字之间
 
 SpanBERT的做法是根据几何分布，先随机选择一段（span）的长度，之后再根据均匀分布随机选择这一段的起始位置，最后按照长度遮盖。文中使用几何分布取 p=0.2，最大长度只能是 10，利用此方案获得平均采样长度分布。
 
-Span Boundary Objective 是该论文加入的新训练目标，希望被遮盖 Span 边界的词向量，能学习到 Span 的内容。或许作者想通过这个目标，让模型在一些需要 Span 的下游任务取得更好表现。具体做法是，在训练时取 Span 前后边界的两个词，这两个词不在 Span 内，然后用这两个词向量加上 Span 中被遮盖掉词的位置向量，来预测原词。
-
-这样做的目的是：增强了 BERT 的性能，为了让模型让模型在一些需要 Span 的下游任务取得更好表现，特别在一些与 Span 相关的任务，如抽取式问答。
-
-**去除NSP任务**
-
-XLNet 中发现NSP不是必要的，而且两句拼接在一起使单句子不能俘获长距离的语义关系，所以作者剔除了NSP任务，直接一句长句做MLM任务和SBO任务。这样做的目的是：剔除没有必要的预训练任务，并且使模型获取更长距离的语义依赖信息。
+**去除 NSP**：单句长上下文 + MLM + SBO，与 XLNet 等结论一致——NSP 易引入主题噪声、削弱长程依赖。
 
 ### MASS
 
@@ -1123,7 +914,20 @@ chain-of-thought (Cot) 任务
 
 C4 数据集
 
-### Handing Out-of-vocabulary
+### 预训练模型对照（速查）
+
+| 模型 | 架构 | 方向 | 预训练目标 | 备注 |
+| --- | --- | --- | --- | --- |
+| GPT-1/2/3 | Transformer Decoder | 左→右 AR | CLM | GPT-2 zero-shot；GPT-3 in-context |
+| BERT | Encoder | 双向 | MLM + NSP | 理解类微调强 |
+| ALBERT | 共享层 + 因式分解 embedding | 双向 | MLM + SOP | 参数更少 |
+| RoBERTa | 同 BERT | 双向 | MLM（无 NSP） | 动态 mask、大 batch、更多数据 |
+| SpanBERT | 同 BERT | 双向 | Span MLM + SBO | 去 NSP，QA 友好 |
+| XLNet | Permutation LM | 伪双向 | AR + 排列 | 无独立 [MASK] token |
+| T5 / BART | Encoder-Decoder |  seq2seq | 文本到文本 / 去噪 | 生成与理解统一框架 |
+| ERNIE | BERT 类 | 双向 | 实体/短语 mask | 知识增强 |
+
+### OOV 与子词嵌入
 
 Typical , such words are set to the **UNK** token and are assigned the same vector ,which is an ineffective choice if the number of OOV words is large
 
@@ -1135,7 +939,7 @@ Subword Embeddings:
 
 ![image-20240525223619340](../img/image-20240525223619340.png)
 
-## task
+## NLP 任务与应用
 
 - token
 - pos 词性标注
@@ -1169,9 +973,11 @@ Subword Embeddings:
 - LSTM  + CRF
 - BERT + BILstm + CRF
 
-### 命名实体识别 Named entity Recongnitiaon
+### 命名实体识别（NER）
 
-### 句法分析 Synatic Analysis
+序列标注；常用 BiLSTM-CRF、BERT-CRF 等（见词性标注一节）。
+
+### 句法分析（Syntactic Parsing）
 
 对一个句子的词语句法做分词， 比如主谓宾
 
@@ -1216,7 +1022,7 @@ ner 识别
 
 关系抽取
 
-### 论文检索：
+### 论文检索
 
 google 学术
 
@@ -1276,7 +1082,7 @@ cs方向：  problem-Driven （对前人工作的优化）
 
 ![image-20210607102557408](../img/image-20210607102557408.png)
 
-# References:
+## 参考资料
 
 - https://www.bilibili.com/video/BV1pT4y1D7H5/?spm_id_from=333.788
 - https://zhuanlan.zhihu.com/p/580468546
