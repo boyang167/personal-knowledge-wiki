@@ -1,49 +1,61 @@
-# Dinky
+# Flink 笔记
 
-让Flink SQL 纵享丝滑
+## 目录
 
+- [Dinky 与生态](#dinky-与生态)
+- [架构与部署模式](#架构与部署模式)
+- [K8s 与作业提交模式](#k8s-与作业提交模式)
+- [Flink on K8s](#flink-on-k8s)
+- [MySQL CDC Connector](#mysql-cdc-connector)
+- [安装与本地环境](#安装与本地环境)
+- [State Backend](#state-backend)
+- [K8s Session 运维命令](#k8s-session-运维命令)
+- [PyFlink](#pyflink)
+- [参考链接](#参考链接)
 
+---
 
-https://gitee.com/642933588/jiron-cloud
-# Flink
+## Dinky 与生态
 
-https://flink.apachse.org/downloads/
+**Dinky**：Flink SQL 开发与运维平台（让 Flink SQL 纵享丝滑）。
 
-https://archive.apache.org/dist/flink/flink-1.16.1/
+- [jiron-cloud（Gitee）](https://gitee.com/642933588/jiron-cloud)
+- 常见组合：Flink + Dinky + Doris + DolphinScheduler；StreamPark、SeaTunnel、Zeppelin
 
-https://mvnrepository.com/artifact/com.ververica/flink-sql-connector-mysql-cdc/2.3.0
+### 下载与 CDC
 
-https://github.com/shaofanzhang/flink-cdc-demo
+- [Flink 下载](https://flink.apache.org/downloads/)
+- [Archive — Flink 1.16.1](https://archive.apache.org/dist/flink/flink-1.16.1/)
+- [MySQL CDC Connector 2.3.0](https://mvnrepository.com/artifact/com.ververica/flink-sql-connector-mysql-cdc/2.3.0)
+- [flink-cdc-demo](https://github.com/shaofanzhang/flink-cdc-demo)
 
-![1742023861507](image/2-flink/1742023861507.png)
+## 架构与部署模式
 
-**Client**:  提交job 的客服端
+![Flink 架构](../img/1742023861507.png)
 
-**JobManager**：  负责调度job, 并协调Task 做checkpoint ,
+| 角色 | 职责 |
+| --- | --- |
+| Client | 提交 Job 的客户端 |
+| JobManager | 调度 Job，协调 Checkpoint |
+| TaskManager | 启动时配置 Slot；每个 Slot 运行 1 个 Task（线程） |
 
-**TaskManager**: 在启动时候就设置好slot , 槽位数， 每个slot 启动1个task, task 为线程
+Flink 任务调度为**多线程模型**。
 
-Flink 的任务调度是多线程模型，
+### Standalone
 
-## 部署模式
+1. 需提前运行 Flink 集群；部署简单，适合开发/测试  
+2. 集群创建时资源总量已固定，后续作业竞争集群资源  
+3. 作业隔离性差，异常作业可能拖垮整个集群  
 
-### standalone :
+### YARN
 
-feature:
+![Flink on YARN](../img/1742028852058.png)
 
-1. 需求提前运行flink 集群， 部署简单，用于开发和测试
-2. 集群在创建时，资源重量已经确定下来，后续提交作业。竞争集群资源
-3. 作业资源隔离性差，作业相互影响，异常作业会拖垮整个flink 集群
+## K8s 与作业提交模式
 
-### yarn
+![Flink on K8s 概览](../img/1742029710472.png)
 
-![1742028852058](image/2-flink/1742028852058.png)
-
-## Flink  on kubernets
-
-![1742029710472](image/2-flink/1742029710472.png)
-
-在K8S 中有2种方式：
+在 K8s 中有两种 Flink 集群部署方式：
 
 - standalone
 - native
@@ -53,7 +65,7 @@ feature:
 - Session : 先启动1个flink 集群，然后向该集群提交任务，所有的任务公用job manager, 任务提交速度快，适合频繁提交运行短的时间任务
 - Per-job： 每提交1个任务，单独启动1个集群运行该任务，运行结束集群被删除，资源也被释放，适合长时间运行的大型任务
 
-![1742026470872](image/2-flink/1742026470872.png)
+![Flink 图示](../img/1742026470872.png)
 
 K8s 基本的架构，这是一个非常典型的 Master-Slave 的架构。
 
@@ -64,13 +76,13 @@ K8s 基本的架构，这是一个非常典型的 Master-Slave 的架构。
 2. 在 Slave 上，它主要是包括 Kube proxy、Kubelet，以及 Docker 等相关的组件，每个 Node 上部署的相关组件都是类似的，通过它来管理上面运行的多个 Pod。
 3. 根据不同用户的习惯，可以通过 UI 或者 CLI 的方式向 K8s 提交任务。用户可以通过 K8s 提供的 Dashboard Web UI 的方式将任务进行提交，也可以通过 Kubectl 命令行的方式进行提交。
 
-![1742025106669](image/2-flink/1742025106669.png)
+![Flink 图示](../img/1742025106669.png)
 
-![1742026561315](image/2-flink/1742026561315.png)
+![Flink 图示](../img/1742026561315.png)
 
 Stream Graph -> Job Graph-> Execution Graph -> 物理执行图
 
-![1742025158314](image/2-flink/1742025158314.png)
+![Flink 图示](../img/1742025158314.png)
 
 * 第一层 StreamGraph 从 Source 节点开始，每一次 transform
   生成一个 StreamNode，两个 StreamNode 通过 StreamEdge 连接在一起,形成 StreamNode 和
@@ -87,7 +99,7 @@ Stream Graph -> Job Graph-> Execution Graph -> 物理执行图
 
 1. Session 模式：
 
-![1742025450865](image/2-flink/1742025450865.png)
+![Flink 图示](../img/1742025450865.png)
 
 多个 Job 提交共享同一个 JobManager
 在 Flink Client 上生成 JobGraph
@@ -98,9 +110,9 @@ Stream Graph -> Job Graph-> Execution Graph -> 物理执行图
 
 一个Job导致的JobManager失败可能会导致所有的Job失败。
 
-2. Pre-job:
+2. Per-Job（Pre-job）：
 
-![1742025815472](image/2-flink/1742025815472.png)
+![Flink 图示](../img/1742025815472.png)
 
 为每次 Job 提交启动专用 JM，JM 将只执行此作业，然后退出。
 在 Flink Client 上生成 JobGraph
@@ -111,9 +123,9 @@ Stream Graph -> Job Graph-> Execution Graph -> 物理执行图
 
 一个Job一个Cluster实例。
 
-3. **.[Application 模式](https://zhida.zhihu.com/search?content_id=165880385&content_type=Article&match_order=1&q=Application+%E6%A8%A1%E5%BC%8F&zhida_source=entity)**
+3. **Application 模式**
 
-![1742025882072](image/2-flink/1742025882072.png)
+![Flink 图示](../img/1742025882072.png)
 
 Flink提交的程序，被当做集群内部Application，不再需要Client端做繁重的准备工作
 
@@ -123,11 +135,11 @@ main函数被提交给JobManager执行。
 
 一个Application一个Cluster实例。
 
-![1742025979520](image/2-flink/1742025979520.png)
+![Flink 图示](../img/1742025979520.png)
 
 - Standalone :
 
-![1742027167992](image/2-flink/1742027167992.png)
+![Flink 图示](../img/1742027167992.png)
 
 如图所示：
 
@@ -146,7 +158,7 @@ main函数被提交给JobManager执行。
 
 - Native kubernets Session:
 
-![1742027259386](image/2-flink/1742027259386.png)
+![Flink 图示](../img/1742027259386.png)
 
 首先 Session 的方式。
 
@@ -164,28 +176,28 @@ main函数被提交给JobManager执行。
   集群里，K8s 和 Flink Client 是不在同一个网络环境的，这时候可以通过 LoadBalancer 的方式或者 NodePort
   的方式，使 Flink Client 可以访问到 Jobmanager Dispatcher，否则 Jar 包是无法提交的。
 
-# Flink on K8s
+## Flink on K8s
 
-2种部署方式：
+两种与 K8s 集成方式：
 
 1. standalone : 需要配合 kubectl + yaml 部署，Flink 无法感知 K8s 集群的存在，资源被动
 2. native :  仅使用 flink 客户端 kubernetes-session.sh or flink run 部署，Flink 主动与 K8s 申请资源
 
-![1742637142596](image/2-flink/1742637142596.png)
+![Flink Native on K8s](../img/1742637142596.png)
 
-kubectl auth can-i delte  pods  `<list|create|edit|delete> `
-
+```bash
+kubectl auth can-i delete pods
+# 或：kubectl auth can-i create pods
 sudo yum install java-11-openjdk
+```
 
-https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.tar.gz
+[Oracle JDK 21 下载](https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.tar.gz)
 
-s
-
+```bash
 docker pull docker-0.unsee.tech/apache/flink:1.19.2-scala_2.12
+```
 
-# Flink Connector:
-
-## mysql
+## MySQL CDC Connector
 
 1. 检查 Binlog 是否启用
    ```sql
@@ -222,9 +234,9 @@ FLUSH PRIVILEGES;
 
 [SQL Connector for MySQL CDC](https://mvnrepository.com/artifact/com.ververica/flink-sql-connector-mysql-cdc/2.3.0)
 
-# install
+## 安装与本地环境
 
-提前安装好**Java 11**
+提前安装 **Java 11**（或文档要求的 JDK 版本）
 
 ```bash
     java -version
@@ -419,11 +431,11 @@ services:
   #     name: flink-network
 ```
 
-# Flink
+## State Backend
 
-State 存储方式
+State 存储方式：
 
-1. memeory state backend
+### 1. MemoryStateBackend
    MemoryStateBackend 将工作状态数据保存在 taskmanager 的 java 内存中。key/value 状态和
    window 算子使用哈希表存储数值和触发器。进行快照时（checkpointing），生成的快照数据将和 checkpoint ACK
    消息一起发送给 jobmanager，jobmanager 将收到的所有快照保存在 java 内存中。
@@ -439,11 +451,11 @@ MemoryStateBackend 适合的场景：
 * 本地开发和调试
 * 状态很小的作业
 
-![1742633400722](image/2-flink/1742633400722.png)
+![Flink 图示](../img/1742633400722.png)
 
 当触发 savepoint 时，jobmanager 会把快照数据持久化到外部存储。
 
-2. FsStateBackend
+### 2. FsStateBackend
 
 FsStateBackend 需要配置一个 checkpoint
 路径，例如“hdfs://namenode:40010/flink/checkpoints” 或者
@@ -457,74 +469,54 @@ FsStateBackend 适合的场景：
 
 * 大状态、长窗口、大键值（键或者值很大）状态的作业
 * 适合高可用方案
-  ![@FsStateBackend state 存储位置 | center](https://i-blog.csdnimg.cn/blog_migrate/60711a04871771ed7e296395075e27b0.png)
+  ![FsStateBackend 存储示意](https://i-blog.csdnimg.cn/blog_migrate/60711a04871771ed7e296395075e27b0.png)
 
-1. 全局配置状态的后端
+### 全局配置示例
 
+```properties
 state.backend: filesystem
-
 state.checkpoints.dir: file:///opt/flink/data/checkpoints
 state.savepoints.dir: file:///opt/flink/data/savepoints
-
-Flink 开源项目管理：
-
-[Zeppelin](https://zhida.zhihu.com/search?content_id=223598273&content_type=Article&match_order=1&q=Zeppelin&zhida_source=entity)
-
-[StreamPark](https://link.zhihu.com/?target=https%3A//www.oomspot.com/post/apachestreampark-flinkkaifaliqi)
-
-Flink + Dinky+ Doris+ DolphinScheduler
-
-SeaTunnel
-
-kubectl create namespace flink-session-cluster
-
-kubectl create serviceaccount flink -n flink-session-cluster
-
-kubectl create clusterrolebinding flink-role-binding-flink --clusterrole=edit --serviceaccount=flink-session-cluster:flink
-
-./bin/kubernetes-session.sh
-  -Dkubernetes.namespace=flink-session-cluster
-  -Dkubernetes.jobmanager.service-account=flink
-  -Dkubernetes.cluster-id=session001
-  -Dtaskmanager.memory.process.size=8192m
-  -Dkubernetes.taskmanager.cpu=1
-  -Dtaskmanager.numberOfTaskSlots=4
-  -Dresourcemanager.taskmanager-timeout=3600000
-
-echo 'stop' |
-  ./bin/kubernetes-session.sh
-  -Dkubernetes.namespace=flink-session-cluster
-  -Dkubernetes.cluster-id=session001
-  -Dexecution.attached=true
-
-```bash
-./bin/kubernetes-session.sh
-  -Dkubernetes.namespace=flink-session-cluster
-  -Dkubernetes.jobmanager.service-account=flink
-  -Dkubernetes.cluster-id=session001
-  -Dtaskmanager.memory.process.size=2096m
-  -Dkubernetes.taskmanager.cpu=0.5
-  -Dtaskmanager.numberOfTaskSlots=2
-  -Dresourcemanager.taskmanager-timeout=3600000
 ```
 
-./bin/kubernetes-session.sh -Dkubernetes.namespace=flink-session-cluster -Dkubernetes.jobmanager.service-account=flink -Dkubernetes.cluster-id=session001 -Dtaskmanager.memory.process.size=2096m -Dkubernetes.taskmanager.cpu=0.5 -Dtaskmanager.numberOfTaskSlots=2 -Dresourcemanager.taskmanager-timeout=3600
+## K8s Session 运维命令
 
-https://developer.aliyun.com/article/883632
+```bash
+kubectl create namespace flink-session-cluster
+kubectl create serviceaccount flink -n flink-session-cluster
+kubectl create clusterrolebinding flink-role-binding-flink --clusterrole=edit --serviceaccount=flink-session-cluster:flink
 
-# Pyflink
+# 启动 Session（示例：大内存）
+./bin/kubernetes-session.sh \
+  -Dkubernetes.namespace=flink-session-cluster \
+  -Dkubernetes.jobmanager.service-account=flink \
+  -Dkubernetes.cluster-id=session001 \
+  -Dtaskmanager.memory.process.size=8192m \
+  -Dkubernetes.taskmanager.cpu=1 \
+  -Dtaskmanager.numberOfTaskSlots=4 \
+  -Dresourcemanager.taskmanager-timeout=3600000
+
+# 停止 Session
+echo 'stop' | ./bin/kubernetes-session.sh \
+  -Dkubernetes.namespace=flink-session-cluster \
+  -Dkubernetes.cluster-id=session001 \
+  -Dexecution.attached=true
+
+# 启动 Session（示例：小资源，单行）
+./bin/kubernetes-session.sh -Dkubernetes.namespace=flink-session-cluster -Dkubernetes.jobmanager.service-account=flink -Dkubernetes.cluster-id=session001 -Dtaskmanager.memory.process.size=2096m -Dkubernetes.taskmanager.cpu=0.5 -Dtaskmanager.numberOfTaskSlots=2 -Dresourcemanager.taskmanager-timeout=3600000
+```
+
+## PyFlink
 
 - DataStream API
 - Table API
 - Event Time
 - Watermark
 
-# Reference
+## 参考链接
 
-1. https://nightlies.apache.org/flink/flink-docs-stable/zh/
-2. https://developer.aliyun.com/article/766710
-3. https://developer.aliyun.com/article/883632state.checkpoints.dir: file:///opt/flink/data/checkpoints
-4. https://blog.csdn.net/shirukai/article/details/109452700  flink on k8s
-5. https://www.cnblogs.com/wan-ming-zhu/p/18050046 flink 基本介绍
-
-state.savepoints.dir: file:///opt/flink/data/savepoints
+1. [Flink 官方文档（中文 stable）](https://nightlies.apache.org/flink/flink-docs-stable/zh/)
+2. [阿里云 — Flink 实践](https://developer.aliyun.com/article/766710)
+3. [阿里云 — K8s 相关](https://developer.aliyun.com/article/883632)
+4. [CSDN — Flink on K8s](https://blog.csdn.net/shirukai/article/details/109452700)
+5. [博客园 — Flink 基本介绍](https://www.cnblogs.com/wan-ming-zhu/p/18050046)
