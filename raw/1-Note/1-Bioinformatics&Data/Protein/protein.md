@@ -1,5 +1,3 @@
-> 生物药 CMC（细胞株—上游—下游—制剂—分析）培训摘要。图片：`../../img/`（自 `3-TechNotes/11-protein/image/protein` 迁入）。流程术语见 [Bio Business summary.md](../Bio%20Business%20summary.md)。
-
 # 生物药工艺开发笔记（Protein / CMC）
 
 ## 目录

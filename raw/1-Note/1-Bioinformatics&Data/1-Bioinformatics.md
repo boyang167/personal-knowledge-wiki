@@ -1,5 +1,19 @@
-
 # 生物信息学
+
+> 生物信息学、数据库、蛋白纯化、序列比对与 GeneCards 等综合笔记。图片：`../img/`。相关：[Bio Business summary.md](Bio%20Business%20summary.md)、[Protein/protein.md](Protein/protein.md)。
+
+## 目录
+
+- [生物信息学](#生物信息学)
+- [现代药物分离与纯化](#现代药物分离与纯化)
+- [结构免疫学](#结构免疫学)
+- [生物大数据](#生物大数据)
+- [蛋白纯化](#蛋白纯化)
+- [序列比对工具](#序列比对工具)
+- [台湾大学](#台湾大学)
+- [GeneCards 基因卡片](#genecards-基因卡片)
+
+---
 
 ## 1： 基本生物知识
 
@@ -26,7 +40,7 @@ DNA的复制：
 - 全保留复制：新复制出的分子直接形成，完全没有旧的部分
 - 半保留复制：形成的分子一半是新的，一半是旧的
 
-<img src="../img/image-20220913230545065.png" alt="image-20220913230545065" style="zoom:50%;" />
+![图示](../img/image-20220913230545065.png)
 
 dNTP :	脱氧核糖核苷酸  通过磷酸二酯键连接形成DNA链
 
@@ -48,15 +62,12 @@ main types of biological pathways :
    	3. signal transduction pathways 
 
 
-
 https://mp.weixin.qq.com/s?__biz=MzA4ODY4MDE0NA==&mid=2247527095&idx=1&sn=9b049b64b520793d4adf13c554486ef8&chksm=90245908a753d01e9e8d97d58193d20507330fc6f40cdce871b5404245632ca9fa30419ee3ce&scene=27
-
 
 
 ## 蛋白质
 
 **蛋白质的一级结构指的是蛋白质多肽链中氨基酸残基的排列顺序，包括二硫键的位置，也是蛋白质最基本的结构**
-
 
 
 蛋白质的二级结构：多肽链上的主链有规则的折叠方式，包括α-螺旋，β-折叠,β-转角 ，无规则卷曲，Ω环等。靠氢键维持
@@ -66,23 +77,19 @@ https://mp.weixin.qq.com/s?__biz=MzA4ODY4MDE0NA==&mid=2247527095&idx=1&sn=9b049b
 蛋白质的四级结构：主要靠次级键（非共价键）维持。
 
 
-
 **多态 的单字母书写：**
 
-~~~
+```
  ①多肽序列1: G T F L V R C D M A，共10个氨基酸，所有字母均是大写，则表示所有的氨基酸均是天然存在的L型氨基酸。
 ②多肽序列2：G T F L v R C d M A，共10个氨基酸，序列里面有两个氨基酸是小写，说明对应的两个氨基酸是D型氨基酸。
 ③多肽序列1：G T F L V R C D M A 也可以写成H-G T F L V R C D M A-OH，左边的H- 代表N端的氨基，右边的-OH 代表C端的羧基。不过一般通常为了美观整齐，H-和-OH同时写或同时不写。
 ④多肽序列3：G T F L V R C D M A-NH2，与多肽序列1的区别是，右边多了-NH2，代表C端酰胺化。
 
 ⑤多肽序列4：AC-G T F L V R C D M A,与多肽序列1的区别是，左边多-AC，代表N端乙酰化。
-~~~
-
+```
 **多肽的三字母书写形式**
 
-**多肽的三字母书写形式**
-
-~~~
+```
 三个字母代表一个氨基酸，并且三字母和前面提到的单字母是一一对应关系
 ①多肽序列1对应的三字母书写为：H-Gly-Thr-Phe-Leu-Val-Cys-Asp-Met-Ala-OH.
 ②多肽序列3对应的三字母书写为：H-Gly-Thr-Phe-Leu-Val-Cys-Asp-Met-Ala-NH2，C端酰胺化。
@@ -90,20 +97,16 @@ https://mp.weixin.qq.com/s?__biz=MzA4ODY4MDE0NA==&mid=2247527095&idx=1&sn=9b049b
 ③多肽序列4对应的三字母书写：Ac-Gly-Thr-Phe-Leu-Val-Cys-Asp-Met-Ala-OH左边多-Ac，代表N端乙酰化。
 
 DNA-RNA-蛋白质，并指出蛋白质是由DNA转录为RNA,再由RNA翻译成一个个氨基酸组合而成的，因此蛋白质的一级氨基酸序列信息应该包含了蛋白质三维空间结构的必要重要信息。
-~~~
-
-
-
+```
 **特殊多肽序列的书写**
 
-~~~
+```
 例如：磷酸化氨基酸的书写，
 
 ①：H-Gly-pThr-Phe-Leu-Val-Cys-Asp-Met-Ala-OH
 
 ②：H-Gly-Thr(PO3H2)-Phe-Leu-Val-Cys-Asp-Met-Ala-OH
-~~~
-
+```
 homology ： 同源
 
 similarity： 相似
@@ -115,31 +118,19 @@ similarity： 相似
 多序列：  启发式  multiple alogrithms 
 
 
-
-
-
-
-
 如两条序列的相似程度达到30%或60%。一般来说，相似性很高的两条序列往往具有同源关系。但也有例外，即两条序列的相似性很高，但它们可能并不是同源序列，这两条序列的相似性可能是由随机因素所产生的，这在进化上称为“趋同”（convergence），这样一对序列可称为**同功序列。**
 
 
-
 # 现代药物分离与纯化
-
-
-
-
-
 
 
 # 结构免疫学
 
 Structural Immunology
 
-<img src="../img/image-20230314195824419.png" alt="image-20230314195824419" style="zoom:50%;" />
+![图示](../img/image-20230314195824419.png)
 
-<img src="../img/image-20230314195952031.png" alt="image-20230314195952031" style="zoom:33%;" />
-
+![图示](../img/image-20230314195952031.png)
 
 
 ![image-20230314200013922](../img/image-20230314200013922.png)
@@ -147,19 +138,9 @@ Structural Immunology
 ![image-20230314200314814](../img/image-20230314200314814.png)
 
 
-
-
-
-
-
-
-
 # 生物大数据
 
 Locus : 基因注   
-
-
-
 
 
 ## Gene Ontology
@@ -176,7 +157,7 @@ Gene Ontology(GO) 提供目前可获得基于或基于产物的功能，是一�
 
 每个基因产物 (a protein , non-coding RNA , or macromonlucular complex) 对应的功能
 
-<img src="../img/image-20230313203956132.png" alt="image-20230313203956132" style="zoom:25%;" />
+![图示](../img/image-20230313203956132.png)
 
 Go term 类别：
 
@@ -184,38 +165,33 @@ Go term 类别：
 2. Molecular Function 分子功能 what does it do ? (MF)
 3. Cellular Componet 细胞组分 where does it act ? 
 
-<img src="../img/image-20230313204526023.png" alt="image-20230313204526023" style="zoom:25%;" />
+![图示](../img/image-20230313204526023.png)
 
-<img src="../img/image-20230313204629645.png" alt="image-20230313204629645" style="zoom:25%;" />
+![图示](../img/image-20230313204629645.png)
 
-<img src="../img/image-20230313204701461.png" alt="image-20230313204701461" style="zoom:25%;" />
-
-
-
-<img src="../img/image-20230313204945456.png" alt="image-20230313204945456" style="zoom:25%;" />
-
-<img src="../img/image-20230313205100267.png" alt="image-20230313205100267" style="zoom:33%;" />
-
-<img src="../img/image-20230313205311989.png" alt="image-20230313205311989" style="zoom: 50%;" />
+![图示](../img/image-20230313204701461.png)
 
 
+![图示](../img/image-20230313204945456.png)
 
-<img src="../img/image-20230313205502906.png" alt="image-20230313205502906" style="zoom:50%;" />![image-20230313205604554](../img/image-20230313205604554.png)
+![图示](../img/image-20230313205100267.png)
 
-<img src="../img/image-20230313205502906.png" alt="image-20230313205502906" style="zoom:50%;" />![image-20230313205604554](../img/image-20230313205604554.png)
+![图示](../img/image-20230313205311989.png)
 
-<img src="../img/image-20230313205645067.png" alt="image-20230313205645067" style="zoom:50%;" />
+
+![图示](../img/image-20230313205502906.png)![image-20230313205604554](../img/image-20230313205604554.png)
+
+![图示](../img/image-20230313205502906.png)![image-20230313205604554](../img/image-20230313205604554.png)
+
+![图示](../img/image-20230313205645067.png)
 
 ![image-20230313205737790](../img/image-20230313205737790.png)
 
-<img src="../img/image-20230313205823575.png" alt="image-20230313205823575" />
+![图示](../img/image-20230313205823575.png)
 
-<img src="../img/image-20230313210518201.png" alt="image-20230313210518201" style="zoom:33%;" />
+![图示](../img/image-20230313210518201.png)
 
 ![image-20230313210636593](../img/image-20230313210636593.png)
-
-
-
 
 
 ![image-20230313211013405](../img/image-20230313211013405.png)
@@ -225,7 +201,6 @@ biological_process
 molecualr_function
 
 Cellular Componet
-
 
 
 生信数据库
@@ -239,7 +214,6 @@ Cellular Componet
 ![image-20230504200047075](../img/image-20230504200047075.png)
 
 
-
 ![image-20230504200157139](../img/image-20230504200157139.png)
 
 ![image-20230504200251659](../img/image-20230504200251659.png)
@@ -251,15 +225,12 @@ Cellular Componet
 ![image-20230504200526115](../img/image-20230504200526115.png)
 
 
-
 ![image-20230504200624272](../img/image-20230504200624272.png)
 
 ![image-20230504200642855](../img/image-20230504200642855.png)
 
 
-
 ![image-20230504200823220](../img/image-20230504200823220.png)
-
 
 
 ![image-20230504201028759](../img/image-20230504201028759.png)
@@ -271,7 +242,6 @@ Cellular Componet
 ![image-20230504201334250](../img/image-20230504201334250.png)
 
 
-
 ![image-20230504201642470](../img/image-20230504201642470.png)
 
 ![image-20230504201725478](../img/image-20230504201725478.png)
@@ -279,23 +249,17 @@ Cellular Componet
 ![image-20230504202448788](../img/image-20230504202448788.png)
 
 
-
-
-
-## Ensemble
+## Ensembl
 
 ![image-20230505193235100](../img/image-20230505193235100.png)
 
 ![image-20230505193316543](../img/image-20230505193316543.png)
 
 
-
 ![image-20230505193327608](../img/image-20230505193327608.png)
 
 
-
 ![image-20230505193358607](../img/image-20230505193358607.png)
-
 
 
 ## UMLS
@@ -316,9 +280,7 @@ Concept Unique Identifier： 统一概念
 语义类型是分层次的,因此具有等级关系：  
 
 
-
 专家辞典及工具：SPECIALIST Lexicon
-
 
 
 超级词表：
@@ -333,8 +295,7 @@ SUI是不同术语（LUI）所拥有的不同的英语表达形式（单复数/�
 
 AUI是原词
 
-<img src="../Note/pic/image-20220706191624398.png" alt="image-20220706191624398" style="zoom:50%;" />
-
+![图示](../img/image-20220706191624398.png)
 
 
 ## UniPort 
@@ -348,17 +309,12 @@ UniProtKB 包含两类序列：
 （2）Unreviewed UniProtKB / TrEMBL entries
 
 
-
 ## SRC & MERC
-
 
 
 ## Metaclust
 
 作者用 Linclust 聚类了从2200个宏基因组和宏转录组数据集预测的15.9亿条蛋白质序列片段，获得4.24 亿个聚类，这些聚类的代表结构组成了 Metaclust 蛋白序列库。
-
-
-
 
 
 https://qinqianshan.com/bioinformatics/file_type/
@@ -367,21 +323,19 @@ https://qinqianshan.com/bioinformatics/file_type/
 
 选择合适的载体-> 重组质粒 
 
-<img src="../img/image-20230307195921856.png" alt="image-20230307195921856" style="zoom:50%;" />
+![图示](../img/image-20230307195921856.png)
 
-<img src="../img/image-20230307200052268.png" alt="image-20230307200052268" style="zoom:50%;" />
-
-
-
-<img src="../img/image-20230307200213741.png" alt="image-20230307200213741" style="zoom:50%;" />
+![图示](../img/image-20230307200052268.png)
 
 
+![图示](../img/image-20230307200213741.png)
 
-<img src="../img/image-20230307200256412.png" alt="image-20230307200256412" style="zoom:50%;" />![image-20230307200412894](../img/image-20230307200412894.png)
+
+![图示](../img/image-20230307200256412.png)![image-20230307200412894](../img/image-20230307200412894.png)
 
 ![image-20230307200428927](../img/image-20230307200428927.png)
 
-<img src="../img/image-20230307200611938.png" alt="image-20230307200611938" style="zoom:50%;" />
+![图示](../img/image-20230307200611938.png)
 
 ![image-20230307200831537](../img/image-20230307200831537.png)
 
@@ -403,13 +357,10 @@ https://qinqianshan.com/bioinformatics/file_type/
 
 ## 色谱方法
 
-~~~
+```
 https://zhuanlan.zhihu.com/p/96734920
 
-~~~
-
-
-
+```
 色谱法利用不同物质在不同相态的选择性分配，以**流动相**对**固定相**中的混合物进行洗脱，混合物中不同的物质会以不同的速度沿固定相移动，最终达到分离的效果。”简而言之，可以把流动相理解为**动力**来源，固定相理解为**阻力**来源，由于物质性质不同，在固定相的影响下通过柱子的时间不同，就能挨个分离检测了
 
 ▪ 固定相：在色谱分离中固定不动，对样品产生保留的一相。
@@ -423,13 +374,11 @@ https://zhuanlan.zhihu.com/p/96734920
 ▪ 固定相：气－固、气－液；液－固、液－液
 
 
-
 **按固定相的形式分类**
 
 ▪ 柱色谱：填充柱色谱、毛细管柱色谱、微填充柱色谱、制备色谱
 
 ▪ 平面色谱：纸色谱、薄层色谱、高分子膜色谱
-
 
 
 **按分离机制分类**
@@ -447,99 +396,88 @@ https://zhuanlan.zhihu.com/p/96734920
 ▪ 手性色谱：用于手性药物的分离分析，可分为三类：手性衍生化试剂法；手性流动相添加剂法；手性固定相拆分法
 
 
+![图示](../img/image-20230312101838426.png)![图示](../img/image-20230312101938038.png)![图示](../img/image-20230312101838426.png)![图示](../img/image-20230312101938038.png)
 
-<img src="../img/image-20230312101838426.png" alt="image-20230312101838426" style="zoom: 33%;" /><img src="../img/image-20230312101938038.png" alt="image-20230312101938038" style="zoom:50%;" /><img src="../img/image-20230312101838426.png" alt="image-20230312101838426" style="zoom: 33%;" /><img src="../img/image-20230312101938038.png" alt="image-20230312101938038" style="zoom:50%;" />
+![图示](../img/image-20230312102051995.png)
 
-<img src="../img/image-20230312102051995.png" alt="image-20230312102051995" style="zoom:33%;" />
-
-<img src="../img/image-20230312102209582.png" alt="image-20230312102209582" />
-
+![图示](../img/image-20230312102209582.png)
 
 
 ![image-20230312102333154](../img/image-20230312102333154.png)
 
 ![image-20230312102610866](../img/image-20230312102610866.png)
 
-<img src="../img/image-20230312102712030.png" alt="image-20230312102712030" style="zoom:50%;" />
+![图示](../img/image-20230312102712030.png)
 
-<img src="../img/image-20230312102748090.png" alt="image-20230312102748090" style="zoom:25%;" />
+![图示](../img/image-20230312102748090.png)
 
-<img src="../img/image-20230312102819612.png" alt="image-20230312102819612" style="zoom:25%;" />![image-20230312102851935](../img/image-20230312102851935.png)
+![图示](../img/image-20230312102819612.png)![image-20230312102851935](../img/image-20230312102851935.png)
 
-<img src="../img/image-20230312102917754.png" alt="image-20230312102917754" style="zoom:25%;" />
+![图示](../img/image-20230312102917754.png)
 
-<img src="../img/image-20230312102938532.png" alt="image-20230312102938532" style="zoom:25%;" />
+![图示](../img/image-20230312102938532.png)
 
-<img src="../img/image-20230312103015532.png" alt="image-20230312103015532" style="zoom:25%;" />![image-20230312103033411](../img/image-20230312103033411.png)
+![图示](../img/image-20230312103015532.png)![图示](../img/image-20230312103033411.png)
 
-![image-20230312103033411](../img/image-20230312103033411.png)
+![图示](../img/image-20230312103105948.png)
 
-<img src="../img/image-20230312103105948.png" alt="image-20230312103105948" style="zoom:25%;" />
+![图示](../img/image-20230312103142711.png)
 
-<img src="../img/image-20230312103142711.png" alt="image-20230312103142711" style="zoom:25%;" />
-
-<img src="../img/image-20230312103205716.png" alt="image-20230312103205716" style="zoom:25%;" />
+![图示](../img/image-20230312103205716.png)
 
 
+![图示](../img/image-20230312103255097.png)
 
-<img src="../img/image-20230312103255097.png" alt="image-20230312103255097" style="zoom:25%;" />
+![图示](../img/image-20230312103341118.png)
 
-<img src="../img/image-20230312103341118.png" alt="image-20230312103341118" style="zoom:25%;" />
+![图示](../img/image-20230312103412372.png)
 
-<img src="../img/image-20230312103412372.png" alt="image-20230312103412372" style="zoom:25%;" />
+![图示](../img/image-20230312103504162.png)![image-20230312103540802](../img/image-20230312103540802.png)
 
-<img src="../img/image-20230312103504162.png" alt="image-20230312103504162" style="zoom:33%;" />![image-20230312103540802](../img/image-20230312103540802.png)
+![图示](../img/image-20230312103540802.png)
 
-<img src="../img/image-20230312103540802.png" alt="image-20230312103540802" style="zoom:50%;" />
-
-<img src="../img/image-20230312103629806.png" alt="image-20230312103629806" style="zoom:33%;" />
-
+![图示](../img/image-20230312103629806.png)
 
 
-<img src="../img/image-20230312103648210.png" alt="image-20230312103648210" style="zoom:33%;" />![image-20230312103747689](../img/image-20230312103747689.png)
+![图示](../img/image-20230312103648210.png)![image-20230312103747689](../img/image-20230312103747689.png)
 
-<img src="../img/image-20230312103826831.png" alt="image-20230312103826831" style="zoom:50%;" />
-
-
-
-<img src="../img/image-20230312103902563.png" alt="image-20230312103902563" style="zoom:50%;" />
-
-<img src="../img/image-20230312103952011.png" alt="image-20230312103952011" style="zoom:33%;" />
-
-<img src="../img/image-20230312104008206.png" alt="image-20230312104008206" style="zoom:33%;" />
+![图示](../img/image-20230312103826831.png)
 
 
+![图示](../img/image-20230312103902563.png)
 
-<img src="../img/image-20230312104124580.png" alt="image-20230312104124580" style="zoom:50%;" />
+![图示](../img/image-20230312103952011.png)
+
+![图示](../img/image-20230312104008206.png)
+
+
+![图示](../img/image-20230312104124580.png)
 
 ![image-20230312104245621](../img/image-20230312104245621.png)
 
-<img src="../img/image-20230312104326304.png" alt="image-20230312104326304" style="zoom: 33%;" />![image-20230312104426626](../img/image-20230312104426626.png)
+![图示](../img/image-20230312104326304.png)![image-20230312104426626](../img/image-20230312104426626.png)
 
-<img src="../img/image-20230312104458005.png" alt="image-20230312104458005" style="zoom:33%;" />
+![图示](../img/image-20230312104458005.png)
 
 ![image-20230312104834503](../img/image-20230312104834503.png)
 
 ![image-20230312104901459](../img/image-20230312104901459.png)
 
 
-
 ## 重组蛋白
 
-<img src="../img/image-20230314202920292.png" alt="image-20230314202920292" style="zoom:33%;" />
+![图示](../img/image-20230314202920292.png)
 
 
+![图示](../img/image-20230314202942346.png)
 
-<img src="../img/image-20230314202942346.png" alt="image-20230314202942346" style="zoom:50%;" />
+![图示](../img/image-20230314203015650.png)
 
-<img src="../img/image-20230314203015650.png" alt="image-20230314203015650" style="zoom:25%;" />
+![图示](../img/image-20230314203033828.png)
 
-<img src="../img/image-20230314203033828.png" alt="image-20230314203033828" style="zoom:33%;" />
-
-<img src="../img/image-20230314203100289.png" alt="image-20230314203100289" style="zoom:33%;" />
+![图示](../img/image-20230314203100289.png)
 
 ![image-20230314203132004](../img/image-20230314203132004.png)
-
 
 
 ![image-20230314203206173](../img/image-20230314203206173.png)
@@ -548,22 +486,20 @@ https://zhuanlan.zhihu.com/p/96734920
 
 ![image-20230314203337073](../img/image-20230314203337073.png)
 
-<img src="../img/image-20230314203439737.png" alt="image-20230314203439737" style="zoom:50%;" />
+![图示](../img/image-20230314203439737.png)
 
 ![image-20230314203505442](../img/image-20230314203505442.png)
 
 ![image-20230314203521424](../img/image-20230314203521424.png)
 
 
-
 ![image-20230314203540106](../img/image-20230314203540106.png)
 
 ![image-20230314203632186](../img/image-20230314203632186.png)
 
-<img src="../img/image-20230314203647025.png" alt="image-20230314203647025" style="zoom:33%;" />
+![图示](../img/image-20230314203647025.png)
 
 ![image-20230314203720802](../img/image-20230314203720802.png)
-
 
 
 ![image-20230314203734710](../img/image-20230314203734710.png)
@@ -573,9 +509,7 @@ https://zhuanlan.zhihu.com/p/96734920
 ![image-20230314203813397](../img/image-20230314203813397.png)
 
 
-
 ![image-20230314203901015](../img/image-20230314203901015.png)
-
 
 
 ![image-20230314203942901](../img/image-20230314203942901.png)
@@ -585,14 +519,11 @@ https://zhuanlan.zhihu.com/p/96734920
 ![image-20230314204054315](../img/image-20230314204054315.png)
 
 
-
 ![image-20230314204110879](../img/image-20230314204110879.png)
 
-<img src="../img/image-20230314204143530.png" alt="image-20230314204143530" style="zoom:33%;" />
+![图示](../img/image-20230314204143530.png)
 
-<img src="../img/image-20230314204220350.png" alt="image-20230314204220350" style="zoom:50%;" />![image-20230314204253683](../img/image-20230314204253683.png)
-
-![image-20230314204253683](../img/image-20230314204253683.png)
+![图示](../img/image-20230314204220350.png)![图示](../img/image-20230314204253683.png)
 
 ![image-20230314204446406](../img/image-20230314204446406.png)
 
@@ -603,19 +534,16 @@ https://zhuanlan.zhihu.com/p/96734920
 ![image-20230314204638808](../img/image-20230314204638808.png)
 
 
-
 ![image-20230314204709402](../img/image-20230314204709402.png)
 
 
-
-<img src="../img/image-20230314204749794.png" alt="image-20230314204749794" style="zoom:50%;" />
+![图示](../img/image-20230314204749794.png)
 
 ![image-20230314204823017](../img/image-20230314204823017.png)
 
 ![image-20230314204917719](../img/image-20230314204917719.png)
 
 ![image-20230314204939608](../img/image-20230314204939608.png)
-
 
 
 ![image-20230314204953129](../img/image-20230314204953129.png)
@@ -627,11 +555,9 @@ https://zhuanlan.zhihu.com/p/96734920
 ![image-20230314205523960](../img/image-20230314205523960.png)
 
 
-
 ![image-20230314205553947](../img/image-20230314205553947.png)
 
 ![image-20230314205701629](../img/image-20230314205701629.png)
-
 
 
 ![image-20230314205918779](../img/image-20230314205918779.png)
@@ -649,7 +575,6 @@ https://zhuanlan.zhihu.com/p/96734920
 ![image-20230314210225352](../img/image-20230314210225352.png)
 
 
-
 ![image-20230314210304970](../img/image-20230314210304970.png)
 
 ![image-20230314210317749](../img/image-20230314210317749.png)
@@ -661,7 +586,6 @@ https://zhuanlan.zhihu.com/p/96734920
 ![image-20230314210631041](../img/image-20230314210631041.png)
 
 
-
 ![image-20230314210659825](../img/image-20230314210659825.png)
 
 ![image-20230314210735427](../img/image-20230314210735427.png)
@@ -669,15 +593,9 @@ https://zhuanlan.zhihu.com/p/96734920
 ![image-20230314210806451](../img/image-20230314210806451.png)
 
 
-
-
-
-
-
 ![image-20230314210832461](../img/image-20230314210832461.png)
 
 ![image-20230314210851503](../img/image-20230314210851503.png)
-
 
 
 ![image-20230314210908516](../img/image-20230314210908516.png)
@@ -689,15 +607,10 @@ https://zhuanlan.zhihu.com/p/96734920
 ![image-20230314210945939](../img/image-20230314210945939.png)
 
 
-
 ![image-20230314210959493](../img/image-20230314210959493.png)
 
 
-
 ![image-20230314211012913](../img/image-20230314211012913.png)
-
-
-
 
 
 ![image-20230314211025545](../img/image-20230314211025545.png)
@@ -705,11 +618,9 @@ https://zhuanlan.zhihu.com/p/96734920
 ![image-20230314211047066](../img/image-20230314211047066.png)
 
 
-
 ![image-20230314211104354](../img/image-20230314211104354.png)
 
 ![image-20230314211118156](../img/image-20230314211118156.png)
-
 
 
 ![image-20230314211134244](../img/image-20230314211134244.png)
@@ -719,7 +630,6 @@ https://zhuanlan.zhihu.com/p/96734920
 ![image-20230314211222459](../img/image-20230314211222459.png)
 
 ![image-20230314211240985](../img/image-20230314211240985.png)
-
 
 
 ![image-20230314211259117](../img/image-20230314211259117.png)
@@ -735,17 +645,12 @@ https://zhuanlan.zhihu.com/p/96734920
 ![image-20230314211430719](../img/image-20230314211430719.png)
 
 
-
-
-
 ![image-20230314211444616](../img/image-20230314211444616.png)
 
 ![image-20230314211500289](../img/image-20230314211500289.png)
 
 
-
 ![image-20230314211528811](../img/image-20230314211528811.png)
-
 
 
 ![image-20230315211426259](../img/image-20230315211426259.png)
@@ -757,11 +662,9 @@ https://zhuanlan.zhihu.com/p/96734920
 ![image-20230315211611501](../img/image-20230315211611501.png)
 
 
-
 ![image-20230315211646402](../img/image-20230315211646402.png)
 
 ![image-20230315211703767](../img/image-20230315211703767.png)
-
 
 
 ![image-20230315211806919](../img/image-20230315211806919.png)
@@ -769,13 +672,10 @@ https://zhuanlan.zhihu.com/p/96734920
 ![image-20230315211850468](../img/image-20230315211850468.png)
 
 
-
 ![image-20230315212001204](../img/image-20230315212001204.png)
 
 
-
 ![image-20230315212041374](../img/image-20230315212041374.png)
-
 
 
 ![image-20230315212058469](../img/image-20230315212058469.png)
@@ -783,9 +683,7 @@ https://zhuanlan.zhihu.com/p/96734920
 ![image-20230315212111636](../img/image-20230315212111636.png)
 
 
-
 ![image-20230315212126753](../img/image-20230315212126753.png)
-
 
 
 ![image-20230315212210557](../img/image-20230315212210557.png)
@@ -795,15 +693,12 @@ https://zhuanlan.zhihu.com/p/96734920
 ![image-20230315212255163](../img/image-20230315212255163.png)
 
 
-
 ![image-20230315212313143](../img/image-20230315212313143.png)
 
 ![image-20230315212336532](../img/image-20230315212336532.png)
 
 
-
 ![image-20230315212358796](../img/image-20230315212358796.png)
-
 
 
 ![image-20230315212431517](../img/image-20230315212431517.png)
@@ -811,9 +706,7 @@ https://zhuanlan.zhihu.com/p/96734920
 ![image-20230315212459993](../img/image-20230315212459993.png)
 
 
-
 ![image-20230315212535802](../img/image-20230315212535802.png)
-
 
 
 ![image-20230315212559067](../img/image-20230315212559067.png)
@@ -821,23 +714,18 @@ https://zhuanlan.zhihu.com/p/96734920
 ![image-20230315212615274](../img/image-20230315212615274.png)
 
 
-
 ph > pi 值， 带负电
 
 < pi 值 ，带正电
 
 
-
 ![image-20230315212639878](../img/image-20230315212639878.png)
-
 
 
 ![image-20230315213155374](../img/image-20230315213155374.png)
 
 
-
 ![image-20230315213255029](../img/image-20230315213255029.png)
-
 
 
 ![image-20230315213315335](../img/image-20230315213315335.png)
@@ -845,7 +733,6 @@ ph > pi 值， 带负电
 ![image-20230315213456799](../img/image-20230315213456799.png)
 
 ![image-20230315213528479](../img/image-20230315213528479.png)
-
 
 
 ![image-20230315213603800](../img/image-20230315213603800.png)
@@ -859,7 +746,6 @@ ph > pi 值， 带负电
 ![image-20230315213712292](../img/image-20230315213712292.png)
 
 
-
 ![image-20230315213730298](../img/image-20230315213730298.png)
 
 ![image-20230315213748572](../img/image-20230315213748572.png)
@@ -867,11 +753,9 @@ ph > pi 值， 带负电
 ![image-20230315213758944](../img/image-20230315213758944.png)
 
 
-
 ![image-20230315213813654](../img/image-20230315213813654.png)
 
 ![image-20230315213831353](../img/image-20230315213831353.png)
-
 
 
 ![image-20230315213912333](../img/image-20230315213912333.png)
@@ -879,23 +763,16 @@ ph > pi 值， 带负电
 ![image-20230315213949916](../img/image-20230315213949916.png)
 
 
-
-
-
 ![image-20230315214610025](../img/image-20230315214610025.png)
-
 
 
 ![image-20230315214703523](../img/image-20230315214703523.png)
 
 
-
 ![image-20230315214812624](../img/image-20230315214812624.png)
 
 
-
 ![image-20230315214839378](../img/image-20230315214839378.png)
-
 
 
 ![image-20230315214903663](../img/image-20230315214903663.png)
@@ -903,7 +780,6 @@ ph > pi 值， 带负电
 ![image-20230315215015297](../img/image-20230315215015297.png)
 
 ![image-20230315215127267](../img/image-20230315215127267.png)
-
 
 
 ![image-20230315215211502](../img/image-20230315215211502.png)
@@ -915,7 +791,6 @@ ph > pi 值， 带负电
 ![image-20230315215330323](../img/image-20230315215330323.png)
 
 
-
 ![image-20230315215409472](../img/image-20230315215409472.png)
 
 ![image-20230315215513061](../img/image-20230315215513061.png)
@@ -923,9 +798,7 @@ ph > pi 值， 带负电
 ![image-20230315215530828](../img/image-20230315215530828.png)
 
 
-
 ![image-20230315215545353](../img/image-20230315215545353.png)
-
 
 
 ![image-20230315215636372](../img/image-20230315215636372.png)
@@ -933,23 +806,10 @@ ph > pi 值， 带负电
 ![image-20230315215657043](../img/image-20230315215657043.png)
 
 
-
 ![image-20230315215744552](../img/image-20230315215744552.png)
 
 
-
 ![image-20230315215808744](../img/image-20230315215808744.png)
-
-
-
-
-
-
-
-
-
-
-
 
 
 ![image-20230315220344900](../img/image-20230315220344900.png)
@@ -957,9 +817,7 @@ ph > pi 值， 带负电
 ![image-20230315220514189](../img/image-20230315220514189.png)
 
 
-
 ![image-20230315220553013](../img/image-20230315220553013.png)
-
 
 
 ![image-20230315220730017](../img/image-20230315220730017.png)
@@ -967,31 +825,22 @@ ph > pi 值， 带负电
 ![image-20230315220818388](../img/image-20230315220818388.png)
 
 
-
 ![image-20230315220836327](../img/image-20230315220836327.png)
-
 
 
 ![image-20230315220857007](../img/image-20230315220857007.png)
 
 
-
 ![image-20230315220908354](../img/image-20230315220908354.png)
-
 
 
 ![image-20230315220940395](../img/image-20230315220940395.png)
 
 
-
-
-
 ![image-20230315221011241](../img/image-20230315221011241.png)
 
 
-
 ![image-20230315221044517](../img/image-20230315221044517.png)
-
 
 
 ![image-20230315221113302](../img/image-20230315221113302.png)
@@ -999,15 +848,10 @@ ph > pi 值， 带负电
 ![image-20230315221303593](../img/image-20230315221303593.png)
 
 
-
-
-
 ![image-20230315221416552](../img/image-20230315221416552.png)
 
 
-
 ![image-20230315221446927](../img/image-20230315221446927.png)
-
 
 
 ![image-20230315221601228](../img/image-20230315221601228.png)
@@ -1017,13 +861,7 @@ ph > pi 值， 带负电
 ![image-20230315222821438](../img/image-20230315222821438.png)
 
 
-
-
-
 ![image-20230315222910076](../img/image-20230315222910076.png)
-
-
-
 
 
 ## 抗体纯化
@@ -1037,13 +875,11 @@ ph > pi 值， 带负电
 ![image-20230320204735462](../img/image-20230320204735462.png)
 
 
-
 ![image-20230320205200178](../img/image-20230320205200178.png)
 
 ![image-20230320205306754](../img/image-20230320205306754.png)
 
 ![image-20230320205610689](../img/image-20230320205610689.png)
-
 
 
 ![image-20230320205716291](../img/image-20230320205716291.png)
@@ -1063,11 +899,9 @@ Ecoli 大肠杆菌 ： 原核细胞
 ![image-20230320211222595](../img/image-20230320211222595.png)
 
 
-
 **Capto MMC一步层析过程可以有效将半抗体以及同源二聚体相互分离**
 
 ，**混合模式层析对轻链缺失副产物也有较好的去除效果**
-
 
 
 half antobody 
@@ -1084,18 +918,14 @@ https://mp.weixin.qq.com/s?__biz=MjM5NTI3MDE0NQ==&mid=2653706529&idx=3&sn=dbb85f
 
 ## 蛋白质纯化
 
-<img src="../img/image-20230312111144894.png" alt="image-20230312111144894" style="zoom:33%;" />
-
+![图示](../img/image-20230312111144894.png)
 
 
 ![image-20230312111312013](../img/image-20230312111312013.png)
 
-<img src="../img/image-20230312111338032.png" alt="image-20230312111338032" />
+![图示](../img/image-20230312111338032.png)
 
-<img src="../img/image-20230312111422410.png" alt="image-20230312111422410" style="zoom:33%;" />
-
-
-
+![图示](../img/image-20230312111422410.png)
 
 
 亲和层析  （Affinity chromatography ）
@@ -1133,14 +963,7 @@ https://mp.weixin.qq.com/s?__biz=MjM5NTI3MDE0NQ==&mid=2653706529&idx=3&sn=dbb85f
 ProteinA
 
 
-
-
-
-
-
-
-
-~~~
+```
 蛋白纯化: 主要利用不同蛋白之间的内在相似性与差异
 蛋白： 大小，形状，电荷，疏水性，溶解度和生物活性
 电荷：  离子交换 IEX 
@@ -1172,8 +995,7 @@ ProteinA
 柱效： 表明层析柱的性能，层析柱的柱效应应该固定间隔时间进行检测，通过检测理论塔板数和峰形对称性，可表明柱效。
 
 
-~~~
-
+```
 ~~~markdown
 E.Coli 表达 纯化 （宿主）
 
@@ -1199,15 +1021,13 @@ E.Coli 表达 纯化 （宿主）
 诱导表达 -> 收集菌体-> 超声波破摔-> 收集上清液体（可溶性蛋白）-> 过亲和柱-> 过凝胶柱或超滤膜->蛋白分析
 
 
-
 蛋白镍柱纯化全过程，从镍柱再生，到洗脱蛋白，配蛋白胶，制样上样，跑蛋白定量胶，蛋白胶染色脱色
 
 
-~~~
-
+```
 SDS-PAGE 电泳
 
-~~~
+```
 SDS： 
 断裂分子内和分子间的氢键
 破坏蛋白质的二级和三级结构
@@ -1222,44 +1042,29 @@ B-ME：
 
 running buffer 
 
-~~~
-
-
-
-
-
-
-
+```
 ![image-20230214202334646](../img/image-20230214202334646.png)
 
 ![image-20230214202410459](../img/image-20230214202410459.png)
 
 
-
-
-
-~~~
+```
 标签蛋白：
 融合蛋白 fusion protein , 加在重组蛋白的N段或者C端，可以提高目标蛋白产量或赋予其一些新的特征
 标签：  大小	 亲和介质
 
 
-~~~
-
+```
 ![image-20230214210447662](../img/image-20230214210447662.png)
 
-~~~
+```
 EDTA Tris DTT 
-~~~
-
-
-
+```
 ![image-20230214211821000](../img/image-20230214211821000.png)
 
 ![image-20230214212018320](../img/image-20230214212018320.png)
 
 ![image-20230214212321916](../img/image-20230214212321916.png)
-
 
 
 ![image-20230214212430553](../img/image-20230214212430553.png)
@@ -1271,14 +1076,12 @@ EDTA Tris DTT
 ![image-20230214213208760](../img/image-20230214213208760.png)
 
 
-
 ![image-20230214213742918](../img/image-20230214213742918.png)
-
 
 
 柱体，填料
 
-~~~
+```
 纯化填料：
 非吸附类填料（裸球） 分子筛填料  sephadex sephacry1 sepharose super 
 吸附类填料（裸球+配基） 
@@ -1288,23 +1091,16 @@ EDTA Tris DTT
 多模式层析： 
 
 
-
-~~~
-
-
-
-~~~
+```
+```
 蛋白质：
 天然蛋白
 纯化蛋白
 
-~~~
-
-
-
+```
 AKTA 
 
-~~~
+```
 控制面板
 混合池
 系统泵
@@ -1324,10 +1120,8 @@ buffer out
 混合池 M9 
 
 
-
-~~~
-
-~~~
+```
+```
 层析介质的“皇冠之珠”——令人爱恨交加的Protein A
 
 生物大分子的层析方法主要分为亲和，离子交换，疏水作用及体积排阻。亲和层析是利用介质上的配基与目标蛋白分子有特异性结合，而对其它的蛋白质及杂质不吸附，因此杂质从层析柱中流出，被吸附的目标生物分子通过改变洗脱液的条件使被分离物质与配基解吸附，即可达到分离纯化的目的。亲和层析无疑是最理想的层析分离方法，其与其它分离方法如离子交换、疏水、体积排阻等最大的不同是由于亲和层析只与目标生物分子发生专一性吸附，其它杂质都不吸附，因此亲和层析分离纯化的工艺条件与杂质的组成及含量多少关系不大，从而大大简化亲和分离工艺开发方法，而其它分离方法如离子交换、疏水、体积排阻等都是基于目标分子跟杂质分子之间的大小，电荷及疏水强度的差异来分离的，因此即使分离纯化同样的目标分子，但不同样品的杂质组分不同，含量不同，纯化工艺方法就需要重新调整。
@@ -1346,7 +1140,6 @@ ProteinA结构及作用机制:
 ProteinA蛋白是金黄色葡萄球菌细胞壁锚钉蛋白，其C端为细胞壁结合区域，抗体结合区域包括五个同源区域（E、D、A、B、C，N端顺序）。五个domain的序列同源率65-90%（图1）。
 
 
-
 https://www.instrument.com.cn/news/20211231/602744.shtml
 
 https://www.zhihu.com/search?type=content&q=Protein%20A%20
@@ -1354,24 +1147,14 @@ https://www.zhihu.com/search?type=content&q=Protein%20A%20
 MabSelectSure是一种亲和层析技术中的固定相，用于单克隆抗体（mAb）的纯化。 MabSelectSure由GE HealthCare公司生产，可以有效地纯化大规模的mAb，包括重组单克隆抗体和嵌合单克隆抗体等。该技术利用特定的亲和层析树脂和mAb之间的亲和力，选择性地从混合物中分离并纯化目标蛋白。MabSelectSure的优点包括高亲和力、高纯化效率、低非特异性吸附、高稳定性、低毒性等。MabSelectSure已被广泛应用于mAb研究和生产领域，有助于提高mAb的质量、纯度和产量。
 
 
+**试剂 — Triton X-114**
 
-
-
-
-~~~
-
-试剂
-
-~~~
 Triton X-114：
 1：内毒素主要成分是脂多糖LPS,114是一种离子型表面活性剂，4‘C与水互溶，与LPS充分结合，25 ‘C把结合的LPS从水中析出。
 Triton X-114是一种非离子表面活性剂，常用于生物化学和分子生物学中的蛋白质分离和纯化过程中。 它是一种温和的溶剂，能够解析膜蛋白和其他蛋白质复合物，特别是那些与细胞膜或膜相关的蛋白质。 Triton X-114可以通过其温度敏感的相分离性质，实现膜蛋白和水溶性蛋白的分离。在不同温度下调整 Triton X-114 溶液的相分离性，可以获得纯度更高的蛋白质分离物，并可以去除大部分非蛋白质污染物，如脂类等。
 2：Triton X-114 在一些实验中也被用作裂解细胞膜和上清液中的膜蛋白。
 
-~~~
-
-
-
+```
 # 序列比对工具
 
 ## MMSeqs
@@ -1389,17 +1172,10 @@ MMSeqs 的全称是 **m**any-against-**m**any **seq**uences **s**earching， 意
 **blo**ck **su**bstitution **m**atrix ,氨基酸替换打分矩阵
 
 
-
 ## FAMSA
 
 
-
-
-
 我们的讨论都局限于如何处理序列（比较相似度、排列对齐、聚类），获得的是 MSA，
-
-
-
 
 
 https://zhuanlan.zhihu.com/p/423064843#:~:text=%E6%88%91%E8%AF%B4%E7%9A%84%E5%BD%93%E7%84%B6%E6%98%AF%20AlphaFold2%20%E6%89%80%E4%BD%BF%E7%94%A8%E7%9A%84%E8%9B%8B%E7%99%BD%E8%B4%A8%E5%BA%8F%E5%88%97%E6%95%B0%E6%8D%AE%E5%BA%93%20Big%20Fantastic%20Database%20%EF%BC%88BFD%EF%BC%89%EF%BC%8C%E6%88%91%E5%8F%AB%E5%AE%83%E2%80%9C%20%E5%A4%A7%E8%B6%85%E5%87%A1,%E2%80%9D%E3%80%82%20AlphaFold2%20%E6%A8%A1%E5%9E%8B%E7%9A%84%E6%95%B0%E6%8D%AE%E5%9F%BA%E7%A1%80%E6%98%AF%E7%B2%BE%E5%BF%83%E9%80%89%E6%8B%A9%E3%80%81%E8%B0%83%E8%AF%95%E7%9A%84%E5%BA%8F%E5%88%97%E5%BA%93%E5%92%8C%E4%B8%89%E7%BB%B4%E7%BB%93%E6%9E%84%E5%BA%93%EF%BC%8C%20%E5%A4%A7%E8%B6%85%E5%87%A1%20%E5%B0%B1%E6%98%AF%E7%94%B1%E6%96%87%E7%AB%A0%E7%9A%84%E7%AC%AC25%E4%BD%9C%E8%80%85%20Martin%20Steinegger%20%EF%BC%88M.S.%EF%BC%89%E6%9E%84%E5%BB%BA%E7%9A%84%E5%BA%8F%E5%88%97%E6%95%B0%E6%8D%AE%E5%BA%93%E3%80%82
@@ -1409,7 +1185,6 @@ https://zhuanlan.zhihu.com/p/423064843#:~:text=%E6%88%91%E8%AF%B4%E7%9A%84%E5%BD
 **蛋白质的一级结构指的是蛋白质多肽链中氨基酸残基的排列顺序，包括二硫键的位置，也是蛋白质最基本的结构**
 
 
-
 蛋白质的二级结构：多肽链上的主链有规则的折叠方式，包括α-螺旋，β-折叠,β-转角 ，无规则卷曲，Ω环等。靠氢键维持
 
 蛋白质的三级结构：是在二级结构的基础上进一步盘绕、折叠形成。是蛋白质分子处于它的天然折叠状态的三维构象，其主要靠氨基酸侧链之间的疏水作用力、氢键、范德华力和静电作用来维持（非共价键）。
@@ -1417,23 +1192,19 @@ https://zhuanlan.zhihu.com/p/423064843#:~:text=%E6%88%91%E8%AF%B4%E7%9A%84%E5%BD
 蛋白质的四级结构：主要靠次级键（非共价键）维持。
 
 
-
 **多态 的单字母书写：**
 
-~~~
+```
  ①多肽序列1: G T F L V R C D M A，共10个氨基酸，所有字母均是大写，则表示所有的氨基酸均是天然存在的L型氨基酸。
 ②多肽序列2：G T F L v R C d M A，共10个氨基酸，序列里面有两个氨基酸是小写，说明对应的两个氨基酸是D型氨基酸。
 ③多肽序列1：G T F L V R C D M A 也可以写成H-G T F L V R C D M A-OH，左边的H- 代表N端的氨基，右边的-OH 代表C端的羧基。不过一般通常为了美观整齐，H-和-OH同时写或同时不写。
 ④多肽序列3：G T F L V R C D M A-NH2，与多肽序列1的区别是，右边多了-NH2，代表C端酰胺化。
 
 ⑤多肽序列4：AC-G T F L V R C D M A,与多肽序列1的区别是，左边多-AC，代表N端乙酰化。
-~~~
-
+```
 **多肽的三字母书写形式**
 
-**多肽的三字母书写形式**
-
-~~~
+```
 三个字母代表一个氨基酸，并且三字母和前面提到的单字母是一一对应关系
 ①多肽序列1对应的三字母书写为：H-Gly-Thr-Phe-Leu-Val-Cys-Asp-Met-Ala-OH.
 ②多肽序列3对应的三字母书写为：H-Gly-Thr-Phe-Leu-Val-Cys-Asp-Met-Ala-NH2，C端酰胺化。
@@ -1441,27 +1212,21 @@ https://zhuanlan.zhihu.com/p/423064843#:~:text=%E6%88%91%E8%AF%B4%E7%9A%84%E5%BD
 ③多肽序列4对应的三字母书写：Ac-Gly-Thr-Phe-Leu-Val-Cys-Asp-Met-Ala-OH左边多-Ac，代表N端乙酰化。
 
 DNA-RNA-蛋白质，并指出蛋白质是由DNA转录为RNA,再由RNA翻译成一个个氨基酸组合而成的，因此蛋白质的一级氨基酸序列信息应该包含了蛋白质三维空间结构的必要重要信息。
-~~~
-
-
-
+```
 **特殊多肽序列的书写**
 
-~~~
+```
 例如：磷酸化氨基酸的书写，
 
 ①：H-Gly-pThr-Phe-Leu-Val-Cys-Asp-Met-Ala-OH
 
 ②：H-Gly-Thr(PO3H2)-Phe-Leu-Val-Cys-Asp-Met-Ala-OH
-~~~
-
-
-
+```
 ## AlphaFold
 
 的特征提取包含了**序列特征**和**序列平方特征**两大部分。
 
-~~~
+```
 序列特征是长度和原始输入序列相同的，包括了one-hot[3]的氨基酸种类特征（21维）,HHblit[4]特征（22维），MSA[2]特征等等
 
 1:了one-hot[3]的氨基酸种类特征
@@ -1471,12 +1236,7 @@ DNA-RNA-蛋白质，并指出蛋白质是由DNA转录为RNA,再由RNA翻译成�
 抽取这个特征的原因是类似的氨基酸序列一般来说折叠方式也类似，相当于在特征中就加入了相近的序列结构信息
 
 
-
-
-~~~
-
-
-
+```
 ~~~markdown
 input： 氨基酸 sequence 
 output: 氨基酸两两之间的距离分布和夹角
@@ -1495,22 +1255,13 @@ MSA特征
 aplpha 第一代： 预测的是一个二维结构 然后优化 ResNet
 
 构建不同列氨基酸之间的相关性，这可以学习到蛋白质的phylogeny信息。和wise是类似的操作。
-~~~
-
-
-
-~~~
+```
+```
 大家下午好，今天我分享的是alphafold2 ，一种经过计算预测蛋白质空间结构的方法，在座各位都是这个领域的大佬，在关公面前耍大刀了，后面有讲的不对的地方，或者有问题，可以补充。
-~~~
-
+```
 ```
 SOURCE_URL="https://storage.googleapis.com/alphafold/alphafold_params_2022-03-02.tar"
 ```
-
-
-
-
-
 
 
 ```
@@ -1547,14 +1298,11 @@ pip install opencv-python pandas
 https://pjreddie.com/media/files/yolov2-tiny-voc.weights
 ```
 
-~~~
+```
 X-ray、冷冻电镜、核磁共振
 
 source ~/.bash  # 进入系统环境
-~~~
-
-
-
+```
 ## 抗体
 
 抗体是脊椎动物为应对外来入侵蛋白（抗原），保护机体不被伤害而分泌的、在体内进行循环的蛋白质分子，是机体体液免疫的主要参与者
@@ -1585,7 +1333,6 @@ SOURCE_URL="https://storage.googleapis.com/alphafold-databases/reduced_dbs/bfd-f
 重链的4个Ig结构域分别为VH、CH1、CH2和CH3。
 
 
-
 Fab（fragment antigen binding）片段包括全部的轻链结构和重链的VH和CH1结构域
 
 一个蛋白片段能够很快的形成结晶，被称为Fc片段，Fc是fragment crystallizable的首字母,对应的是抗体两条重链的CH2和CH3结构域
@@ -1593,7 +1340,6 @@ Fab（fragment antigen binding）片段包括全部的轻链结构和重链的VH
 Fab还需要通过一个蛋白片段和Fc进行连接，这个蛋白片段被称为抗体的hinge结构域
 
 ![image-20220711145731085](../img/image-20220711145731085.png)
-
 
 
 disulfude bonds  二硫键
@@ -1607,15 +1353,12 @@ effector region
   通常情况下，一个抗体的两条重链和轻链是相同的两条链，但是IgG4在某些情况下可以和其它的IgG4交换重链，产生杂合抗体；杂合抗体的Fc是相似的，但是Fab不相同，因此严格说抗体的两条轻链和重链并不一定完全相同。
 
 
-
 氨基酸序列研究显示，抗体（以IgG为例）轻链的C末端和重链的C末端约3/4的结构都是高度保守的，被称为保守区域（Constant region）而对应的轻链的N末端和重链的N末端，有着极高的氨基酸序列多样性，被称为可变区（Variant region）；在这些可变区域内分布着相对短的序列，表现出极强的多样性，被称为高频突变区域，这样的序列在轻链和重链的可变区分别有三个，被称为CDR（complementarity determining regions，CDRs)，随后的研究证明这些序列和抗体特异性的识别抗原相关。
-
 
 
 ## 抗原
 
 抗原（antigen，缩写Ag）是指能引起抗体生成的物质，是任何可诱发免疫反应的物质。
-
 
 
 知识
@@ -1624,7 +1367,7 @@ https://blog.csdn.net/qq_45493596/article/details/124903920?spm=1001.2101.3001.6
 
 ## 附录
 
-~~~
+```
 https://github.com/lingluodlut/BioNER-Progress
 https://zhuanlan.zhihu.com/p/330510520 # 抗体 
 http://www.detaibio.com/topics/antibody-structure.html
@@ -1634,8 +1377,7 @@ https://github.com/lingluodlut/BioNER-Progress
 
 
 https://zhuanlan.zhihu.com/p/423064843#:~:text=%E6%88%91%E8%AF%B4%E7%9A%84%E5%BD%93%E7%84%B6%E6%98%AF%20AlphaFold2%20%E6%89%80%E4%BD%BF%E7%94%A8%E7%9A%84%E8%9B%8B%E7%99%BD%E8%B4%A8%E5%BA%8F%E5%88%97%E6%95%B0%E6%8D%AE%E5%BA%93%20Big%20Fantastic%20Database%20%EF%BC%88BFD%EF%BC%89%EF%BC%8C%E6%88%91%E5%8F%AB%E5%AE%83%E2%80%9C%20%E5%A4%A7%E8%B6%85%E5%87%A1,%E2%80%9D%E3%80%82%20AlphaFold2%20%E6%A8%A1%E5%9E%8B%E7%9A%84%E6%95%B0%E6%8D%AE%E5%9F%BA%E7%A1%80%E6%98%AF%E7%B2%BE%E5%BF%83%E9%80%89%E6%8B%A9%E3%80%81%E8%B0%83%E8%AF%95%E7%9A%84%E5%BA%8F%E5%88%97%E5%BA%93%E5%92%8C%E4%B8%89%E7%BB%B4%E7%BB%93%E6%9E%84%E5%BA%93%EF%BC%8C%20%E5%A4%A7%E8%B6%85%E5%87%A1%20%E5%B0%B1%E6%98%AF%E7%94%B1%E6%96%87%E7%AB%A0%E7%9A%84%E7%AC%AC25%E4%BD%9C%E8%80%85%20Martin%20Steinegger%20%EF%BC%88M.S.%EF%BC%89%E6%9E%84%E5%BB%BA%E7%9A%84%E5%BA%8F%E5%88%97%E6%95%B0%E6%8D%AE%E5%BA%93%E3%80%82
-~~~
-
+```
 ## NER
 
 它的目的是从大量的非结构化医学文本中找出基因、疾病、蛋白质等相应的医学实体边界，然后再经过标准化映射到受控词汇表中，从而方便进行文献挖掘的下游任务。
@@ -1649,7 +1391,6 @@ https://zhuanlan.zhihu.com/p/423064843#:~:text=%E6%88%91%E8%AF%B4%E7%9A%84%E5%BD
 这些方法分成4个类别，分别是：基于神经网络、基于多任务、基于迁移学习、基于混合模型的方法
 
 
-
 # 台湾大学
 
 ![image-20221010213018985](../img/image-20221010213018985.png)
@@ -1657,15 +1398,9 @@ https://zhuanlan.zhihu.com/p/423064843#:~:text=%E6%88%91%E8%AF%B4%E7%9A%84%E5%BD
 ![image-20221010213110422](../img/image-20221010213110422.png)
 
 
-
-
-
 ![image-20221010213153446](../img/image-20221010213153446.png)
 
 ![image-20221010213219152](../img/image-20221010213219152.png)
-
-
-
 
 
 ![image-20221010213258537](../img/image-20221010213258537.png)
@@ -1679,7 +1414,6 @@ Blosum62
 ![image-20221010213908143](../img/image-20221010213908143.png)
 
 gloab local alignment :
-
 
 
 local alignment:
@@ -1701,7 +1435,6 @@ idea:  true alignments will have a short stretch of identity (perfect match)
 ![image-20221010215718452](../img/image-20221010215718452.png)
 
 蛋白质结构：
-
 
 
 ![image-20221010223925649](../img/image-20221010223925649.png)
@@ -1749,15 +1482,11 @@ https://www.cn-healthcare.com/articlewm/20210110/content-1179325.html
 DNA 片段的一个集合，将测序片段打断之后构成了一个DNA文库
 
 
-
 2： Cluster Generation 族生成
 
 3： Sequencing 测序
 
 4： Data Analysis
-
-
-
 
 
 ## word
@@ -1767,7 +1496,6 @@ DNA 片段的一个集合，将测序片段打断之后构成了一个DNA文库
 **蛋白质的一级结构指的是蛋白质多肽链中氨基酸残基的排列顺序，包括二硫键的位置，也是蛋白质最基本的结构**
 
 
-
 蛋白质的二级结构：多肽链上的主链有规则的折叠方式，包括α-螺旋，β-折叠,β-转角 ，无规则卷曲，Ω环等。靠氢键维持
 
 蛋白质的三级结构：是在二级结构的基础上进一步盘绕、折叠形成。是蛋白质分子处于它的天然折叠状态的三维构象，其主要靠氨基酸侧链之间的疏水作用力、氢键、范德华力和静电作用来维持（非共价键）。
@@ -1775,23 +1503,19 @@ DNA 片段的一个集合，将测序片段打断之后构成了一个DNA文库
 蛋白质的四级结构：主要靠次级键（非共价键）维持。
 
 
-
 **多态 的单字母书写：**
 
-~~~
+```
  ①多肽序列1: G T F L V R C D M A，共10个氨基酸，所有字母均是大写，则表示所有的氨基酸均是天然存在的L型氨基酸。
 ②多肽序列2：G T F L v R C d M A，共10个氨基酸，序列里面有两个氨基酸是小写，说明对应的两个氨基酸是D型氨基酸。
 ③多肽序列1：G T F L V R C D M A 也可以写成H-G T F L V R C D M A-OH，左边的H- 代表N端的氨基，右边的-OH 代表C端的羧基。不过一般通常为了美观整齐，H-和-OH同时写或同时不写。
 ④多肽序列3：G T F L V R C D M A-NH2，与多肽序列1的区别是，右边多了-NH2，代表C端酰胺化。
 
 ⑤多肽序列4：AC-G T F L V R C D M A,与多肽序列1的区别是，左边多-AC，代表N端乙酰化。
-~~~
-
+```
 **多肽的三字母书写形式**
 
-**多肽的三字母书写形式**
-
-~~~
+```
 三个字母代表一个氨基酸，并且三字母和前面提到的单字母是一一对应关系
 ①多肽序列1对应的三字母书写为：H-Gly-Thr-Phe-Leu-Val-Cys-Asp-Met-Ala-OH.
 ②多肽序列3对应的三字母书写为：H-Gly-Thr-Phe-Leu-Val-Cys-Asp-Met-Ala-NH2，C端酰胺化。
@@ -1799,20 +1523,16 @@ DNA 片段的一个集合，将测序片段打断之后构成了一个DNA文库
 ③多肽序列4对应的三字母书写：Ac-Gly-Thr-Phe-Leu-Val-Cys-Asp-Met-Ala-OH左边多-Ac，代表N端乙酰化。
 
 DNA-RNA-蛋白质，并指出蛋白质是由DNA转录为RNA,再由RNA翻译成一个个氨基酸组合而成的，因此蛋白质的一级氨基酸序列信息应该包含了蛋白质三维空间结构的必要重要信息。
-~~~
-
-
-
+```
 **特殊多肽序列的书写**
 
-~~~
+```
 例如：磷酸化氨基酸的书写，
 
 ①：H-Gly-pThr-Phe-Leu-Val-Cys-Asp-Met-Ala-OH
 
 ②：H-Gly-Thr(PO3H2)-Phe-Leu-Val-Cys-Asp-Met-Ala-OH
-~~~
-
+```
 homology ： 同源
 
 similarity： 相似
@@ -1822,11 +1542,6 @@ similarity： 相似
 两个序列：DP  pair-wise alignments 
 
 多序列：  启发式  multiple alogrithms 
-
-
-
-
-
 
 
 如两条序列的相似程度达到30%或60%。一般来说，相似性很高的两条序列往往具有同源关系。但也有例外，即两条序列的相似性很高，但它们可能并不是同源序列，这两条序列的相似性可能是由随机因素所产生的，这在进化上称为“趋同”（convergence），这样一对序列可称为**同功序列。**
@@ -1842,7 +1557,6 @@ similarity： 相似
 **BLOSUM** score matrix【blocks substitution matrix】
 
 **PAM** score matrix，**位置特异性矩阵PSSM**
-
 
 
 多序列比对算法
@@ -1876,11 +1590,6 @@ Disadvatage : high cost
 potemtial problem :  long mononucleotide  repeats 
 
 
-
-
-
-
-
 ### 形成稳定分子结构所参与作用的力
 
 - 骨架链：连续的肽键
@@ -1902,9 +1611,7 @@ potemtial problem :  long mononucleotide  repeats
 相似性90%以上的氨基酸序列的MSA没什么意义，因为太像了，留一条就够了；相似性30%以下的氨基酸序列MSA也没什么意义，因为太不像了很可能不是同源的。
 
 
-
 ## Data pipeline
-
 
 
 AlphaFold的运行流程如下：
@@ -1914,7 +1621,6 @@ AlphaFold的运行流程如下：
 - 在GPU上运行jax代码，运行训练好的深度学习模型，分别运行5个模型，得到5个PDB结构和对应的置信度分数
 - 使用CPU运行amber relax去除violation并加上氢原子
 - 得到基于pLDDT排序的五个模型
-
 
 
 ## AlphaFold
@@ -1929,7 +1635,7 @@ http://www.knightofnight.com/archives/alphafold2%E9%98%85%E8%AF%BB%E7%AC%94%E8%A
 
 https://zhuanlan.zhihu.com/p/464232665
 
-~~~
+```
 序列特征是长度和原始输入序列相同的，包括了one-hot[3]的氨基酸种类特征（21维）,HHblit[4]特征（22维），MSA[2]特征等等
 
 1:了one-hot[3]的氨基酸种类特征
@@ -1939,12 +1645,7 @@ https://zhuanlan.zhihu.com/p/464232665
 抽取这个特征的原因是类似的氨基酸序列一般来说折叠方式也类似，相当于在特征中就加入了相近的序列结构信息
 
 
-
-
-~~~
-
-
-
+```
 ~~~markdown
 input： 氨基酸 sequence 
 output: 氨基酸两两之间的距离分布和夹角
@@ -1963,10 +1664,7 @@ MSA特征
 aplpha 第一代： 预测的是一个二维结构 然后优化 ResNet
 
 构建不同列氨基酸之间的相关性，这可以学习到蛋白质的phylogeny信息。和wise是类似的操作。
-~~~
-
-
-
+```
 ## 蛋白质结构预测：
 
 1. all the information necessary  for protein folding into its native structure is encoded in its amino acid sequence 
@@ -1980,27 +1678,18 @@ Template-based modeling  (基于模板的) PDB
 Template-free modeling 
 
 
-
-
-
-~~~
+```
 大家下午好，今天我分享的是alphafold2 ，一种经过计算预测蛋白质空间结构的方法，在座各位都是这个领域的大佬，在关公面前耍大刀了，后面有讲的不对的地方，或者有问题，可以补充。
-~~~
-
+```
 ```
 SOURCE_URL="https://storage.googleapis.com/alphafold/alphafold_params_2022-03-02.tar"
 ```
 
 
-
 ![image-20221014000158819](../img/image-20221014000158819.png)
 
 
-
-
-
 ![image-20221014001926068](../img/image-20221014001926068.png)
-
 
 
 ![image-20221014001952419](../img/image-20221014001952419.png)
@@ -2008,181 +1697,22 @@ SOURCE_URL="https://storage.googleapis.com/alphafold/alphafold_params_2022-03-02
 ![image-20221014002052608](../img/image-20221014002052608.png)
 
 
-
 ![image-20221014002113386](../img/image-20221014002113386.png)
-
 
 
 ![image-20221014002144514](../img/image-20221014002144514.png)
 
 
-
 ![image-20221014002210883](../img/image-20221014002210883.png)
 
 
+在进行基因相关研究的时候，我们经常需要查询了解基因的相关功能，才能知道我们要往哪里进行下一步研究。对于基因功能的查询，我们介绍过ncbi的gene数据库，同样的之前的gene  id转换的时候我们也提到过，关于基因信息的汇总除了gene数据库还有ensembl、uniprot等等很多数据库，各个数据库都提供了不同的基因信息。我们在查询的时候，总不能说把各个数据库都查询一遍吧？所以今天就给大家介绍一个汇总了多个数据库的基因信息查询网站:
 
-```
-conda config --remove-key channels 
-conda config --show channels
-
-conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
-conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/
-conda config --set show_channel_urls yes
-比如 
-
-pip install tensorboard
-# 阿里镜像源
-conda config --add channels https://mirrors.aliyun.com/pypi/simple/
-# 豆瓣的python的源
-conda config --add channels http://pypi.douban.com/simple/ 
-conda config --set show_channel_urls yes
-
-conda install pytorch==1.7.1 torchvision==0.8.2 torchaudio==0.7.2 cudatoolkit=11.0 -c pytorch
-conda install  --index-url https://pypi.douban.com/simple 
-opencv-python
-pip install --index-url https://pypi.douban.com/simple  pandas
-pycocotools-windows
-torchvision==0.8.2
-pycocotools-windows
-tf-slim==1.1.0
-Pytorch1.7.1
-tensorflow==2.2.0 
-pip install tensorflow==2.7.0 
-pip install tf-slim==1.1.0
-opencv-python
-matplotlib
-pip install opencv-python pandas
-https://pjreddie.com/media/files/yolov2-tiny-voc.weights
-
-# 本地项目打包
-pip install --user torch==1.7.1 torchvision==0.8.2 -f https://download.pytorch.org/whl/torch_stable.html -i http://pypi.douban.com/simple/ --trusted-host pypi.douban.com
-
-pip install conda-pack
-conda pack -n fastercnn2 -o A:\11_code\fastercnn\fastercnn.tar.gz
-
-```
-
-~~~
-X-ray、冷冻电镜、核磁共振
-
-source ~/.bash  # 进入系统环境
-~~~
-
-
-
-## 抗体
-
-抗体是脊椎动物为应对外来入侵蛋白（抗原），保护机体不被伤害而分泌的、在体内进行循环的蛋白质分子，是机体体液免疫的主要参与者
-
-抗体又被称为免疫球蛋白（immunoglobulin，Ig） （一类糖蛋白）
-
-```
-SOURCE_URL="https://storage.googleapis.com/alphafold-databases/reduced_dbs/bfd-first_non_consensus_sequences.fasta.gz"
-```
-
-只能通过B细胞系的相关细胞产生：
-
-分泌型和膜结合型
-
-在体内抗体主要通过两个功能实现对病原清除
-
-1. 抗体可以识别并特异性的结合外来病原，这样的结合足以使病原或者毒素失去活性
-2. 抗体在体内和病原结合后，还可以通过Fc和FcR信号通路引发后续的一系列免疫反应，介导对入侵外来抗原的清除，这些免疫反应包括补体系统的激活、吞噬系统的激活、ADCC等作用
-
-**抗体的Ig结构**
-
-抗体的单体是一个Y形的分子
-
-抗体整体由四条多肽链构成，分别为两条结构相同的轻链（L chain）和两条结构相同的重链（H chain），四条链形成典型的“Y”型抗体结构
-
-*抗体的轻链包含2个Ig结构域，分别为V domain（VL）和C domain（CL）*
-
-重链的4个Ig结构域分别为VH、CH1、CH2和CH3。
-
-
-
-Fab（fragment antigen binding）片段包括全部的轻链结构和重链的VH和CH1结构域
-
-一个蛋白片段能够很快的形成结晶，被称为Fc片段，Fc是fragment crystallizable的首字母,对应的是抗体两条重链的CH2和CH3结构域
-
-Fab还需要通过一个蛋白片段和Fc进行连接，这个蛋白片段被称为抗体的hinge结构域
-
-![image-20220711145731085](../note_git/pic/image-20220711145731085.png)
-
-
-
-disulfude bonds  二硫键
-
-effector region 
-
-- **抗体的亚型**
-
-  IgG、IgM、IgA、IgD和IgE五种亚型
-
-  通常情况下，一个抗体的两条重链和轻链是相同的两条链，但是IgG4在某些情况下可以和其它的IgG4交换重链，产生杂合抗体；杂合抗体的Fc是相似的，但是Fab不相同，因此严格说抗体的两条轻链和重链并不一定完全相同。
-
-
-
-氨基酸序列研究显示，抗体（以IgG为例）轻链的C末端和重链的C末端约3/4的结构都是高度保守的，被称为保守区域（Constant region）而对应的轻链的N末端和重链的N末端，有着极高的氨基酸序列多样性，被称为可变区（Variant region）；在这些可变区域内分布着相对短的序列，表现出极强的多样性，被称为高频突变区域，这样的序列在轻链和重链的可变区分别有三个，被称为CDR（complementarity determining regions，CDRs)，随后的研究证明这些序列和抗体特异性的识别抗原相关。
-
-
-
-## 抗原
-
-抗原（antigen，缩写Ag）是指能引起抗体生成的物质，是任何可诱发免疫反应的物质。
-
-
-
-知识
-
-https://blog.csdn.net/qq_45493596/article/details/124903920?spm=1001.2101.3001.6661.1&utm_medium=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-124903920-blog-122561714.pc_relevant_multi_platform_whitelistv3&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-124903920-blog-122561714.pc_relevant_multi_platform_whitelistv3&utm_relevant_index=1
-
-## 附录
-
-~~~
-https://github.com/lingluodlut/BioNER-Progress
-https://zhuanlan.zhihu.com/p/330510520 # 抗体 
-http://www.detaibio.com/topics/antibody-structure.html
-pip install tensorboard
-
-https://github.com/lingluodlut/BioNER-Progress
-
-
-https://zhuanlan.zhihu.com/p/423064843#:~:text=%E6%88%91%E8%AF%B4%E7%9A%84%E5%BD%93%E7%84%B6%E6%98%AF%20AlphaFold2%20%E6%89%80%E4%BD%BF%E7%94%A8%E7%9A%84%E8%9B%8B%E7%99%BD%E8%B4%A8%E5%BA%8F%E5%88%97%E6%95%B0%E6%8D%AE%E5%BA%93%20Big%20Fantastic%20Database%20%EF%BC%88BFD%EF%BC%89%EF%BC%8C%E6%88%91%E5%8F%AB%E5%AE%83%E2%80%9C%20%E5%A4%A7%E8%B6%85%E5%87%A1,%E2%80%9D%E3%80%82%20AlphaFold2%20%E6%A8%A1%E5%9E%8B%E7%9A%84%E6%95%B0%E6%8D%AE%E5%9F%BA%E7%A1%80%E6%98%AF%E7%B2%BE%E5%BF%83%E9%80%89%E6%8B%A9%E3%80%81%E8%B0%83%E8%AF%95%E7%9A%84%E5%BA%8F%E5%88%97%E5%BA%93%E5%92%8C%E4%B8%89%E7%BB%B4%E7%BB%93%E6%9E%84%E5%BA%93%EF%BC%8C%20%E5%A4%A7%E8%B6%85%E5%87%A1%20%E5%B0%B1%E6%98%AF%E7%94%B1%E6%96%87%E7%AB%A0%E7%9A%84%E7%AC%AC25%E4%BD%9C%E8%80%85%20Martin%20Steinegger%20%EF%BC%88M.S.%EF%BC%89%E6%9E%84%E5%BB%BA%E7%9A%84%E5%BA%8F%E5%88%97%E6%95%B0%E6%8D%AE%E5%BA%93%E3%80%82
-~~~
-
-![image-20221017203200491](../img/image-20221017203200491.png)
-
-![image-20221017203244360](../img/image-20221017203244360.png)
-
-![image-20221017203428875](../img/image-20221017203428875.png)
-
-![image-20221017203642166](../img/image-20221017203642166.png)
-
-## NER
-
-它的目的是从大量的非结构化医学文本中找出基因、疾病、蛋白质等相应的医学实体边界，然后再经过标准化映射到受控词汇表中，从而方便进行文献挖掘的下游任务。
-
-1. 遗传性非息肉性结直肠癌综合征   很长的词汇组成
-2. Zolmitriptan, Zomig and Zomigon  这三个名词都是表示同一实体
-3. 生物医学实体通常由数字和字母缩写组成，有时相同的字母可能表示不同的意思
-
-深度学习需要大量的高质量的已标注的数据集 ，数据集的大小和质量严重影响着最终的识别效果
-
-这些方法分成4个类别，分别是：基于神经网络、基于多任务、基于迁移学习、基于混合模型的方法
-
-
-
-
-
-在进行基因相关研究的时候，我们经常需要查询了解基因的相关功能，才能知道我们要往哪里进行下一步研究。对于基因功能的查询，我们介绍过ncbi的gene数据库，同样的之前的gene  id转换的时候我们也提到过，关于基因信息的汇总除了gene数据库还有ensembl、uniprot等等很多数据库，各个数据库都提供了不同的基因信息。我们在查询的时候，总不能说把各个数据库都查询一遍吧？所以今天就给大家介绍一个汇总了多个数据库的基因信息查询网站: 
+## GeneCards 基因卡片
 
 **GeneCards** (https://www.genecards.org/ )
 
 GeneCards 是一个汇总了150个网络数据库的基因功能查询数据库。通过这个数据库我们可以查询到一个基因各个方面的基本功能（主要注意的是这个数据库只能查询人的基因信息哈）。
-
-
-
 
 
 ![下载.jpeg](https://www.51xxziyuan.com/ueditor/php/upload/image/20210222/1613990384894070.jpeg)
@@ -2190,34 +1720,18 @@ GeneCards 是一个汇总了150个网络数据库的基因功能查询数据库�
 这类汇总性的数据库，最担心的是数据库的不更新，但是由于genecards所在的公司还有很多功能是付费的，算是一个营利性的机构，所以为了机构的名声，他们也会长时间更新的，目前已经到了4.14版本了。
 
 
-
-
-
 ![下载 (1).jpeg](https://www.51xxziyuan.com/ueditor/php/upload/image/20210222/1613990393818325.jpeg)
-
 
 
 由于查询的信息比较多，所以我们分两期来进行讲解。
 
 
-
-
-
-
-
-
-
 PART 1
-
 
 
 **数据库使用**
 
-
-
-
-
-##  
+### 检索与界面
 
 数据库的使用很简单，就是输入我们想要检索的基因即可。这里我们可以输入基因名、ensembl ID、uniprot ID都可以，例如我们这里输入MYC。
 
@@ -2226,145 +1740,68 @@ PART 1
 检索完之后，我们就可以看这个基因相关的信息了。对于基因的信息，数据库分成了很多个部分。现在基本上分成基因基本信息以及基因实验相关的产品信息。我们这里主要的就来介绍数据库包括那些基本信息。
 
 
-
-
-
 ![下载 (3).jpeg](../img/1613990408483580.jpeg)
 
-##  
-
-
-
-
-
-
-
-
-
 PART 2
-
 
 
 **基因信息汇总 Summaries**
 
 
-
-
-
-
-
 很多数据库对于基因的功能都会有简单的汇总介绍，通过这句话我们基本上能大概的了解这个基因的基本功能。在**Summaries**这个模块当中，genecards汇总了多个数据库对于这个基因功能的总结，我们通过这个就可以知道多个数据库对于这个基因是什么评价的了。
-
-
-
 
 
 ![下载 (4).jpeg](../img/1613990416555167.jpeg)
 
 
-
-
-
-
-
 PART 3
-
 
 
 **基因结构及调控信息**
 
 
-
-
-
 按照中心法则，一个基因有三个不同的身份：分别是DNA、mRNA、蛋白。对于这三个身份都有信息。因此genecards也基于三个不同身份有了三个不同的模块: **Genomics**、**Transcripts**、**Proteins**
-
-###  
 
 ### Genomics
 
 在基因组这个模块当中，我们可以看到目标基因在基因组当中的位置及长度。
 
 
-
-
-
-
-
 ![下载 (5).jpeg](../img/1613990433241923.jpeg)
-
 
 
 另外，由于基因组对于基因表达的调控，主要是通过转录调控来实现的，所以数据库总结了很多转录调控的信息。我们在这里就可以查询到这个基因可能收到哪些转录因子的调控。
 
 
-
-
-
 ![下载 (6).jpeg](../img/1613990444845649.jpeg)
-
-###  
 
 ### Transcripts
 
 由于可变剪切的存在，基因的mRNA会产生很多的剪切异构体，所以这个数据库汇总了多个数据库对于剪切异构体的ID，以及相对应的可能剪切方式。
 
 
-
-
-
 ![下载 (7).jpeg](../img/1613990453914649.jpeg)
-
 
 
 另外，我们在做相关的基础实验的话，需要对这个基因的mRNA进行处理，具体处理的话就需要用到公司的试剂。所以这里也 汇总了相关可能用到的试剂，例如CRISPR、miRNA等等。
 
 
-
-
-
-
-
 ![下载 (8).jpeg](../img/1613990460887832.jpeg)
-
-###  
 
 ### Proteins
 
-对于基因蛋白，同样的也是汇总了蛋白的基本信息。另外关于蛋白的调控，也存在翻译后调控，所以 GeneCards 利用 UniprotKB，neXtProt 和 GlyConnect  三个数据库注释了相关的翻译后调控信息，另外还通过PhosphoSitePlus注释了其磷酸化位点。
-
-
-
-
-
-
+对于基因蛋白，同样的也是汇总了蛋白的基本信息。另外关于蛋白的调控，也存在翻译后调控，所以 GeneCards 利用 UniprotKB、neXtProt 和 GlyConnect 注释翻译后调控；PhosphoSitePlus 注释磷酸化位点。
 
 ![下载 (9).jpeg](../img/1613990467328374.jpeg)
 
-
-
-对于蛋白相关的功能研究，我们会用到相关的抗体，所以这里也总结了关于各个公司抗体的型号。
-
-
-
-
+对于蛋白功能研究常用抗体，此处汇总各公司抗体型号。
 
 ![下载 (10).jpeg](../img/1613990473138492.jpeg)
-
-
-
-
-
-
 
 PART 4
 
 
-
 **基因功能**
-
-
-
 
 
 上面对于基因的介绍是它本身在染色体上的基本特征,了解了基本特征，我们还要进一步的去了解这个基因有什么功能,毕竟功能决定这个基因的研究价值的。GeneCards方面，对于基因功能的注释包括了包括了：**Localization**、 **Pathways**、 **Function**。
@@ -2374,11 +1811,7 @@ PART 4
 一个基因的功能经常是由他们的定位决定的，基因在细胞核和细胞质形式的功能不一样的，所以我们就把基因的定位放到基因功能上了。GeneCards对于基因功能的定位使用的是compartments、HPA数据库。另外关于GO数据库，也提供了细胞组分的分类，所以GeneCards把关于这个基因的go的信息也就纳入进来了。
 
 
-
-
-
 ![下载.jpeg](../img/1613990658220257.jpeg)
-
 
 
 ### Function
@@ -2386,47 +1819,19 @@ PART 4
 提到GO数据库的话，这个数据库还提供了其他两种信息，另外的分子功能就直接放到的功能这个部分了。
 
 
-
-
-
 ![下载 (1).jpeg](../img/1613990686114732.jpeg)
-
-
-
-###  
 
 ### Pathways
 
 对于一个基因而言，他的功能也是通过相关的信号通路来发挥作用的。GeneCards收集了目前主流的一些数据库关于这个基因的信号通路信息，例如: **KEGG**、**Reactome**等等。在这里，我们就可以了解到很多关于基因通路的信息。
 
 
-
-
-
 ![下载 (2).jpeg](../img/1613990712373043.jpeg)
-
-
-
-##  
-
-
-
-
-
-
-
-
 
 PART 5
 
 
-
 **基因和临床的相关性**
-
-
-
-
-
 
 
 由于我们做的很多基因相关的研究是要来解释疾病的发生原理的，所以往往还是要看这个基因和疾病的相关性。GeneCards提供了两个和疾病有关的模块，分别是：**Disorders**和**Drugs**。
@@ -2436,11 +1841,7 @@ PART 5
 在Disorders这个模块下，汇总了这个基因和哪些疾病是有关系的。当然这种的汇总是基于以往的研究来的，所以如果没有看到和我们研究的疾病有关系，那也不一定说明真的是没关系，这里的数据主要来自于malacards。关于malacards的介绍，我们明天再说。
 
 
-
-
-
 ![下载 (3).jpeg](../img/1613990726447963.jpeg)
-
 
 
 ### Drugs
@@ -2448,31 +1849,12 @@ PART 5
 药物在体内发挥作用也是需要通过基因的变化来产生的，所以我们可以通过这个模块了解有哪些药物影响这个基因的表达。数据库总结了DrugBank，ClinicalTrials，ApexBio，DGIdb和Novoseek五个数据库的结果，我们可以很容易的看到这个基因的和哪些药物有关系以及可能的激活机制。
 
 
-
-
-
 ![下载 (4).jpeg](../img/1613990735188386.jpeg)
-
-
-
-##  
-
-
-
-
-
-
 
 PART 6
 
 
-
 **相似基因**
-
-
-
-
-
 
 
 有时候我们除了了解了这个基因的功能本身的功能之外，还想要研究这个基因在不同物种的进化关系，以及相同物种这个基因和哪些基因相似，这个在数据库也是有的**Orthologs**、**Paralogs**。
@@ -2480,54 +1862,25 @@ PART 6
 - 我们可以在Orthologs查看，不同物种之间相同基因之间的相似度。
 
 
-
-
-
 ![下载 (5).jpeg](../img/1613990741927881.jpeg)
-
-
-
 
 
 - 可以在Paralogs查看，这个基因和其他哪些基因高度同源。
 
 
-
-
-
 ![下载 (6).jpeg](../img/1613990764399077.jpeg)
-
-
-
-
-
-
-
 
 
 PART 7
 
 
-
 **目前发表的文章**
-
-
-
-
-
 
 
 研究完基因的功能之后，最后还是要看这个基因一共发表了多少篇文章的。这个可以看见**Publications**当中看到，检索的是所有相关的文章。我们可以在进一步检索当中输入关键词，查看和某一个疾病相关的研究都有多少篇。
 
 
-
-
-
 ![下载 (7).jpeg](../img/1613990756219680.jpeg)
-
-
-
-##  
 
 ## 数据库总结
 
