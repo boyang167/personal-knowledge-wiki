@@ -1,3 +1,8 @@
+# 数据库笔记索引
+
+## 综合 / MySQL / SQL
+
+- **[8-mysql.md](8-mysql.md)** — 自 Desktop `2024/7-DataBase.md` 迁移并整理（目录 + 章节标题；含 SQL/MySQL、Redis、ES、MongoDB、Hive、Consul、Kafka/RabbitMQ 等）
 
 # Redis
 

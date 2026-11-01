@@ -4,8 +4,8 @@
 
 ## 目录
 
-- [基础概念](#基础概念)
-- [表示学习与预训练模型谱系](#表示学习与预训练模型谱系)
+- [基础概念](#基础概念)（语义表示、语言模型、Word2Vec、Attention 概要）
+- [表示学习与预训练模型谱系](#表示学习与预训练模型谱系)（GloVe、ELMo、Transformer、BERT 族等）
 - [NLP 任务与应用](#nlp-任务与应用)
 - [论文检索](#论文检索)
 - [参考资料](#参考资料)
@@ -39,25 +39,36 @@
 | 词-文档 | 偏主题（LSA 等） |
 | 词-窗口 | 偏句法 / 局部语义 |
 
-问题：矩阵大、高维、稀疏。  
-**路线 1**：SVD 等降维 \(X \approx USV^T\)，贵且新词难加。  
+问题：矩阵大、高维、稀疏 → 鲁棒性差。  
+**路线 1**：SVD 等降维 \(X \approx USV^T\)（计算约 \(O(mn^2)\)，\(n \ll m\) 时仍贵），难加新词；降维结果同时承载 **semantic**（语义）与 **syntactic**（句法）关联。  
 **路线 2**：直接学习低维 **word embedding**（Word2Vec 2013、GloVe 2014；更早 NNLM 2003 等）。
+
+**邻居 → 向量形态**：① 高维稀疏（one-hot / 共现）；② 低维稠密（降维或直接学习）。
+
+**直接学习词向量（时间线，课程 *Meaning Representation in Computers*）**：反向传播学表示（1986）→ 神经概率语言模型 NNLM（2003）→ *NLP from Scratch*（2008）→ Word2Vec（2013）、GloVe（2014）。
+
+**词嵌入收益**（无标注语料学向量）：① 语义相似度（余弦）；② 作为监督 NLP 任务的强特征；③ 经神经网络反向传播继续更新。
 
 词向量用途：余弦相似度、下游特征、与神经网络联合微调。
 
 ### 语言模型演进
 
+**目标**：估计序列概率 \(P(w_1,w_2,\ldots,w_n)\)；例：判断句子是否通顺、是否更「说得通」。
+
+**课程 outline（P11）**：Language Modeling → N-gram LM → Feed-Forward Neural LM → RNN LM →（现多为 Transformer 预训练）。
+
 | 阶段 | 核心 |
 | --- | --- |
-| N-gram | 用 \((n-1)\) 阶马尔科夫近似；链式法则 \(P(w_{1:n})=\prod_i P(w_i\mid w_{1:i-1})\)；**计数 + 平滑** |
-| FNN LM | 固定窗口，用 NN 预测下一词 |
-| RNN LM | 理论上 conditioning 全部历史；长依赖仍难 |
+| N-gram | 在 \((n-1)\) 词窗口上条件化；链式法则 \(P(w_{1:n})=\prod_i P(w_i\mid w_{1:i-1})\)；**计数 + 平滑**（训练集未见 n-gram 时给小概率） |
+| FNN LM | 用 NN **预测** \(P(w_i\mid w_{i-(n-1)},\ldots,w_{i-1})\)，而非纯计数；**固定上下文窗口** |
+| RNN LM | 对全部历史 conditioning、各时间步 **共享权重**；强调 **时间信息**；长依赖仍难 |
 | Transformer + 预训练 | 自注意力；GPT（AR）、BERT（AE）等 |
 
 N-gram **问题**：数据稀疏 → 平滑；**固定窗口** → RNN/Transformer。
 
 ### Word2Vec（静态嵌入）
 
+- **语言建模起点**：给定前文预测下一词 \(P(w_{t+1}\mid w_t)\)（与 NNLM 一脉）。
 - **Skip-gram**：中心词 \(w_t\) 预测窗口内上下文  
   \(P(w_{t-m},\ldots,w_{t-1},w_{t+1},\ldots,w_{t+m}\mid w_t)\)
 - **CBOW**：上下文预测中心词 \(P(w_t\mid \text{context})\)
@@ -65,16 +76,18 @@ N-gram **问题**：数据稀疏 → 平滑；**固定窗口** → RNN/Transform
 
 ### 注意力与 Seq2Seq
 
-认知类比：感官 → 工作记忆（**注意力**）→ 长时记忆。
+认知类比：**感官输入** → 感官记忆（**attention 筛选**）→ 工作记忆（encoding）→ 长时记忆（retrieval）。
 
 | 问题 | 思路 |
 | --- | --- |
-| 输入过长 | 每步只关注部分输入（Attention） |
-| RNN 记忆参数多 | 外部记忆 / Attention 读写在不变参数量下扩大有效记忆 |
+| 序列/图像过长 | 每次只 attend **部分**输入 |
+| RNN 记忆越大参数量越多 | 长时记忆 + Attention：**增大有效记忆而不线性增参** |
 
 **机器翻译**：Seq2Seq，输入输出长度可不同；`<END>` 结束符；RNN + Attention。  
-**Attention 矩阵形式**：\(\mathrm{Attention}(Q,K,V)=\mathrm{softmax}(QK^T)V\)。  
+**Attention 矩阵形式**：\(\mathrm{Attention}(Q,K,V)=\mathrm{softmax}(QK^T)V\)（Dot-Product Attention）。  
 其它：语音识别、图像/视频描述、阅读理解等。
+
+变长输入的表示与 CNN/RNN/Attention 细节见下文 [Attention 与 Transformer](#attention-与-transformer)。
 
 ## 表示学习与预训练模型谱系
 
@@ -92,87 +105,23 @@ N-gram **问题**：数据稀疏 → 平滑；**固定窗口** → RNN/Transform
 
 ![image-20210607110514863](../img/image-20210607110514863.png)
 
-**Counter-based:**  统计的方法
+### 词向量：统计方法 vs 神经网络预测
 
-LSA,LDA,PCA:
+| 路线 | 代表 | 优点 | 缺点 |
+| --- | --- | --- | --- |
+| **Counter-based** | LSA、LDA、PCA | 训练快；统计利用充分 | 主要限于词相似度；高频共现权重过大 |
+| **Direct prediction** | NNLM、HLBL、RNN、Skip-gram、CBOW | 下游更好；超越相似度的复杂模式 | 依赖大语料；统计利用效率低 |
 
-**pros:**
+### GloVe
 
-1. fast training
-2. efficient usage of statistics
+结合共现统计与预测式学习的思路：**共现概率之比**可编码语义；目标是在后续任务的神经网络中直接使用词向量，并可在微调中注入任务信息。  
+GloVe：Global Vectors for Word Representation。
 
-**cons:**
+### 静态词向量的一词多义
 
-1. primarily used to capture word similarity
-2. disproportionate importance given to large counts
-
-**Direct prediction ** 直接预测 深度学习
-
-NNLM HLBL, RNN ,skipgram , cbow
-
-**pros:**
-
-1. generate improved performance on other tasks
-2. capture complex patterns beyond word similarity
-
-**cons:**
-
-1. benefits mainly from large corpus
-2. inefficient usage of statistics
-
-### OneHot
-
-### Glove
-
-Combining the benefits from both words
-
- idea : ratio of co-occurrence probability can encode meaning
-
-**Goal** : use word vectors in neural net models built for subsequent tasks
-
-ability to also classify words accurately
-
-incorporate any information into them other tasks 附加信息
-
-Glove: Global Vectors for world Representation
-
-### word2Vec
-
-Word Embedding Polysemy (一词多义 )issue
-
-Issue :
-
-multi-senses
-
-multi-aspects (semantic syntax )
-
-**Intrinsic evaluation - word analogies**
-
-word linear relationship
-
-syntactic  句法 and semantic 语义 example questions
-
-**Extrinsic Evaluation Subsequent Task**
-
- Word Embedding Polysemy issue  一词多意
-
-Words are polysemy
-
-an apple a day ,keeps the doctor away.
-
-smartphone companies including apple ...
-
-However , their embeddings are not polysemy
-
-issue :
-
-multi-senses
-
-multi-aspects (semantics ,syntax)
-
-TagLM  pre-ELMO
-
-paper : Semi-supervised sequence tagging with bidirectional language models
+静态 embedding（Word2Vec、GloVe）对 **multi-sense**、**multi-aspect**（语义 vs 句法）往往只有单向量，例：*apple*（水果 vs 公司）。  
+**评估**：Intrinsic（词类比、句法/语义类比题）；Extrinsic（下游任务表现）。  
+过渡：**TagLM**（*Semi-supervised sequence tagging with bidirectional language models*）→ **ELMo** 等上下文向量。
 
 ### BPE（Byte Pair Encoding）
 
@@ -193,7 +142,7 @@ idea : contextualized word Embeddings
 
 ![image-20210408170649769](../img/image-20210408170649769.png)
 
-### Attention
+### Attention 与 Transformer
 
 **Representation of variable Length data**
 
@@ -224,15 +173,15 @@ RNN (Recurrent neural network): temporal information
 - RNNs need attention mechanism to handle long dependencies
 - attention allows us to access any state
 
-### Dot-product Attention
+#### Dot-product Attention
 
-input: a query q and a set of key-value(k-v) pairs to an output
-
-output: weighted sum of values
+输入 query \(q\) 与多组 key-value；输出为 value 的加权和（与基础概念中 \(\mathrm{softmax}(QK^T)V\) 一致）。
 
 ![image-20240525222832890](../img/image-20240525222832890.png)
 
-### Transformer
+![image-20210330154938401](../img/image-20210330154938401.png)
+
+#### Transformer 与多头注意力
 
 Multi-Head Attention:
 idea: allow words to interact with one another
@@ -664,6 +613,10 @@ Roberta在如下几个方面对Bert进行了调优：
 - 输入编码
 - 大语料与更长的训练步数
 
+### XLM
+
+**Masked LM + Translation LM**：在单语 MLM 之外，用平行语料做翻译语言建模，学习跨语言表示（原笔记 `1-nlp/1：Meaning Representation in Computs` §13）。
+
 ### SpanBERT
 
 Span masking
@@ -684,9 +637,9 @@ predict the entire masked span using only the spans's boundary
 2. 通过**加入 Span Boundary Objective (SBO) 训练目标**，增强了 BERT 的性能，特别在一些与 Span 相关的任务，如抽取式问答；
 3. 用实验获得了和 XLNet 类似的结果，发现**不加入 Next Sentence Prediction (NSP) 任务，直接用连续一长句训练效果更好**。
 
-**（2）加入SBO 训练目标**
+**（2）加入 SBO 训练目标**
 
-**SBO**：用 Span **边界**词向量 + 被 mask 词的位置向量，预测 Span 内原词（利于抽取式 QA 等）。
+**SBO（Span Boundary Objective）**：取 Span **前后边界**的两个词（不在 Span 内），用其词向量 + Span 内被 mask 词的**位置向量**预测原词，使边界表示编码 Span 内容，利于抽取式 QA 等。
 
 | 对比 | BERT | SpanBERT |
 | --- | --- | --- |
@@ -926,6 +879,7 @@ C4 数据集
 | XLNet | Permutation LM | 伪双向 | AR + 排列 | 无独立 [MASK] token |
 | T5 / BART | Encoder-Decoder |  seq2seq | 文本到文本 / 去噪 | 生成与理解统一框架 |
 | ERNIE | BERT 类 | 双向 | 实体/短语 mask | 知识增强 |
+| XLM | BERT 类 + 跨语 | 双向 | MLM + TLM | 多语预训练 |
 
 ### OOV 与子词嵌入
 
@@ -1084,6 +1038,7 @@ cs方向：  problem-Driven （对前人工作的优化）
 
 ## 参考资料
 
+- 已并入本文的本地笔记：`C:\Users\Mrwang\Desktop\整理笔记\Note\1-nlp\1：Meaning Representation in Computs.md`（语义表示、词向量、Attention、ELMo、BERT 族等；图片已同步至 `../img/`）
 - https://www.bilibili.com/video/BV1pT4y1D7H5/?spm_id_from=333.788
 - https://zhuanlan.zhihu.com/p/580468546
 - https://blog.csdn.net/qq_51957239/article/details/139013895

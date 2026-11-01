@@ -1,4 +1,20 @@
-## #spark 运行模式
+# Spark / PySpark 笔记
+
+课程参考：[B 站 · PySpark 入门](https://www.bilibili.com/video/BV1j4411u7hT?p=6&spm_id_from=pageDriver)（内容已合并自 `C:\Users\Mrwang\Desktop\整理笔记\note_git\2： pyspark.md`）。
+
+## 目录
+
+- [运行模式与架构](#spark-运行模式)
+- [RDD / DAG / 算子](#create-rdd-2-way)
+- [序列化、Yarn、UDF](#spark-的序列化)
+- [Standalone 部署与 spark-submit](#安装pyspark)
+- [Spark SQL · DataFrame 速查](#spark-sql--dataframe-速查)
+- [Hive](#hive)
+- [数据分类（RDD / DataFrame / Dataset）](#数据分类)
+
+---
+
+## Spark 运行模式
 
 - Local
 - Cluster
@@ -15,7 +31,7 @@ Executor: 执行进程，分布式启动在多台节点上，专门负责运行D
 
 --deploy-mode :  client | cluster 
 
-![1750562433152](../img//1750562433152.png)
+![1750562433152](../img/1750562433152.png)
 
 spark on yarn 
 
@@ -30,7 +46,7 @@ spark web-ui 日志：
 - localhost:8080  集群信息
 - localhose:4040 任务日志信息
 
-![1750583112417](../img//1750583112417.png)
+![1750583112417](../img/1750583112417.png)
 
 架构层面：ClustermManager ,worker 
 
@@ -49,12 +65,12 @@ Work : 统称：
 - standalone : worker
 - Yarn : NodeManger
 
-![1750583308488](../img//1750583308488.png)
+![1750583308488](../img/1750583308488.png)
 
-![1750583452098](../img//1750583452098.png)
+![1750583452098](../img/1750583452098.png)
 
 
-![1750583086456](../img//1750583086456.png)
+![1750583086456](../img/1750583086456.png)
 
 
 
@@ -69,11 +85,11 @@ RDD  5 个特征：
 1. RDD 是逻辑， 每个RDD 在物理上都可以对应多个分区数据，每个分区的数据可以存储在不同的节点上
 2. RDD  的Transformation 本质上是对RDD 所有的分区并行转换
 3. RDD Lineage 血缘机制
-   1. ![1750563473468](../img//1750563473468.png)
+   1. ![1750563473468](../img/1750563473468.png)
 4. （k,v） RADD ,  在shuffle 过程中可以自定义分区
 5. 
 
-![1750563614637](../img//1750563614637.png)
+![1750563614637](../img/1750563614637.png)
 
 
 ## Create RDD (2 way)
@@ -99,18 +115,18 @@ persist
 
 checkpoint 
 
-![1750580216128](../img//1750580216128.png)
+![1750580216128](../img/1750580216128.png)
 
-![1750580357066](../img//1750580357066.png)
+![1750580357066](../img/1750580357066.png)
 
 
 
 默认分区数：
 
-![1750564369937](../img//1750564369937.png)
+![1750564369937](../img/1750564369937.png)
 
 
-## # spark
+## Spark 核心概念
 
 RDD(Resilient Distributed Dataset)叫做弹性分布式数据集，是 Spark 中最基本的数据抽象，代表一个不可变、可分区、里面的元素可并行计算的集合。
 
@@ -130,15 +146,15 @@ RDD单词拆解：
 
 spark 可以计算，结构化，半结构化，非结构化
 
-![1749999725437](../img//1749999725437.png)
+![1749999725437](../img/1749999725437.png)
 
-![1749999911574](../img//1749999911574.png)
+![1749999911574](../img/1749999911574.png)
 
 Application: Spark应用程序
 
 指的是用户编写的Spark应用程序，包含了Driver功能代码和分布在集群中多个节点上运行的Executor代码。
 
-![1750082501315](../img//1750082501315.png)
+![1750082501315](../img/1750082501315.png)
 
 Driver :
 
@@ -146,7 +162,7 @@ Spark中的Driver即运行上述Application的Main()函数并且创建SparkConte
 
 其中创建SparkContext的目的是为了准备Spark应用程序的运行环境。
 
-![1750082545297](../img//1750082545297.png)
+![1750082545297](../img/1750082545297.png)
 
 Cluster Manager : 资源管理器
 
@@ -157,31 +173,31 @@ Executor: 执行器
 
 Application运行在Worker节点上的一个进程，该进程负责运行Task，并且负责将数据存在内存或者磁盘上，每个Application都有各自独立的一批Executor，如下图所示。
 
-![1750082647941](../img//1750082647941.png)
+![1750082647941](../img/1750082647941.png)
 
 Worker：计算节点
 
 集群中任何可以运行Application代码的节点，类似于Yarn中的NodeManager节点。在Standalone模式中指的就是通过Slave文件配置的Worker节点，在Spark
  on Yarn模式中指的就是NodeManager节点，在Spark on Messos模式中指的就是Messos
 Slave节点，如下图所示。
-![1750082736876](../img//1750082736876.png)
+![1750082736876](../img/1750082736876.png)
 
 DAGScheduler :
 
 基于DAG划分Stage
 并以TaskSet的形势提交Stage给TaskScheduler；负责将作业拆分成不同阶段的具有依赖关系的多批任务；最重要的任务之一就是：计算作业和任务的依赖关系，制定调度逻辑。在SparkContext初始化的过程中被实例化，一个SparkContext对应创建一个DAGScheduler。
 
-![1750082822447](../img//1750082822447.png)
+![1750082822447](../img/1750082822447.png)
 
 TaskScheduler:
 
-![1750082859520](../img//1750082859520.png)
+![1750082859520](../img/1750082859520.png)
 
 job :
 
 由一个或多个调度阶段所组成的一次计算作业；包含多个Task组成的并行计算，往往由**Spark Action**催生，一个JOB包含多个RDD及作用于相应RDD上的各种Operation。如图所示。
 
-![1750082900580](../img//1750082900580.png)
+![1750082900580](../img/1750082900580.png)
 
 ## RDD 类型
 
@@ -208,7 +224,7 @@ job :
 
 让所有正在运行的计算任务以只读方式访问
 
-![1750581188042](../img//1750581188042.png)
+![1750581188042](../img/1750581188042.png)
 
 ### 5. 自定义 RDD
 
@@ -298,9 +314,9 @@ final_rdd = aggregated_rdd.map(lambda x: (x[0].split("_")[1], x[1]))
 * **避免过度 Shuffle** ：优先使用窄依赖操作。
 * **匹配资源** ：分片数与集群资源成正比。
 
-![1750080826479](../img//1750080826479.png)
+![1750080826479](../img/1750080826479.png)
 
-![1750080985679](../img//1750080985679.png)
+![1750080985679](../img/1750080985679.png)
 
 RDD lineage
 
@@ -331,7 +347,7 @@ Spark shuffle 实现方式有2种：
 * [Spark MLlib](https://zhida.zhihu.com/search?content_id=228788816&content_type=Article&match_order=1&q=Spark+MLlib&zhida_source=entity)
 * [Spark GraphX](https://zhida.zhihu.com/search?content_id=228788816&content_type=Article&match_order=1&q=Spark+GraphX&zhida_source=entity)
 
-![1749998302198](../img//1749998302198.png)
+![1749998302198](../img/1749998302198.png)
 
 Spark有完善的生态圈，如下：
 
@@ -369,7 +385,7 @@ executor创建成功后，在日志文件会显示如下信息： `INFO Executor
 
 阶段之间的划分是根据数据的依赖关系来确定的。当一个 RDD 的分区依赖于另一个 RDD 的分区时，这两个 RDD 就属于同一个阶段。当一个 RDD 的分区依赖于多个 RDD 的分区时，这些 RDD 就属于不同的阶段。
 
-![1750253608538](../img//1750253608538.png)
+![1750253608538](../img/1750253608538.png)
 
 * 一个 Spark 程序可以有多个 DAG(有几个 Action，就有几个 DAG，上图最后只有一个 Action（图中未表现）,那么就是一个 DAG);
 * 一个 DAG 可以有多个 Stage(根据宽依赖/shuffle 进行划分)；
@@ -393,7 +409,7 @@ Spark 会根据 shuffle/宽依赖使用回溯算法来对 DAG 进行 Stage 划�
 
 Shuffle也是Spark中最昂贵的操作之一，它不仅会带来网络IO，还会引发磁盘IO、数据序列化/反序列化、JVM垃圾回收等操作，因此其性能往往决定着Spark作业的整体性能
 
-![1750583569807](../img//1750583569807.png)
+![1750583569807](../img/1750583569807.png)
 
 
 
@@ -529,11 +545,11 @@ acc = sc.LongAccumulator('variable_acc')
 
 **Action 动作算子** ：
 
-![1749998728856](../img//1749998728856.png)
+![1749998728856](../img/1749998728856.png)
 
 **统计操作** ：
 
-![1749998754560](../img//1749998754560.png)
+![1749998754560](../img/1749998754560.png)
 
 * **窄依赖** ：父 RDD 的一个分区只会被子 RDD 的一个分区依赖；
 * **宽依赖** ：父 RDD 的一个分区会被子 RDD 的多个分区依赖(涉及到 shuffle)。
@@ -765,247 +781,10 @@ work  : 启动
 SchedulerBackend : coarseGrainedExecutorBackend , StandaloneSchedulerBackend
 ```
 
-## 基本使用
 
-### RDD:
+> **合并说明**：`note_git/2： pyspark.md` 中与上文重复的 Standalone 部署、RDD/算子、UDF 段落已删；DataFrame 函数速查见下节。
 
-```
-分为两类算法：
-Transfomer : 转换算子 lazy  产生一个新的rdd
-map fliter flatMap goupBykey reduceBykey aggregateByKey ,union ,join ,coalesce
-action :    执行 (写文件 ， ) 返回结果给驱动程序 ，或写入文件系统
-reduce ,collect ,count  ,first ,take ,countByKey , foreach 
-
-产生job 
-
-Application ->job（DAG）->Stage -> task 
-RDD: 弹性分布式数据集合  resillebt distributed dataset（不可变得 ，只读的）
-弹性： 容错能力 
-分布式： 以分区为单位 ，运行在不同的节点上
-
-1: rdd 的创建：
-集合并行化
-读取外部系统文件  sc.textFilxt(path)
-转换算子
-2:  rdd 的分区  默认分区数量 = application 使用的cores 数量
- 每一个rdd 都有分区 。 rdd.size 分区的数量
-partition :  
-hdfs :   分区数量 = 读取hdfs 文件的block 快的数量
-
-
-RDD依赖关系  父到子
-宽依赖  有shuffle操作
-窄依赖 
-划分阶段
-从计算过程：
-ont-to-one  所有作业可以流水线  pipeline 速度快 窄依赖
-宽依赖必须拿到所有分区的数据才能计算，速度慢
-容错： 窄依赖 好 宽依赖差
-
-基于以上2点， 用dependency , 用于封装两种不同的依赖关系  ，然后搞出stage阶段
-把所有的窄依赖放在一个阶段中 
-
-窄依赖算子：
-map flatMap filter 不会改变分区数量
-union coalesce   增加  减少分区数量
-所有的窄依赖算子rdd 都在一个阶段中 stage
-（一旦遇到宽依赖 ，就切分stage）
-宽依赖算子: shuffle 一对多的关系  : 有几个算子 就切分多个阶段
-groupByKey  reduceByKey distinct 
-
-Stage ： spark 中对所有的窄依赖的封装 ，提供的一个抽象类
-Stage： ResultStage ： 只有一个 ， 就是最后一个stage
-ShuffleMapStage :  0 到多个
-
-Stage 是有起始边界：
-ShuffleMapStage： 起点  job 中的第一个RDD
-终点： shuffle Write
-ResultStage:  起点: Shffle Read 
-终点： job 中最后一个RDD 
-job的起始位置：
-当触发action 算法的时候，产生job  ， job终止位置 ,就是action算子对应的RDD
-
-DAG ： 有向五环图
-有向： 数据的流向， RDD的依赖方向
-无环 ： 不是闭环
-图：  点 RDD  线 rdd 之间的依赖关系 
-
-1Driver 
-在解析业务逻辑代码的时候 ，完成DAG的构建，当触发action 算子的时候，DAG构建完成
-2DAGSchedule
-基于DAG,切分stage ，创建task ，提交stage
-3Taskschedule
-调度Task ，提交task 给executor 执行 
-```
-
-### 基本算子
-
-```
-map :  一一映射  对每一条数据执行
-mapValues :
-mapPartitions: 一一映射,对每个分区 
-mapPatitionWithIndex
-
-zip  分区数量必须一致，每个分区的元素也必须一致   a ,b ->（a, b）
-zipWithIndex 
-
-groupByKey 
-默认的分区器 ：  key hashcode % 分区数
-数据重新分发 ： shuffle 
-reduceByKey
-分区类聚合 
-能使用reduceByKey 就不用groupByKey 
-
-foreach  一一映射 ， 没有返回值 ， 常见的打印  每次迭代一个元素 
-foreachPartition 
-
-sortByKey   产生 job
-zipWithIndex  产生 job
-take 产生 job
-reduct 元素并归 ， 没有顺序
-coutByKey    某个元素的key 的个数
-collectAsMAp  ： 用于[k,v] rdd , 以map 集合返回
-take()
-first()
-top()  返回前n 个
-takeOrdered(n) 
-```
-
-### RDD的高级应用
-
-```
-1：RDD 的缓存和持久化 
-默认情况下， 每一个action 操作 ， 都会重新计算上面的转换RDD （重新计算）
-如果能把该RDD的结果缓存下来， 那么基于该RDD的操作，就不需要从头计算 
-cache() (StoregeLevel )  缓存
-persisit(StoregeLevel.MeMORY_AND_DISK) 持久化
-执行完业务逻辑，可以手动释放
-unpersisit()
-
-2：RDD 的checkpoint 容错方案 
-把rdd 中的数据 ，写到分布式文件系统中
-sc.setCheckpointDir('hdfs://ip:port/dir')
-rdd.checkpoint   
-1:是lazy 算子  ，当触发action算子的时候， 才执行，产生2个job,第一个job
-是 执行业务逻辑， 第二个job 执行写入到数据到hdfs
-2: 当对某一个rdd 执行checkpoint 之后， 该RDD原有的父依赖关系被删除 ，取而代之是checkpointRDD
-3: 以后对该RDD所有的操作，依赖关系从CheckpointRDD开始，真正的数据从hdfs 读取
-
-在特别复杂的业务逻辑中，才会用 
-
-3： RDD 中的共享变量（广播变量 ， 累计器） 广播大变量  在driver端一个副本 
-
-RDD的内存管理方法：
-spark1.x 静态内存管理 （各个模块的占比是固定的 ，容易造成不均衡 淘汰）
-spark2.x 统一的内存管理  
-
-内存的组成部分：
-总的内存 = 系统预留内存（300M） + 可用内存
-可用内存  = 统一内存（0.6） + 其他（0.4）
-统一内存 = 存储内存(storege)（0.5） + 执行内存 (executiom)（0.5）
-
-Storege 存储内存 ：
-缓存RDD ,展开partition ,存放Direct task result ，存放广播变量 ，在spark Streaming reciver 模式中， 存放每个batch 的blocks
-execution 执行内存：
-用于shuffle , join , sort ,aggregation(聚合) ，buffer等操作
-其他：
-spark : 内部的元数据 ， OOM错误 ， 
-
-默认配置参数， spark.memory.fraction = 0.6
- spark.memory.storageFraction=0.5
- 
-
-Torrent 比特洪流技术
-广播变量实现类 ： TorrentBroadcast 
-利用广播变量， 能保证一个executor的所有task 共用一份反序列化的数据
-减少数据的反序列化和GC
-使用：
-    diver 端广播  blockManagerMaster 
-    executor 使用  blockManager 
-注意使用： 
-1除了RDD 不能被广播， 其他的类 、集合。对象都可以被广播
-2： 被广播数据， 可以在任意的executor 中通过value调用
-3： 广播变量是只读的，不能被修改 
-4： 最大的功能是，就是保证一个executor中所有的task共用一份数据 ，提升效率 
-
-
-4： 累加器
-在driver端定义一个类加器
-全局的 可以通过Web 监控界面查看 
-acc = sc.LongAccumulator('variable_acc')
-
-总结：
-1在driver端定义累加器
-2在任意的函数中，executor中通过add方法调用
-3累加器是全局(application为单位)的累加 
-4在driver端 ，通过value 方法获取值
-5在程序的监控界面，通过累加器的名称来获取值
-
-```
-
-**spark 序列化**
-
-```
-spark 中使用的序列化机制 默认是java 序列化 javaSerializer
-内存中对象  序列化 二进制文件  网络传输 反序列化
-
-KryoSerializer  : 占用内存少，速度快， 需要注册
-
-1： spark standalone HA  （high avaliable ） 高可用  7 * 24  (集群) 
- 单点故障  核心节点
- standlone master worker
- master alive  master standby(热备)
-zookeeper 管理节点 高可用 
-2： spark on yarn  standalone 两套不同的集群
-
-yarn 集群  
-客服端提交任务  1台（满足条件  ，spark 安装包 ， hadoop 的配置 （hdfs  +yarn）） 连接到hadoop集群 
-
-yarn 集群：
-ResourceManager 
-NodeManager
-1: 修改 ${hadoop}/etc/hadoop/capacity-scheduler.xml 中的资源调度
-
-2： yarn.site.xml
-
-
-spark 的客服端配置 
-1：jdk
-vim ${spark_home}/conf/spark-env.sh
-2: hadoop_conf_dir  /yarn_conf_dir # hadoop的配置文件路径 
-
-spark-submit --master yarn --deploy-model client/cluster 
-
-两种部署模式区别 ：
-cluster : Driver 运行在集群中的某一个节点 ， Driver 可以容错 ，提交任务，就可以退出
-client :  Driver 运行在客服端 
-```
-
-### UDF 自定义函数
-
-```
-第1种方式
-# 定义自定义函数
- def fun_name():
- pass
-# 注册自定义函数
-udf1 = functions.udf(fun_name, FloatType()
-# 使用自定义函数
-dataframe = dataframe.withColumn(col, udf1(col))
-第2种方式
-注册udf，在sql中使用
-spark.udf.register("udf1", fun_name,StringType()) 
-dataframe = dataframe.withColumn(col, udf1(col))
-第3种方式 注解形式更方便
-@udf(returnType=StringType()) 
-def fun_name():
- pass
-df.withColumn("Cureated Name", convertCase(col("Name"))).show(truncate=False)
-
-pandas_udf函数支持定义三种类型的函数，分别为SCALAR、GROUP_MAP、GROUP_AGG，在pyspark.sql.function.PandasUDFType 中做了定义
-
-from pyspark.sql.functions import pandas_udf, PandasUDFType
-```
+### Spark SQL · DataFrame 速查
 
 **由于数据中某些字段包含 json 数据，因此直接使用 DataFrame 进行读取会出现分割错误，所以如果要创建 DataFrame，需要先直接读取文件生成 RDD，再将 RDD 转为 DataFrame。过程中，使用 python3 中的 csv 模块对数据进行解析和转换。**
 
@@ -1105,32 +884,6 @@ df.select(F.count(df.age)) # 直接统计，经试验，这个函数会去掉缺
 
 from pyspark.sql import Window
 df.withColumn("row_number", F.row_number().over(Window.partitionBy("a","b","c","d").orderBy("time"))).show() # row_number()函数
-```
-
-```
-key  v 
-rdd2 =rdd1.map(lambda v: (v.genre, int(v.num_of_sales))).reduceByKey(lambda x, y: x + y).collect()  # collect 返回的是 []
-json.dumps(rdd2)
-# 注意reducebykey  x,y : x+y    都是 value 
-
-# 两个列求和 
- keyv-> []
-rdd.map(lambda v: (int(v.year_of_pub),  [ int(v.num_of_tracks), 1] ))\
-.reduceByKey(lambda x, y: [x[0] + y[0], x[1] + y[1]]).sortByKey()
- = res = [k ,v]
-list(map(lambda v: v[0], result))
-list(map(lambda v: v[1][0], result))
-list(map(lambda v: v[1][1], result))
-
- key ()  元组v 
-rdd.map(lambda v: ( (v.genre, int(v.year_of_pub)), int(v.num_of_sales)))\
-.reduceByKey(lambda x, y: x + y).sortByKey().collect()
-
-#多列 聚合操作  
-rdd.map(lambda v: (v.genre, (float(v.rolling_stone_critic), float(v.mtv_critic), float(v.music_maniac_critic), 1)))\
-.reduceByKey(lambda x, y : (x[0] + y[0], x[1] + y[1], x[2] + y[2], x[3] + y[3]))\
-.map(lambda v: (v[0], v[1][0]/v[1][3], v[1][1]/v[1][3], v[1][2]/v[1][3])).collect()
-
 ```
 
 ### spark sql
@@ -1266,11 +1019,51 @@ rdd.map(lambda v: (v.genre, (float(v.rolling_stone_critic), float(v.mtv_critic),
 
 ```
 
-![1750253900372](../img//1750253900372.png)
+![1750253900372](../img/1750253900372.png)
+
+## Hive
+
+参考：[知乎 · Hive 入门](https://zhuanlan.zhihu.com/p/100163942)、[知乎 · Hive 进阶](https://zhuanlan.zhihu.com/p/103413663)
+
+**查询原理**：Hive 将 HQL 转为 MapReduce（或 Tez/Spark）在 Yarn 上运行；**元数据**存于 MetaStore（常用 MySQL），表数据一般在 HDFS。
+
+| 概念 | 说明 |
+| --- | --- |
+| 内部表 | 数据移到仓库目录（如 `/usr/hive/warehouse`），删表删数据 |
+| 外部表 | 数据位置不变，删表不删 HDFS 数据；生产映射多用外部表 |
+| 分区 / 分桶 | 分区按目录；分桶按 hash 分文件，适合超大数据 |
+| 复合类型 | Array、Map、Struct |
+
+```sql
+CREATE DATABASE IF NOT EXISTS hive_test COMMENT 'db' LOCATION 'hdfs_path';
+CREATE [EXTERNAL] TABLE ... (PARTITIONED BY ... CLUSTERED BY ... INTO n BUCKETS ...);
+CREATE TABLE emp_copy AS SELECT * FROM emp WHERE deptno='20';
+LOAD DATA LOCAL INPATH '/path/emp.txt' INTO TABLE emp;
+INSERT OVERWRITE TABLE t SELECT ... FROM ...;
+-- 窗口：sum/avg/rank/dense_rank/row_number () OVER (...)
+```
+
+### Yelp 业务 SQL 示例（PySpark）
+
+```python
+split_col = f.split(business['categories'], ',')
+business = business.withColumn("categories", split_col).filter(business["city"] != "").dropna()
+business.createOrReplaceTempView("business")
+b_etl = spark.sql(
+    "SELECT business_id, name, city, state, latitude, longitude, stars, review_count, "
+    "is_open, categories, attributes FROM business"
+).cache()
+part_business = spark.sql(
+    "SELECT state, city, stars, review_count, explode(categories) AS category FROM business"
+).cache()
+spark.sql("SELECT new_category, COUNT(*) AS freq FROM part_business GROUP BY new_category ORDER BY freq DESC")
+df.toJSON()
+df.toPandas()
+```
 
 ## 数据分类
 
-![1750253935735](../img//1750253935735.png)
+![1750253935735](../img/1750253935735.png)
 
 **总结：**
 
@@ -1284,7 +1077,7 @@ Spark SQL数据抽象可以分为两类：
 
 ② DataSet：DataSet是DataFrame的进一步发展，它比RDD保存了更多的描述信息，概念上等同于关系型数据库中的二维表，它保存了类型信息，是强类型的，提供了编译时类型检查。调用 Dataset 的方法先会生成逻辑计划，然后被 spark 的优化器进行优化，最终生成物理计划，然后提交到集群中运行！DataFrame = Dateset[Row]
 
-![1750253992466](../img//1750253992466.png)
+![1750253992466](../img/1750253992466.png)
 
 * DataFrame = RDD - 泛型 + Schema + SQL + 优化
 * DataSet = DataFrame + 泛型
@@ -1295,11 +1088,11 @@ Spark SQL数据抽象可以分为两类：
 - 通过 josn/parquet 会有完整的约束；
 - 不管是 DataFrame 还是 DataSet 都可以注册成表，之后就可以使用 SQL 进行查询了! 也可以使用 DSL
 
-![1750584043035](../img//1750584043035.png)
+![1750584043035](../img/1750584043035.png)
 
-![1750584677837](../img//1750584677837.png)
+![1750584677837](../img/1750584677837.png)
 
-![1750584699501](../img//1750584699501.png)
+![1750584699501](../img/1750584699501.png)
 
 
 
@@ -1313,4 +1106,9 @@ https://blog.csdn.net/Javachichi/article/details/131871627
 
 https://www.cnblogs.com/skaarl/p/13960639.html
 
-https://blog.csdn.net/Javachichi/article/details/131871627
+## 参考资料
+
+- 本地原笔记：`C:\Users\Mrwang\Desktop\整理笔记\note_git\2： pyspark.md`
+- [美团 · Spark 性能调优](https://tech.meituan.com/2016/05/12/spark-tuning-pro.html)
+- [CSDN · Spark 调优](https://blog.csdn.net/Javachichi/article/details/131871627)
+- [博客园 · Spark 笔记](https://www.cnblogs.com/skaarl/p/13960639.html)
