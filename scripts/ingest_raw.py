@@ -28,8 +28,23 @@ MEDIA_EXT = {".png", ".jpg", ".jpeg", ".gif", ".webp", ".svg", ".bmp", ".ico"}
 SKIP_DIR_NAMES = {".git"}
 
 TOPIC_BY_PREFIX = (
+    ("1-Note/1-Bioinformatics&Data", "biological", "生物 / 生信", "biological"),
+    ("1-Note/4-DataEngineering", "big-data", "大数据", "big-data"),
+    ("1-Note/5-Infrastructure", "infrastructure", "基础设施", "infrastructure"),
+    ("1-Note/8-BigData", "big-data", "大数据", "big-data"),
+    ("1-Note/11-Database", "database", "数据库", "database"),
     ("1-Note/2-MachineLearning", "ml", "机器学习", "ml"),
     ("1-Note/3-DeepLearning", "ml", "机器学习", "ml"),
+    ("1-Note/7-Programming", "programming", "编程语言", "programming"),
+    ("1-Note/10-TechSharing", "tech", "技术杂项", "tech"),
+    ("1-Note/12-Architecture", "tech", "技术杂项", "tech"),
+    ("1-Note/13-Stock", "tech", "技术杂项", "tech"),
+    ("1-Note/15-RecommandSystem", "ml", "机器学习", "ml"),
+    ("1-Note/16-Cloud", "infrastructure", "基础设施", "infrastructure"),
+    ("1-Note/17-PM", "tech", "技术杂项", "tech"),
+    ("1-Note/18-GPU", "ml", "机器学习", "ml"),
+    ("3-blog", "tech", "技术杂项", "tech"),
+    ("4-Skill", "tech", "技术杂项", "tech"),
     ("2-StudyMaterials/1-Biological", "biological", "生物 / 生信", "biological"),
     ("2-StudyMaterials/2-MachineLearning", "ml", "机器学习", "ml"),
     ("2-StudyMaterials/3-ReinforcementLearning", "ml", "机器学习", "ml"),
@@ -493,12 +508,15 @@ def process(dry_run: bool, do_commit: bool, do_push: bool) -> int:
         return 0
     secret = [path for path in fresh if looks_secret(path)]
     if secret:
-        print("发现疑似口令或密钥，已停止。这些文件不会写入 wiki，也不会提交：", file=sys.stderr)
+        print("跳过疑似口令或密钥（不自动摘录 wiki，仍会登记 ledger）：", file=sys.stderr)
         for path in secret:
             print(f"  {rel_posix(path)}", file=sys.stderr)
-        return 2
+    process_list = [path for path in fresh if path not in secret]
+    if not process_list and not secret:
+        print("没有新的 raw 文件。")
+        return 0
     written: list[Path] = []
-    for path in fresh:
+    for path in process_list:
         topic = topic_for(rel_posix(path)) or ("tech", "技术杂项", "tech")
         folder, heading, tag = topic
         if path.suffix.lower() in MEDIA_EXT:
@@ -520,18 +538,22 @@ def process(dry_run: bool, do_commit: bool, do_push: bool) -> int:
         files = ledger["files"]
         assert isinstance(files, dict)
         files[rel_posix(path)] = file_record(path)
+    for path in secret:
+        files = ledger["files"]
+        assert isinstance(files, dict)
+        files[rel_posix(path)] = file_record(path)
     if dry_run:
-        print(f"将处理 {len(fresh)} 个文件。")
+        print(f"将处理 {len(process_list)} 个文件（另跳过 {len(secret)} 个疑似敏感文本）。")
         return 0
     save_ledger(ledger)
     written.extend([LEDGER_PATH, MOC_PATH])
     subprocess.run([sys.executable, str(ROOT / "scripts" / "build_llm_index.py")], cwd=ROOT, check=True)
     written.append(ROOT / "wiki" / "INDEX.llm.md")
     if not do_commit:
-        print(f"已更新 wiki，未提交。新文件 {len(fresh)} 个。")
+        print(f"已更新 wiki，未提交。处理 {len(process_list)} 个文件。")
         return 0
-    message = f"收录 raw 新增资料并更新 wiki。\n\n自动处理 {len(fresh)} 个新文件。"
-    raw_paths = [path for path in fresh if topic_for(rel_posix(path)) is not None]
+    message = f"收录 raw 新增资料并更新 wiki。\n\n自动处理 {len(process_list)} 个新文件。"
+    raw_paths = [path for path in process_list if topic_for(rel_posix(path)) is not None]
     if not commit_paths([*raw_paths, *written], message):
         print("没有需要提交的变更。")
         return 0

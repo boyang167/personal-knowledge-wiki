@@ -32,4 +32,5 @@ sources:
 
 ## 相关
 
+- [个人基础设施笔记地图（1-Note Markdown）](./personal-infrastructure-notes-map.md)
 - [MOC](../MOC.md)

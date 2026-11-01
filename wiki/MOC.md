@@ -6,6 +6,7 @@
 
 - [数据平台架构演进](./big-data/data-platform-architecture.md)
 - [Apache Flink 流处理核心概念与作业模型](./big-data/flink-stream-processing.md)
+- [个人数据工程笔记地图（Spark / Flink / Hive）](./big-data/personal-data-engineering-notes-map.md)
 
 ## 生物 / 生信
 
@@ -19,14 +20,17 @@
 - [人类基因注释、GenBank 发布与蛋白质图谱](./biological/human-annotation-and-expression.md)
 - [文献、医学术语与专利序列](./biological/literature-terminology-and-patents.md)
 - [抗体药物 CMC 项目阶段与 IND 活动路线](./biological/cmc-project-roadmap.md)
+- [个人生信与蛋白工艺笔记地图](./biological/personal-bioinformatics-notes-map.md)
 
 ## 基础设施
 
 - [容器、Kubernetes 与持续集成资料索引](./infrastructure/container-platform-sources.md)
+- [个人基础设施笔记地图](./infrastructure/personal-infrastructure-notes-map.md)
 
 ## 数据库
 
 - [MongoDB 基础资料索引](./database/mongodb-source.md)
+- [数据库与消息中间件个人笔记索引](./database/personal-database-messaging-notes.md)
 
 ## 机器学习
 
@@ -50,6 +54,10 @@
 ## 技术杂项
 
 - [技术分享题目索引](./tech/tech-talk-catalog.md)
+- [raw/1-Note 笔记全量索引](./tech/one-note-raw-index.md)
+- [个人 LLM Wiki 从 0 到 1（方法与实践）](./tech/llm-personal-wiki-practice.md)
+- [Agent Skill 体系：Superpowers 与 BMAD](./tech/agent-skills-bmad-superpowers.md)
+- [架构、推荐、GPU 与其它 1-Note 主题](./tech/personal-architecture-and-misc-notes.md)
 
 ## 开源
 

@@ -3,7 +3,7 @@ title: Apache Flink 流处理核心概念与作业模型
 summary: 梳理 Flink 的批流统一、状态计算、时间语义、窗口、Checkpoint、算子链与部署模式，作为学习和设计实时作业的速查页
 tags: [big-data, flink, stream-processing, state, checkpoint]
 status: reviewed
-updated: 2026-10-24
+updated: 2026-11-01
 sources:
   - path: wiki/big-data/flink-stream-processing.md
     note: 对外发布副本，原始资料路径不对外
@@ -38,39 +38,30 @@ sources:
 
 ## 集群架构与提交模式
 
-Flink 采用 JobManager + TaskManager 的主从式执行模型：作业提交后会被拆分为多个 Task，由 JobManager 调度到不同 TaskManager 执行；运行期间，集群还负责状态管理、监控、失败恢复或重试。
+- **Client**：提交作业的入口。
+- **JobManager**：调度、协调 Checkpoint、管理 TaskManager。
+- **TaskManager**：提供 Slot，每个 Slot 通常运行一个 Task 线程。
 
-资料中列出的作业部署模式包括：
-
-- Standalone
-- Session mode
-- Per-job mode
-- Application mode
-
-这些模式的差异主要体现在集群与作业的生命周期、资源隔离和提交边界上，实际选择应结合平台运维方式与资源管理器再确认。
+常见部署与提交模式包括 Standalone、YARN、Kubernetes 等；生产环境需按资源隔离与作业模式（Session / Application / Per-Job）选型。
 
 ## 算子链
 
-算子链（Operator Chaining）把多个逻辑算子合并为一个 Task，使数据在同一线程内以函数调用方式传递，减少网络传输和序列化开销。
-
-常见形成条件：
-
-1. 上下游算子并行度相同。
-2. 上下游数据传输方式为 Forward。
-3. 算子处于相同的 Slot Sharing Group。
-4. 没有显式禁用算子链。
-
-如果发生 `keyBy`、`rebalance`、`broadcast` 等需要重新分区的传输，或者并行度不同，通常不能直接合并为同一条算子链。
+当多个算子满足相同并行度、Forward 连接、同一 Slot Sharing Group 等条件时，Flink 可能将其合并为算子链以减少开销。`keyBy`、`rebalance`、`broadcast` 或并行度变化通常会打断链。
 
 ## Table API / SQL 备忘
 
-资料将 Flink 的表组织为 Catalog、Database 和 Table name 三层，并区分临时表与永久表。SQL 结果还可能表现为 append、upsert 或 retract 等更新流语义；具体语义取决于查询和连接器能力，使用前应核对目标版本文档。
+表名通常组织为 Catalog / Database / Table；SQL 结果可能表现为 append、upsert 或 retract 等更新语义，需按连接器与版本核对。
+
+## 工程实践延伸
+
+个人笔记（见 [数据工程笔记地图](/knowledge/big-data/personal-data-engineering-notes-map/)）还覆盖：Dinky / StreamPark 生态、Flink on K8s、MySQL CDC 连接器选型、State Backend 与 Session 集群运维等。**概念层以本页为准，部署与运维细节以笔记为准。**
 
 ## 待核实
 
-- 本页保留的是原始学习笔记中的概念总结，未绑定具体 Flink 版本；生产配置、Checkpoint 细节和 SQL 更新语义需按目标版本复核。
+- 未绑定具体 Flink 版本；生产配置、Checkpoint 与 SQL 语义需按目标版本复核。
 
 ## 相关页面
 
 - [数据平台架构演进](/knowledge/big-data/data-platform-architecture/)
-- [MOC](/knowledge/)
+- [数据工程笔记地图](/knowledge/big-data/personal-data-engineering-notes-map/)
+- [知识库首页](/knowledge/)

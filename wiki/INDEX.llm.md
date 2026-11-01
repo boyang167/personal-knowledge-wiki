@@ -2,7 +2,7 @@
 
 自动生成，请勿手改。运行 `python scripts/build_llm_index.py` 更新。
 
-**Generated:** 2026-10-24 11:17 UTC
+**Generated:** 2026-11-01 14:05 UTC
 
 Agent 用法：先读本表定位路径，再打开对应 markdown 全文。
 
@@ -10,6 +10,7 @@ Agent 用法：先读本表定位路径，再打开对应 markdown 全文。
 |------|-------|--------|---------|------|
 | big-data/data-platform-architecture.md | 数据平台架构演进（Lambda / Kappa / 湖仓一体） | draft | 对比 Lambda、Kappa 与湖仓一体架构的短板及 Table/列式/序列化存储格式选型要点 | big-data, lakehouse, lambda, kappa, architecture |
 | big-data/flink-stream-processing.md | Apache Flink 流处理核心概念与作业模型 | draft | 梳理 Flink 的批流统一、状态计算、时间语义、窗口、Checkpoint、算子链与部署模式，作为学习和设计实时作业的速查页 | big-data, flink, stream-processing, state, checkpoint |
+| big-data/personal-data-engineering-notes-map.md | 个人数据工程笔记地图（Spark / Flink / Hive） | draft | 对齐 raw/1-Note 下 4-DataEngineering 与 8-BigData，并链到 wiki 大数据提炼页 | big-data, spark, flink, hive, notes |
 | biological/antibody-immunology-databases.md | 抗体、纳米抗体与免疫表位数据库 | draft | 对比 IMGT、SAbDab、Thera-SAbDab、INDI、ADCdb、IEDB 与 DOTAD 的对象和获取边界，供抗体设计与免疫原性查询选型 | biological, antibody, immunology, nanobody, adc |
 | biological/bioinformatics-data-landscape.md | 生物信息学数据资源总览与蛋白数据整合线索 | draft | 按数据类型和使用场景整理 GenBank、UniParc、JGI、MGnify 等资源，辅助设计可持续更新的蛋白与基因数据库 | biological, bioinformatics, protein, genome, database |
 | biological/bioinformatics-local-data-project.md | 生物药公开数据本地化项目地图 | draft | 按用途归纳 Bioinfo_Data 要本地化的公开库，并指向各类调研页；统计数字与入库进度以 raw 快照为准 | biological, bioinformatics, data-platform, catalog |
@@ -19,9 +20,12 @@ Agent 用法：先读本表定位路径，再打开对应 markdown 全文。
 | biological/interaction-and-pathway-databases.md | 蛋白质互作与代谢通路数据库 | draft | 对比 STRING、BioGRID、Reactome、MetaCyc 与 KEGG 的证据类型，并记录代谢网络整合时要准备的四份源表 | biological, pathway, ppi, string, reactome, metacyc |
 | biological/kegg-pathway-database.md | KEGG 通路数据库调研要点 | uncertain | 说明 KEGG 的 PATHWAY、KO、GENES、COMPOUND 等数据组织方式、通路编号和常见应用边界 | biological, bioinformatics, kegg, pathway, genomics |
 | biological/literature-terminology-and-patents.md | 文献、医学术语与专利序列 | draft | 区分 PubMed 引文、PMC 全文、UMLS 概念标识，以及 EMBL 专利核酸和专利蛋白序列的入库取舍 | biological, pubmed, umls, patent, literature |
+| biological/personal-bioinformatics-notes-map.md | 个人生信与蛋白工艺笔记地图 | draft | 对照 raw/1-Note/1-Bioinformatics&Data 与已有 biological wiki，说明各笔记覆盖范围 | biological, bioinformatics, protein, cmc, notes |
 | biological/protein-domains-structures-enzymes.md | 蛋白质结构域、结构、酶家族与非典型氨基酸 | draft | 归纳 Pfam、AlphaFold、CAZy、iNClusive 与 SPSED 各自回答的问题，以及序列或结构要从哪里补齐 | biological, protein, pfam, alphafold, cazy, enzyme |
 | database/mongodb-source.md | MongoDB 基础资料索引 | draft | 数据库目录目前只有一份 MongoDB 基础 PDF，尚未从正文提炼 | database, mongodb |
+| database/personal-database-messaging-notes.md | 数据库与消息中间件个人笔记索引 | draft | 登记 raw/1-Note/11-Database 下 Redis、Kafka、MySQL、向量库等笔记，供 Agent 按需打开原件 | database, redis, kafka, mysql, messaging |
 | infrastructure/container-platform-sources.md | 容器、Kubernetes 与持续集成资料索引 | draft | 列出基础设施目录中的 Docker、Kubernetes 和 Jenkins PDF，供按需打开，尚未从正文提炼 | infrastructure, docker, kubernetes, jenkins |
+| infrastructure/personal-infrastructure-notes-map.md | 个人基础设施笔记地图 | draft | K8s、ELK、OpenStack、VMWare、Azure 等 raw/1-Note/5-Infrastructure 与 16-Cloud 笔记索引 | infrastructure, kubernetes, cloud, elk |
 | kg/knowledge-graph-representation.md | 知识图谱中的实体链接与 RDF 表示 | draft | 区分实体、提及和歧义，并记录 RDF、RDFS、OWL 在笔记里的分工 | kg, rdf, owl, entity-linking |
 | kg/knowledge-graph-source.md | 知识图谱资料索引 | draft | 知识图谱目录目前只有第 1 章概述 PDF，尚未从正文提炼 | kg, knowledge-graph |
 | ml/computer-vision-models.md | 视觉模型笔记索引 | draft | 按笔记标题列出 CNN、经典视觉模型和检测模型，并保留 AlexNet 与文本卷积的几条原文要点 | ml, vision, cnn, transformer |
@@ -38,6 +42,10 @@ Agent 用法：先读本表定位路径，再打开对应 markdown 全文。
 | ml/reinforcement-learning-concepts.md | 强化学习的基本划分 | draft | 用状态、动作、策略和奖赏整理笔记中的 Model-free/Model-based、价值/策略、在线/离线划分 | ml, reinforcement-learning, q-learning, policy |
 | opensource/ants-go-worker-pool.md | ants Go 协程池使用与运行模型 | draft | 提炼 ants 协程池的基本使用、容量管理、任务提交和生命周期操作，便于阅读源码或快速接入 | opensource, golang, goroutine, worker-pool, ants |
 | programming/java-and-spring-sources.md | Java 与 Spring 资料索引 | draft | 编程语言目录只有 Java 与 Spring 两份 PDF，尚未从正文提炼 | programming, java, spring |
+| tech/agent-skills-bmad-superpowers.md | Agent Skill 体系：Superpowers 与 BMAD | draft | 对照 raw/4-Skill 中 Superpowers 与 BMAD 的入口 Skill，说明触发规则、分工与 Agent 操作清单 | tech, cursor, agent, skill, bmad, superpowers |
+| tech/llm-personal-wiki-practice.md | 个人 LLM Wiki 从 0 到 1（方法与实践） | draft | 提炼 raw/3-blog/llm-wiki.md：Markdown+Git 真源、raw/wiki/publish/Skill 分层及 11-Profile-Web 双仓落地 | tech, knowledge-management, llm, wiki, para |
+| tech/one-note-raw-index.md | raw/1-Note 笔记全量索引 | draft | 登记 personal-knowledge-wiki 下 1-Note 全部 Markdown 路径，供 Agent 路由到原件；细节以 raw 为准 | tech, notes, index, ingest |
+| tech/personal-architecture-and-misc-notes.md | 架构、推荐、GPU 与其它 1-Note 主题 | draft | 监控与分布式架构、推荐系统、GPU、编程语言、技术分享、股票等非核心域笔记登记 | tech, architecture, recommender, gpu |
 | tech/tech-talk-catalog.md | 技术分享题目索引 | draft | 把 raw 中技术分享 README 的题目收成主题索引，具体提纲仍回 raw 阅读 | tech, talks, distributed-systems, golang |
 
-**Total pages:** 31
+**Total pages:** 39

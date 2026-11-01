@@ -3,10 +3,12 @@ title: Apache Flink 流处理核心概念与作业模型
 summary: 梳理 Flink 的批流统一、状态计算、时间语义、窗口、Checkpoint、算子链与部署模式，作为学习和设计实时作业的速查页
 tags: [big-data, flink, stream-processing, state, checkpoint]
 status: draft
-updated: 2026-10-24
+updated: 2026-11-01
 sources:
   - path: raw/2-StudyMaterials/7-BigData/Flink/Flink.md
     note: Flink 基本概念、四个基石、JobManager/TaskManager、部署模式、算子链与 Table/SQL 相关笔记
+  - path: raw/1-Note/4-DataEngineering/2-flink.md
+    note: Dinky 生态、K8s/YARN 提交、MySQL CDC、State Backend 与运维命令
 ---
 
 # Apache Flink 流处理核心概念与作业模型
@@ -70,7 +72,12 @@ Flink 采用 JobManager + TaskManager 的主从式执行模型：作业提交后
 
 - 本页保留的是原始学习笔记中的概念总结，未绑定具体 Flink 版本；生产配置、Checkpoint 细节和 SQL 更新语义需按目标版本复核。
 
+## 工程笔记延伸
+
+个人笔记 [数据工程地图](./personal-data-engineering-notes-map.md) 中 `2-flink.md` 补充：Dinky/StreamPark 组合、Flink on K8s Session/Application 模式、CDC 连接器版本与 PyFlink 入口。概念层仍以 StudyMaterials 来源为主，部署细节以 1-Note 为准。
+
 ## 相关页面
 
 - [数据平台架构演进](./data-platform-architecture.md)
+- [数据工程笔记地图](./personal-data-engineering-notes-map.md)
 - [MOC](../MOC.md)

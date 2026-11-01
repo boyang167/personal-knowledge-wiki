@@ -4,6 +4,17 @@
 
 | raw 目录 | wiki 目录 | 说明 |
 |----------|---------|------|
+| `1-Note/1-Bioinformatics&Data` | `wiki/biological/` | 生信、蛋白与 CMC 笔记 |
+| `1-Note/4-DataEngineering` | `wiki/big-data/` | Spark / Flink / Hive 笔记 |
+| `1-Note/5-Infrastructure` | `wiki/infrastructure/` | K8s、ELK、虚拟化等 |
+| `1-Note/8-BigData` | `wiki/big-data/` | 早期大数据笔记（与 4-DataEngineering 重叠） |
+| `1-Note/11-Database` | `wiki/database/` | Redis、Kafka、MySQL 等 |
+| `1-Note/7-Programming` | `wiki/programming/` | Go / Python / Vue 等 |
+| `1-Note/10-TechSharing` | `wiki/tech/` | 技术分享 |
+| `1-Note/12-Architecture` | `wiki/tech/` | 架构与监控 |
+| `1-Note/16-Cloud` | `wiki/infrastructure/` | 公有云笔记 |
+| `3-blog` | `wiki/tech/` | 博客成稿（方法类可提炼到 wiki） |
+| `4-Skill` | `wiki/tech/` | Cursor Agent Skill 索引 |
 | `1-Note/2-MachineLearning` | `wiki/ml/` | 个人机器学习与采样笔记 |
 | `1-Note/3-DeepLearning` | `wiki/ml/` | 深度学习、NLP、图谱、生成模型和 LLM 笔记 |
 | `1-Biological` | `wiki/biological/` | 生物、生信、CMC 等 |
