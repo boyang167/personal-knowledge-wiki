@@ -1,10 +1,13 @@
-name: Notify portal on publish update
+name: Notify portal on wiki content update
 
 on:
   push:
     branches: [main]
     paths:
       - 'publish/**'
+      - 'raw/1-Note/**'
+      - 'raw/3-blog/**'
+      - 'raw/4-Skill/**'
   workflow_dispatch:
 
 jobs:
