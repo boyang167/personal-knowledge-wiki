@@ -1,5 +1,5 @@
 ---
-title: 阿里云湖仓数据中台构建
+title: 阿里云-湖仓数据平台搭建
 description: Landing Zone 与 MaxCompute / DataWorks / Hologres 能力梳理+ POC 用例、指标
 category: DataPlatform
 date: 2026-11-02

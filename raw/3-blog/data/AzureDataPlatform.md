@@ -303,7 +303,7 @@ status.storage.topic=connect-cluster-status
 - **Embedded** 承载嵌入场景下的算力与容量；与 SaaS 工作区一体规划。
 - **重要限制**：Embedded **不能直连接内网源**；需通过 **云侧语义层**、**Dataflow/Gateway** 或 **把数据同步到云上 DWD** 再 Import/DirectQuery。
 
-元数据与小型配置库可用 **Azure SQL Database**（图中「Power BI Embedded Meta Data」）。
+元数据与小型配置库可用 **Azure SQL Database**
 
 ---
 
@@ -355,43 +355,49 @@ status.storage.topic=connect-cluster-status
 
 ---
 
-## 14. 与腾讯云组件对照（选型脑图）
+## 14. 与阿里云、腾讯云、自建平台对照
 
-在同一企业可能并存多云 POC，下列仅作能力映射，便于统一方法论（详见《数据平台架构演进》一文）：
+ **Azure POC、国内公有云与 IDC 自建**。下表按**能力域**做映射，不是 SKU 一一对应；方法论仍可统一为 Onboarding → ODS → DWD、元数据驱动与分层治理（《[数据平台架构演进](/blog/data/dataplatformarchitecturedesign/)》《[阿里云湖仓数据中台](/blog/data/alicloudy/)》《[自建企业级数据平台](/blog/data/enterprisedataplatform/)》）。
 
-| 能力 | Azure | 腾讯云（参考） |
-|------|-------|----------------|
-| 数据开发治理 | Databricks + UC、Purview | WeData |
-| 湖上计算 | Databricks、Synapse | DLC |
-| 实时 | Event Hubs、Spark Streaming | Oceanus（Flink） |
-| 集成调度 | ADF | 数据集成 / WeData |
-| BI | Power BI | 自有 BI 或第三方 |
+| 能力域 | Azure | 阿里云 | 腾讯云 | 自建（开源 + 门户） |
+|--------|-------------------|--------|--------|---------------------|
+| **开发 + 治理一站式** | Databricks Workspace + Unity Catalog；Purview 目录 | **DataWorks**（集成 / 开发 / 建模 / 质量 / 数据地图） | **WeData** | **OpenMetadata / DataHub** + 自研企业门户；质量/标准流程自建 |
+| **离线 / 湖仓计算** | **Databricks**（Spark/Delta）、可选 Synapse | **MaxCompute**（离线数仓）+ **Hologres**（实时分析 / Serving） | **DLC**（数据湖计算） | **Apache Spark** on K8s / YARN；SQL 可走 Trino / Kyuubi |
+| **对象存储与表格式** | **ADLS Gen2** + Delta（UC 托管） | **OSS** + MaxCompute / 湖外表；Hologres 快查 | **COS** + DLC 表 | **Iceberg / Hudi** + MinIO / Ceph / 现有对象存储 |
+| **实时采集与计算** | **Event Hubs**（Kafka 协议）+ Spark Structured Streaming | **Flink**、**DataHub**（实时通道） | **Oceanus**（Flink） | **Kafka** + **Flink**；库表 CDC 用 **Flink CDC** / Debezium |
+| **批集成与调度** | **ADF**（云）+ **自承载 IR**（IDC）；Function 触发 | DataWorks **数据集成** + 任务调度 | 数据集成 + WeData 调度 | **SeaTunnel** / DataX + **DolphinScheduler**（或 Airflow） |
+| **元数据与权限** | **Unity Catalog**（计算侧）+ **Purview**（企业目录） | DataWorks 数据地图 + **RAM** | WeData 治理 + 云 CAM | **OpenMetadata / DataHub** 血缘资产；**Apache Ranger** 等需按引擎插件落地 |
+| **混合云 / 内网库** | SHIR、**Private Endpoint**、DNS Private Resolver | 专线 / VPN + **Landing Zone** 多账号 | 类似：VPC + 专线 / VPN | 机房 **SeaTunnel / Flink CDC** 直抽；无托管 IR，网络与防火墙自管 |
+| **BI 与语义层** | **Power BI**（Embedded + SaaS） | **Quick BI**、Hologres 作 Serving | 自有 BI 或第三方 | **Superset / Metabase**；语义层可接指标平台或轻量多维模型 |
+| **机器学习（可选）** | Databricks **MLflow** | **PAI** | 云上的 TI / 自建 | **MLflow** + 训练集群；与中台数据分层解耦部署 |
+
+**怎么读这张表**
+
+- **Azure**：强项是 **UC + Databricks + ADF + Power BI** 在微软栈内闭环；混合企业要补 **SHIR 与 DNS**，成本与账号边界要想清楚。
+- **阿里云**：**DataWorks + MaxCompute + Hologres** 的「开发治理 + 离线 + 实时 Serving」路径成熟，适合已上阿里 Landing Zone 的团队（见《阿里云湖仓数据中台构建》）。
+- **腾讯云**：**WeData + DLC + Oceanus** 分工接近「治理开发 / 湖计算 / Flink 实时」，BI 往往还需另选或自研。
+- **自建**：组件可换，但须自建 **门户、发布流程、权限与观测**；集成与调度建议 **主选一个引擎**（如 SeaTunnel + DolphinScheduler），湖表 **Iceberg 优先**，避免与云版能力重复造轮子。
 
 ---
 
 ## 15. 实施 checklist
 
-**身份与治理**
+> 实际项目请在 **变更单 / 项目管理工具** 中维护勾选状态，与 POC 环境解耦。
 
-- [ ] Metastore 与 Access Connector 存储 RBAC 已闭环
-- [ ] UC 权限最小化（Catalog / Schema / Table）
-- [ ] 密钥进 Key Vault，Notebook 用 Secret Scope
+| 序号 | 域 | 检查项 | 验收要点 |
+| --- | --- | --- | --- |
+| 1 | **身份与治理** | Metastore 与 Access Connector 存储 RBAC | Connector **托管标识** 对 UC 所用 ADLS 容器已分配 **存储 Blob 数据参与者**；抽样读写外部位置成功 |
+| 2 | **身份与治理** | Unity Catalog 权限最小化 | Catalog / Schema / Table 按角色 **USE / SELECT** 收敛；无全员可读生产 Catalog |
+| 3 | **身份与治理** | 密钥与凭据 | 连接串、SAS **进 Key Vault**；Notebook / Job 经 **Secret Scope** 引用，仓库与日志无明文 |
+| 4 | **数据链路** | 分层命名一致 | Onboarding / ODS / DWD（及卷路径）与《分层规范》一致，与 UC 三层命名空间映射表已评审 |
+| 5 | **数据链路** | 批流监控分离 | **T+1 ADF** 与 **实时 Event Hubs** 分通道告警；延迟、失败率、积压各有 Owner |
+| 6 | **数据链路** | Checkpoint 与水位 | 流作业 Checkpoint 路径持久化；**水位 / 配置表** 有备份与恢复演练记录 |
+| 7 | **网络** | 自承载 IR | **至少 2 节点** 或 documented 故障切换；内网源连通性有定期探测 |
+| 8 | **网络** | 混合 DNS | 条件转发 / Private Resolver 规则 **文档化**；变更走变更单，非口头修改 |
+| 9 | **消费** | BI 与产数 SLA | Power BI **Refresh** 与 DWD 产出 SLA 对齐；失败有重试与通知 |
+| 10 | **消费** | Embedded 与许可 | Embedded 容量与 SaaS **许可证 / 成本** 有预算与扩容预案 |
 
-**数据链路**
-
-- [ ] Onboarding / ODS / DWD 命名与《分层规范》一致
-- [ ] T+1 ADF 与实时 EH 消费监控、告警分离
-- [ ] Checkpoint 与水位表有备份与恢复演练
-
-**网络**
-
-- [ ] SHIR 高可用（至少 2 节点）或故障切换流程
-- [ ] DNS 条件转发文档化，变更走变更单
-
-**消费**
-
-- [ ] Power BI 数据集 refresh 与 DWD 产出 SLA 对齐
-- [ ] Embedded 容量与 SaaS 许可证预算
+**建议顺序：** 先完成 **1–3**（否则后续入湖即越权风险），再 **4–6** 数据链路，**7–8** 与混合网同步验收，最后 **9–10** 消费侧。
 
 ---
 
@@ -399,4 +405,3 @@ status.storage.topic=connect-cluster-status
 
 在 **Azure 中国区** 搭建数据平台，主线是：**Unity Catalog 定标准与权限 → ADLS 分层存 → Databricks 算 → ADF 批集成 → Event Hubs 流 → Power BI 看**。混合企业必须提前设计 **自承载 IR、Private Endpoint 与 DNS 转发**，否则内网源无法稳定入湖。批流并存时，用 **Onboarding 承接原始落地、ODS 承接规范明细**，增量水位与 Checkpoint 表是运维排障的基础设施。
 
-文中截图均在发布前做了**订阅、资源名、连接串等区域遮挡**；实际实施请替换为自有命名，并遵循公司安全基线，**切勿在 Notebook 或 Git 中提交明文密钥**。

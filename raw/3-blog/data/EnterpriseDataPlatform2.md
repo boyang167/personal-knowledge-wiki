@@ -12,10 +12,12 @@ draft: false
 # Enterprise Data Platform Architecture
 
 **版本：** V2.0  
-**文档类型：** High-Level Design（HLD）  
+**文档类型：** High-Level Design（**HLD**，高层设计 / 概要设计）  
 **建设模式：** 开源组件底座 + 自研统一门户与治理能力  
 **部署模式：** Kubernetes / 私有化部署 / 混合云  
 **架构目标：** 建设统一的数据接入、存储、计算、治理、开发、服务和 AI 应用平台。
+
+> **HLD 读者预期**：本文描述目标态架构、能力域划分、选型原则、分阶段路线与 POC 验收标准，供立项评审与总体设计对齐使用。组件级部署参数、具体库表与接口契约属于 **LLD（Low-Level Design，详细设计）**，不在本文展开。精要版见 [EnterpriseDataPlatform.md](./EnterpriseDataPlatform.md)；系列术语见 [DataPlatformSeriesOverview.md §0.1](./DataPlatformSeriesOverview.md#01-术语hld--lld--poc--sku)。
 
 ---
 
