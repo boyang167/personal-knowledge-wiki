@@ -33,10 +33,10 @@ IDC / 业务库（MySQL、PG 等）
                                                          Power BI（Embedded + SaaS）/ API
 ```
 
-宏观编排常在 **Azure Data Factory（ADF）**；
-微观计算与 SQL/Notebook 在 **Azure Databricks（ADB）**；
-公司级元数据与权限在 **Unity Catalog（UC）**；
-入湖对象在 **ADLS Gen2**（启用分层命名空间）。
+- 宏观编排常在 **Azure Data Factory（ADF）**
+- 微观计算与 SQL/Notebook 在 **Azure Databricks（ADB）**
+- 公司级元数据与权限在 **Unity Catalog（UC）**
+- 入湖对象在 **ADLS Gen2**（启用分层命名空间）
 
 参考目标架构：
 
@@ -48,7 +48,7 @@ IDC / 业务库（MySQL、PG 等）
 
 ## 2. 落地顺序：先公司级，再项目级
 
-推荐按「权限半径」由大到小实施，避免后期迁 Catalog 或反复开 RBAC。
+推荐按权限半径，由大到小实施，避免后期迁 Catalog 或反复开 RBAC。
 
 | 阶段 | 做什么 | 典型产物 |
 |------|--------|----------|
@@ -68,13 +68,13 @@ IDC / 业务库（MySQL、PG 等）
 2. 创建**资源组**，区域示例：**China North 3**（按合规与延迟选型）。
 3. 统一标签：`env`、`cost-center`、`owner`，便于 Purview 与成本分账。
 
-后续所有数据资产（存储、ADB、ADF、Event Hubs）建议落在同一资源组或「数据平台」资源组树下，RBAC 按组授予，而不是按单个资源点选。
+后续所有数据资产（存储、ADB、ADF、Event Hubs）建议落在同一资源组或数据平台资源组树下，RBAC 按组授予，而不是按单个资源点选。
 
 ---
 
 ## 4. Unity Catalog：公司级元数据底座
 
-Unity Catalog 管的是**全公司**的元数据、权限与审计，与工作区内的「项目 Catalog」概念不同：前者是 **Metastore + 账户级治理**，后者是在 UC 里划分的业务域。
+Unity Catalog 管的是**全公司**的元数据、权限与审计，与工作区内的项目 Catalog概念不同：前者是 **Metastore + 账户级治理**，后者是在 UC 里划分的业务域。
 
 ### 4.1 自建 UC 的两块前置（也可由向导自动创建）
 
@@ -104,7 +104,7 @@ Unity Catalog 管的是**全公司**的元数据、权限与审计，与工作�
 
 ![为 Access Connector 分配存储 Blob 数据参与者](/blog-media/img/azure-platform/1740216271226.png)
 
-*图 4-2：角色分配示意（截图已遮挡租户信息）*
+*图 4-2：角色分配示意（截图已脱敏）*
 
 **账户管理员**：在账户控制台为运维账号分配 `account.admin`（或最小权限组合），才能完成 Metastore 与账户级 UC 配置。
 
@@ -182,15 +182,11 @@ Unity Catalog 管的是**全公司**的元数据、权限与审计，与工作�
 - **微观编排**：Databricks Notebook / Workflow —— SQL、PySpark、参数化重跑。
 - **触发器**：Azure Functions 处理复杂表达式或外部事件；也可 ADF 原生 Schedule / Tumbling Window。
 
-Pipeline 数量上去后，建议维护一张**外部依赖表**（库表或 Git），记录 **Pipeline 名、参数、上下游依赖**，避免纯靠 ADF 画布手工维护。
+Pipeline 数量上去后，建议维护一张**外部依赖表**（库表或 Git），记录 **Pipeline 名、参数、上下游依赖**，避免纯靠 ADF 画布手工维护。规模化编排可抽象为：
 
-![Pipeline 依赖表示意](/blog-media/img/azure-platform/1740276621009.png)
-
-![调度视图 1](/blog-media/img/azure-platform/1740276951377.png)
-
-![调度视图 2](/blog-media/img/azure-platform/1740277003485.png)
-
-![触发器与表达式](/blog-media/img/azure-platform/1740278313442.png)
+1. **调度器（ADF / Function）** 周期性查询依赖表：当前批次、状态为 waiting、上游已成功、时间窗满足，则拉取待运行 Pipeline 列表。
+2. **执行**：通过 ADF API 触发运行，结果写回同一元数据库（成功则推进批次，失败则标记批次失败并止损）。
+3. **链路分层（示意）**：**ADF Copy** 入 **Raw** → **ADB / AKS 上的 Notebook 或 Job** 写 **ODS（Delta / SQL）** → 再入 **DWD/DWH**；旁路可用 **Change Feed / Event Grid** 做事件驱动补数。
 
 缩写对照：**EH** = Event Hubs，**ADB** = Azure Databricks。
 
