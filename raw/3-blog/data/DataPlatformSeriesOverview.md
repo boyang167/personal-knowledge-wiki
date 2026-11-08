@@ -5,7 +5,7 @@ category: DataPlatform
 date: 2026-11-08
 readTime: 22 分钟
 icon: ⌁
-featured: false
+featured: true
 draft: false
 ---
 
