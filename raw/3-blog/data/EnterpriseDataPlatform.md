@@ -3,7 +3,7 @@ title: 自建企业级数据平台架构设计方案
 description: 基于 Lakehouse、DataOps 与统一治理的开源组件底座方案，覆盖七层逻辑架构、组件选型、Portal、部署与分阶段实施。
 category: DataPlatform
 date: 2026-11-02
-readTime: 40 分钟
+readTime: 10 分钟
 icon: ⌁
 featured: false
 draft: false

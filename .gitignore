@@ -15,6 +15,10 @@ Thumbs.db
 
 # 安装包、压缩归档和课程录像。单文件可达数百 MB，不纳入版本库。
 raw/2-StudyMaterials/12-InstallPackage/
+# GitHub 单文件 >100MB 禁止推送，以下仅本地保留
+raw/2-StudyMaterials/2-MachineLearning/李航 统计学习方法 第二版.pdf
+raw/2-StudyMaterials/8-ProgramerLanguage/《算法导论》第三版.pdf
+raw/2-StudyMaterials/8-ProgramerLanguage/面试刷题/labuladong的算法小抄官方完整版.pdf
 *.zip
 *.tar
 *.tar.gz

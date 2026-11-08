@@ -1,389 +1,148 @@
 ---
-title:  X-Agent 平台全景
-description: DeerFlow+Wren+RAG 架构
+title: Agent 面试题
+description: 以模拟技术面形式整理 Agent 架构、Harness、RAG、MCP 与评估等 12 组问答，可作为博客模板与面试复盘提纲。
 category: AI Agent
-date: 2026-11-02
-readTime: 45 分钟
-icon: ◈
-featured: true
+date: 2026-11-05
+readTime: 14 分钟
+icon: ◎
+featured: false
 draft: false
-tags: [Agent, LangGraph, Wren, NL2SQL, RAG, 面试]
 ---
-
-# X-Agent 平台全景
-    面向生物工艺数据 Agent 
-**阅读地图**
-
-| 章节 | 内容 |
-|------|------|
-| §1–3 | 业务、用户、PRD 目标 vs 现状 Scope、Wren / Skill / RAG 三条取数轨道 |
-| §4 | 四类数据面：业务表、MDL、`dct_*`、COS + Qdrant |
-| §5 | Nginx → Next 鉴权 BFF → Gateway `lead_agent`；Wren 已 in-process |
-| §6–7 | 场景对照、技术债（共享 corpus、Gateway 管理面弱鉴权） |
-| §8 | 项目向口述题 Q1–Q32 |
-| §10 | Agent 架构师题 A1–A90（无 §9，目录从 8 跳到 10） |
 
 **面试提示**：先声明讲的是 **PRD 目标** 还是 **代码现状**。Thread 问答闭环已有；Dashboard 闭环、ABCDE 规则化归因、Workspace 多租户 RAG 仍在演进或未落地。
 
-## 1. 一句话
+> **说明：** 本文为 **Demo 成稿**，用于验证 `raw/3-blog/agent/` 目录下的发布链路。正式发布前请将 `draft` 改为 `false`，并按你的真实项目经历替换示例中的「我们」表述。
 
-**X-Agent** 是面向生物制药工艺数据的对话式 AI Agent 平台：用户用自然语言提出跨项目、跨批次问题，系统编排取数 → 分析 → 归因 → 建议 → 结构化报告，并把结果沉淀为可回看的问题树、章节与图表。
+## 导语
 
-不是从零自研的通用聊天机器人，而是把三套能力缝合成企业工作台：
+Agent 相关岗位越来越常问的不是「会不会调 API」，而是：**边界怎么划、失败怎么控、效果怎么评、上线怎么运维**。下面用「一问一答」模拟技术面，每组回答控制在 1～2 分钟口述长度，并留「可追问点」方便你扩展到自己的 Harness、数据平台或 CMC 场景。
 
-| 底座 | 来源 | 在  中的角色 |
-|------|------|-----------------|
-| DeerFlow 2.0 | 开源 LangGraph Super Agent | Agent Runtime：中间件、Skills、MCP、Subagent、Sandbox、SSE |
-| Wren（已内化） | 参考新版 WrenAI 重写进 harness | 语义层 NL2SQL、SQL dry-plan/执行、业务库连接、图表生成 |
-| file-search-RAG | 自研 | PDF/Office/视频文档解析、混合检索、带引用的文档问答 |
+---
 
-## 2. 业务背景
+## 一、架构与范式
 
-### 2.1 场景
+### Q1. 单 Agent 和多 Agent 分别适合什么场景？
 
-工艺管理中，**Function Head / Function Lead** 要在同一套态势里同时回答四类问题：
+**答（Demo）：** 单 Agent + 工具循环适合目标清晰、步骤可迭代的任务，例如检索后总结、按模板填报告。多 Agent 适合角色分工明确、需要互相校验或并行探索的场景，例如「规划 Agent + 执行 Agent + 审查 Agent」。选型时我会先看：**任务是否可分解、是否需要独立权限域、评估能否按角色拆分**。若只是步骤多但逻辑线性，优先 Supervisor + 子任务，而不是为了「多 Agent」而拆。
 
-| 维度 | 典型关注点 |
-|------|------------|
-| 范围 | 多个项目、多个批次、多个工艺阶段（NPP Upstream、cMFG 等） |
-| 结果指标 | Titer（表达量）分布是否异常 |
-| 过程指标 | Lactate、VCD、VIA、pCO2、Glucose、pO2 等（常称 **ABCDE** 相关因子） |
-| 决策 | 是否出现风险批次、原因是什么、下一步如何调整 |
+**可追问：** 你们如何避免 Multi-Agent 互相重复调用同一工具？
 
-分析师的传统路径是：切报表 → 透视 → 画图 → 写结论。瓶颈不在「会不会分析」，而在 **入口分散、口径靠人、链路断、结论难沉淀**：
+---
 
-- **数据散**：项目视图、批次视图、文档、培养时序表不在同一入口。
-- **口径不统一**：风险批次判定高度依赖个人经验。
-- **链路长**：从「看见异常」到「归因 + 建议 + 汇报材料」需反复切换工具。
-- **难复盘**：结论散落在聊天、PPT、个人笔记，无法按问题树回看。
+### Q2. ReAct 和 Agentic Workflow 怎么选？
 
-> 管理层需要的不是更多原始切片，而是 **结论 + 风险 + 建议 + 图表 + 可追溯证据** 的一体化输出。
+**答（Demo）：** ReAct 把「想一步、做一步」交给模型，灵活但轨迹不稳定。Workflow 把关键分支、重试、超时、人工节点写进图或代码，适合合规、审计和生产 SLA。实践上常见组合是：**Workflow 定骨架，Agent 节点负责非结构化推理**；高风险写操作必须走固定分支 + Human-in-the-loop，而不是完全交给自由 ReAct。
 
-### 2.2 产品要解决什么
+**可追问：** 某个步骤失败时，你们如何恢复状态而不是从头跑？
 
-产品目标是把一次提问从「听懂」到「可汇报」收成 **一条 Agent 编排链路**，而不是散落在多个工具里的手工步骤：
+---
 
-```text
-意图识别 → 上下文构建 → 任务规划 → 能力执行 → 结果校验 → 管理输出
-```
+## 二、Harness 与运行时
 
-用户在 **对话工作台（Thread）** 内应能闭环完成以下能力（与 §2.1 的四类问题一一对应）：
+### Q3. 什么是 Agent Harness？和 Agent Framework 有何不同？
 
-| 用户要完成的事 | 典型产出 |
-|----------------|----------|
-| 跨项目监控与报表问答 | KPI / 趋势 / 对比表与 Vega 图 |
-| Titer / 工艺指标分析 | 分布、分层、异常批次视图 |
-| 风险批次识别与因子归因 | 风险等级、ABCDE 等因子解释 |
-| 改善建议与结构化报告 | 行动项、章节化摘要、可导出报告区 |
-| 文档与库表证据并用 | 方案/报告/视频纪要与 SQL 结果 **分栏引用**；冲突与缺失 **显式标注** |
+**答（Demo）：** Framework（如 LangGraph）解决的是**流程编排与状态图**；Harness 解决的是**执行生命周期**：上下文窗口管理、工具权限、调用预算、重试、日志、guardrails、审批钩子。我会把 Harness 当成「运行时内核」，Framework 当成「可插拔的编排适配器」，这样换模型或换编排实现时，权限与观测不会丢。
 
-编排层负责路由（Wren / RAG / 领域 Skill）、打断澄清与落库；体验层负责多轮推进与 **问题树回看**（`question` → section / chart）。
+**可追问：** Harness 里 Context 和 Memory 如何区分？
 
-### 2.3 目标用户
+---
 
-| 角色 | 关注点 |
-|------|--------|
-| Function Head | 跨项目态势、风险分布、可汇报摘要与图表 |
-| Function Lead / 工艺科学家 | 单项目、单批次、单指标深挖与调参建议 |
-| Platform Admin | 登录鉴权、RBAC、建模配置、评测与审计 |
+### Q4. 工具调用失败时，生产系统怎么处理？
 
-### 2.4 明确不做（非目标）
+**答（Demo）：** 分层处理：**可重试**（网络、429）带退避；**参数错误**回灌 schema 与错误信息让模型修正；**权限拒绝**直接终止并返回明确原因；**业务失败**进入补偿或人工队列。每次调用记录 `tool_name`、参数摘要、latency、trace_id，避免只在最终答案里看到「失败了」却找不到是哪一步。
 
-不自动改生产系统参数、不闭环执行工艺调整
+**可追问：** 如何防止模型在循环里反复调用同一失败工具？
 
-不是通用 AutoML / 全自动实验设计平台
+---
 
-不是无边界开放式闲聊助手
+## 三、RAG、Graph 与知识
 
-不允许脱离业务规则与证据的自由结论
+### Q5. 向量 RAG 不够用时，你会加什么？
 
-## 3. 产品 Scope
+**答（Demo）：** 先加 **关键词 / 元数据过滤** 和 **Rerank**，再考虑 **混合检索**。跨文档关系类问题（「哪些项目用过 X」「A 和 B 概念在我笔记里如何关联」）需要 **关系表或轻量图谱**，而不是只靠 chunk 相似度。权威内容仍以 Markdown/Git 为源，向量与图谱都是**可重建的派生索引**。
 
-产品有两层 Scope：PRD 目标态，以及当前代码已落地的工作台。面试或评审时先声明「讲目标还是讲现状」。
+**可追问：** Chunk 策略按固定长度还是按标题结构？
 
-### 3.1 目标态能力地图（PRD V2）
+---
 
-PRD 按优先级分三档；**P0 = 决策闭环必需**，P1 = 汇报与建议增强，P2 = 平台化与治理。
+### Q6. 如何降低「胡编」并提高可引用性？
 
-| 优先级 | 能力 | 描述 |
-|--------|------|------|
-| **P0** | 跨项目数据报表查看 | 多项目 KPI、趋势、对比 |
-| **P0** | Titer 分布分析 | 项目/批次分布、分层、异常 |
-| **P0** | 风险批次识别 | 规则 + 多指标偏离，输出等级与标签 |
-| **P0** | 风险原因 / 因子重要性 | Lactate、VCD、VIA、pCO2、Glucose、pO2 等单因子/多因子 |
-| **P1** | AI 改善建议 | 优先改善指标与行动建议 |
-| **P1** | 图表生成与导出 | 管理汇报可用图 + 说明 |
-| **P1** | 分析报告生成与导出 | 摘要 + 图 + 归因 + 建议 |
-| **P2** | 定制工作流 / 专项模板 | 周期报告、专项场景 |
-| **P2** | 历史记忆与案例复用 | 已确认结论与规则沉淀 |
-| **P2** | 评测与建议质量治理 | 准确性、解释性、可接受度 |
+**答（Demo）：** 检索阶段做权限过滤与分数阈值；生成阶段要求 **grounded answer**：每条结论绑定 `source_path`、`heading_path`、`commit`（或版本号）。产品侧展示「证据卡片」而不是只给一段 prose。评估集里单独测 **Citation Coverage / Faithfulness**，不要只看答案读起来是否流畅。
 
-**页面目标形态（PRD 收敛为三块）**
+**可追问：** 用户问题在知识库无覆盖时，系统如何表现？
 
-| 页面 / 区域 | 职责 |
-|-------------|------|
-| **Dashboard** | 跨项目/年度总览（KPI、反应器/规模分布、Titer overview） |
-| **Thread** | 唯一深度分析页：对话 + 多轮推进 + 结构化产物 |
-| **Analysis Panel** | 图表、表格、结论、行动项、导出（产品上是报告区，**不一定是独立路由**） |
+---
 
-### 3.2 当前已落地 Scope（工作台）
+## 四、MCP、Skills 与集成
 
-> **现状一句话**：默认体验更接近 **「聊天流内嵌结构化报告」**，而不是 PRD 里完整的三栏独立 Question Panel。
+### Q7. MCP 和「直接在代码里写 Tool」怎么取舍？
 
-#### 已具备
+**答（Demo）：** 内部高频、强类型、紧耦合的工具适合 SDK/函数；**跨客户端复用、需要标准协议、希望 IDE/Agent 即插即用** 的能力适合 MCP Server。关键是 **最小权限**：每个 Tool 声明清晰的能力边界，写操作与读操作分离，敏感操作走审批。
 
-| 类别 | 能力要点 |
-|------|----------|
-| **运行时** | 多轮 Thread、SSE 流式、可恢复流；可选 Plan Mode / Subagent |
-| **库表取数** | `database_query`（Wren 语义层，in-process） |
-| **文档问答** | `rag_file_search`（file-search-RAG）：PDF 页级解析、Office、视频转写 |
-| **默认 Q&A** | `question-and-answer` Skill：未指定来源时 **库 + 文档双路**；回答须标注库证、文档证、缺失与冲突 |
-| **产物落库** | `thread` → `question` → `section` → `chart`；前端轮询问题树 |
-| **图表契约** | Vega-Lite enrichment（库表答案 **禁止** matplotlib 静图） |
-| **澄清** | 实体词典 + NL2SQL 澄清（歧义可打断；**可见问句保持用户原文**） |
-| **领域 Skill**（与通用报表分轨） | `database-query` / `file-search`（Q&A 子技能） |
-| **建模管理** | Gateway `/api/dbquery/*`（数据源、模型、关系、知识、SQL-pair） |
-| **登录** | JWT + 邮箱白名单 + Casbin RBAC（**主鉴权在 Next.js**） |
-| **评测** | 独立 `eval-service` + `eval_golden_set` / `eval_evidence` |
-| **Office** | OnlyOffice 预览/编辑 |
+**可追问：** Skills 和 MCP Tools 在你们体系里分别承担什么？
 
-#### 部分落地 / 演进中
+---
 
-- Dashboard 看板与「风险行动项提交锁定」完整闭环
-- ABCDE 归因与因子重要性的 **细粒度规则化**
-- 报告 **正式导出中心**（现多在对话内 ReportCard / SectionCard）
+### Q8. Skills 如何安全加载？
 
-#### 明确未落地（设计稿）
+**答（Demo）：** Wiki 里的 Skill 文档是**知识资产**；Runtime 只加载 **校验过、版本固定、工具白名单明确** 的 Skill 包。不允许 Agent  arbitrary 执行 Markdown 里任意指令。加载链路：来源校验 → 权限 → 工具映射 → 执行 → 全链路 Trace。
 
-- **Workspace 多租户**与按团队隔离的 RAG corpus（现状 `corpus_id=default` 全站共享）
-- **自研 Workflow Orchestrator**（已被 DeerFlow `lead_agent` 取代；**勿按 V2 架构稿改编排层**）
+---
 
-### 3.3 产品边界：取数轨道（库表 / 领域 / 文档）
+## 五、评估与可观测
 
-核心原则：**语义所有权分轨**——汇总指标走 Wren，培养时序与模型走 Skill+沙箱，规程证据走 RAG；禁止跨轨「猜 JOIN」或从文档词推断库表字段。
+### Q9. Agent 评估除了「答案对不对」还看什么？
 
-| 轨道 | 适用问题 | 执行方式 | 禁止事项 |
-|------|----------|----------|----------|
-| 语义层（Wren） | 项目/批次/年份等业务汇总：`total_titer`、`project_info`、排名、趋势 | Agent 调 `database_query` | 不要用沙箱 Python 画静图 |
-| 领域 Skill + 沙箱 |  `cultureid` 时序、模型推荐 | `python3` + 技能内 `db_config.yaml` | `toolbox-*` 显式 `disallowed-tools: database_query`，避免两套语义打架 |
-| 文档 RAG | 上传 PDF/Office/视频、选定 references | `rag_file_search` | 文档未写字段（如分子类型）**不得**从 titer 等词推断 |
+**答（Demo）：** **任务完成率**、**工具选择是否正确**、**参数是否符合 schema**、**步数与 token 成本**、**延迟**、**违规率**（越权调用、泄露私有检索结果）。对关键场景维护 50～100 条真实问题回归集，改 Prompt、Chunk、Rerank 或 Workflow 后必跑。
 
-路由契约见 `skills/public/question-and-answer/SKILL.md`：**Skill 是决策合同**，真正执行仍走子技能与工具。
+**可追问：** 线上如何采样做持续评估而不拖垮成本？
 
-## 4. 数据
+---
 
-X-Agent 里至少有 **四类数据平面**，不要当成「一张库、一个向量库」：
+### Q10. 观测里必须落哪些字段？
 
-```text
-┌─────────────────────────────────────────────────────────────┐
-│ A. 业务事实数据（工艺/培养，给 NL2SQL 或 Skill 查询）         │
-│ B. 语义与建模元数据（Wren MDL、词典、SQL-pair、连接串）       │
-│ C. 对话与结构化产物（Thread / Question / Section / Chart）  │
-│ D. 非结构化文档与向量（上传件、Qdrant chunk、视频字幕）       │
-└─────────────────────────────────────────────────────────────┘
-```
+**答（Demo）：** 至少：`session_id`、`run_id`、`model`、`prompt_version`、`retrieval_hits`、`tool_calls[]`（含 latency/status）、`final_outcome`、**user_feedback**（若有）。与 Langfuse 类工具对齐 trace，方便从「用户投诉的一句不对」反查到具体 tool step。
 
-| 存储 | 承载平面 | 备注 |
-|------|----------|------|
-| **Postgres** | A 部分汇总表、B 元数据、C 全量、D 文档元数据 | Prisma（前端/RBAC）、`wren_*` **共库**；后端 psycopg **只读写、不擅自建表** |
-| **Qdrant** | D 文档 chunk | dense + BM25；`collection ≈ {prefix}_{corpus_id}` |
-| **LanceDB** | B 侧 Wren 语义记忆 | **不与** file-search 向量混 collection |
-| **COS** | D 原件与转换件 | 与 ingest / 预览 sidecar 配合 |
+---
 
-### 4.1 A. 业务事实数据
+## 六、权限、合规与落地
 
-#### 4.1.1 业务汇总表（Wren / `database_query`）
+### Q11. 私有笔记和公开博客混在同一 Wiki 时，AI 检索怎么隔离？
 
-语义层对接内部工艺汇总模型,实体词典默认扫描列包括 `project_base_info` 上的 `cell_bank`、`purpose` 等
+**答（Demo）：** 内容对象带 `visibility` / `ai_indexing` / `allow_external_llm`；检索管线在 **索引与查询两侧** 都做过滤。默认：**未声明公开的不进公开索引**。Portal 展示、向量库、对外 MCP 使用同一套元数据规则，避免「网站上看不到但 RAG 能搜到」。
 
-- **典型问法**：项目信息、批次汇总、年份分布、total titer / yield、部门/位点/分子类型维度。
-- **SQL 约束**：必须走 MDL 模型名与列名；PostgreSQL 数值用 `DOUBLE PRECISION`；批次号 JOIN 有 **X/Y 后缀规范化** 规则。
-- **连接安全**：Fernet 加密存储（`connection_security.py`），**不与**应用 JWT 密钥混用。
+---
 
+### Q12. 从 Demo 到上线，你会先做哪三件事？
 
-### 4.2 B. 语义与建模元数据（Wren）
+**答（Demo）：**
 
-由 Prisma / Gateway `dbquery` 管理，核心对象：
+1. **Knowledge / 检索链路可重建**（源 = Markdown，索引可增量）。
+2. **Harness + 评估集**（没有评估的 Agent 不上生产）。
+3. **高风险路径 Human-in-the-loop**（写库、发外部消息、改 Wiki）。
 
-| 对象 | 表/模型 | 含义 |
-|------|---------|------|
-| 项目 | `wren_project` | 数据源、catalog/schema、连接、语言 |
-| 模型 | `wren_model` + columns | MDL：逻辑表 ↔ 物理表 |
-| 关系 / 视图 / 指令 / SQL-pair | `wren_*` | 少样本、业务指令、已知好 SQL |
-| 实体词典 | `entity_dictionary_entry` | 项目/批次/细胞库等字面量消歧 |
-| 澄清选择 | `nl2sql_clarification_choice` | 跨会话「一人一票」澄清记忆 |
+Chat UI 可以后做；没有前两项，界面只是聊天机器人。
 
-**运行时**：LLM 做 NL2SQL → `WrenEngine.dry_plan` / `query` **进程内**执行；语义记忆用嵌入式 **LanceDB**（Wren 不再用 Qdrant 召回）。
+---
 
-**`database_query` 对外契约**（内化 Wren 时不得破坏）：`status` / `sub_results` / `partial_failures` / `internal_metrics`。图表 enrichment、message parser、strict routing 均按此工具名硬编码。
+## 附录：口述自检清单（Demo）
 
-### 4.3 C. 对话与结构化产物（Postgres / Prisma `dct_*`）
+面试前可快速过一遍：
 
-| 表 | 作用 |
-|----|------|
-| `thread` | 与 LangGraph `thread_id` 对齐；`created_by` 为 owner |
-| `question` | 单轮问题：PENDING→完成/失败、短答、推荐追问、图表 enrichment 状态 |
-| `section` | 章节：标题、摘要、`table_sql`、`answer_detail` JSON |
-| `chart` | Vega spec（`chart_detail`）+ 可选 SQL |
-| `dashboard` / `dashboard_item` | 图表钉看板 |
-| `runs` / `run_events` | Run 可恢复、跨 Pod lease、语义事件（非 SSE 镜像） |
-| `eval_evidence` | 评测原始 tool 证据（**业务 HTTP 不得返回**） |
-| `eval_golden_set` | 回归金标（问题 / 参考答案 / SQL） |
+- [ ] 能画一张「用户 → Portal/API → Harness → Tools/MCP → 知识索引」的简图  
+- [ ] 能举例说明一次 **tool 失败** 的分层处理  
+- [ ] 能说明 **RAG vs Graph** 各解决哪类问题  
+- [ ] 能列出 3 个 **非答案质量** 的 Agent 指标  
+- [ ] 能讲清 **Skills 加载** 的安全边界  
 
-**落库入口**（内核均在 `deerflow.persistence`）
+---
 
-- **自动**：`BootstrapMiddleware`（`before_agent` 建档，`after_agent` 解析）
-- **显式**：`POST /api/persistence`
+## 后续可改写成正式文章的方向
 
-**关键约束**
+- 将 Demo 回答替换为你的 **SparkOps Agent / 数据平台 / CMC 知识工程** 真实案例。  
+- 拆成系列：`agent-interview-01-architecture.md` …  
+- 与 `agent-evaluation.md`、`agentic-workflow.md` 互链（门户侧在正文加相对链接即可）。
 
-- LangGraph context **缺 `user_id`** → 静默跳过落库（联调第一嫌疑）
-- 可见 `HumanMessage` 与 `database_query.query` **保持用户原文**；实体 glossary 只进 hidden system
-- 多步 SQL 的 compaction：**不得**把逐步原始 SQL / 全量 `sql_data` 塞进上下文
-- 失败重试后的失败结果 **不得**进入答案总结
-
-### 4.4 D. 文档与向量
-
-| 存储 | 内容 |
-|------|------|
-| Postgres `upload_document` 等 | 文件名、COS key、ingest 状态、版本、视频字幕、费用 |
-| **COS** | 原件、转换件、视频 sidecar（DOCX 转写 / PPTX 校正） |
-| **Qdrant** | file-search：dense + 服务端 BM25 |
-| **现状 corpus** | 默认 `"default"`，**全登录用户共享检索**（产品债） |
-
-**Ingest（简述）**：Gateway 上传 → file-search 增量 skip → 按格式解析（PDF 文字页 / 图表页 Vision OCR、Office→PDF、XLSX、视频 Markdown）→ 切片 → embedding → upsert。
-
-**检索**：混合召回，可选 rerank 与父块展开；返回带 `document_name` / `page_number` 的 evidence。
-
-### 4.5 数据流主路径（记住这一条）
-
-```text
-用户提问
-  → Next.js（JWT）注入 user_id
-  → Gateway 执行 lead_agent
-  → Bootstrap：dthread + question(PENDING)
-  → Skill 路由：database_query 和/或 rag_file_search（或沙箱 Skill）
-  → SSE 流式答案
-  → persist：section / chart
-  → 前端轮询 /api/frontend/thread-questions 刷新问题树
-```
-
-
-## 5. 技术架构
-
-**主线**：体验层只打 Next BFF → Gateway 跑 `lead_agent` → 能力面（Wren / file-search / 沙箱 Skill）→ 四类存储（§4）。
-
-### 5.1 分层
-
-```text
-浏览器
-  → Nginx :2026（只分流，不做鉴权）
-  → Next.js UI + BFF（主鉴权：JWT / 白名单 / Casbin）
-      → /api/frontend/*   问题树、me、dashboard
-      → /api/backend/*    转 Gateway
-      → /api/langgraph/*  LangGraph 兼容协议（上游仍是 Gateway）
-  → FastAPI Gateway :8001 → lead_agent 图执行
-      （独立 LangGraph Server 已从主路径下线，以 compose/现状文档为准）
-  → harness：中间件 + tools + dct + community/wren_ai
-  → packages/wren：WrenEngine + LanceDB
-  → file-search-service :8008 → Qdrant
-  → Postgres / OnlyOffice / eval-service / 可选 sandbox provisioner
-```
-
-两条硬边界：
-
-- 浏览器只打 Next 同源路由；后端不对公网暴露。
-- Harness（`deerflow.*`）禁止 `import app.*`，由 `test_harness_boundary.py` 守护。
-
-### 5.2 技术栈
-
-| 子系统 | 运行时 | 关键依赖 |
-|--------|--------|----------|
-| `frontend/` | Node / TS | Next.js 16、React 19、LangGraph SDK、TanStack Query、Prisma、Casbin、Vega |
-| `backend/` Gateway + Harness | Python 3.12+ | FastAPI、LangGraph/LangChain、sse-starlette、psycopg |
-| `backend/packages/wren` | in-process | wren-core-py（Rust wheel，锁 linux/amd64）、sqlglot、duckdb、LanceDB |
-| `file-search-RAG/` | Python | FastAPI、PyMuPDF、VLM OCR、Qdrant |
-| `eval-service/` | Python | 独立评分服务 |
-| 模型 | 统一网关 | LiteLLM / 公司 AI Gateway；可观测预留 Langfuse |
-
-本地/生产入口（根目录 Makefile）：`make config` / `install` / `dev` / `docker-start` / `up`。浏览器统一 `localhost:2026`（生产宿主机常映射 `12026`）。
-
-### 5.3 Agent 运行时
-
-`make_lead_agent` 装配模型、工具与中间件。**中间件是可 checkpoint 的图节点**，不是 prompt 里的 if-else。
-
-| 链路段 | 中间件（节选） |
-|--------|----------------|
-| **运行时段** | ThreadData → Uploads → Sandbox → DanglingToolCall → StrictWrenRouting → ToolErrorHandling |
-| **业务段** | DctBootstrap → Followup → NL2SQL 澄清 → EntityRewrite → Summarization → Todo（plan）→ Title → Memory → LoopDetection → LanguageAlignment → CitationEvidence → ContextTruncation → **Clarification（链末拦截）** |
-
-**生产 Agent vs Demo**：实体消歧不改可见 query；非法 tool call 可重试一次；多步 SQL **按依赖 DAG** 完成（非全局串行）；图表类型尊重用户显式请求。
-
-### 5.4 Wren 内化（架构迁移要点）
-
-原先 **6 个容器**（wren-ai-service / wren-ui / wren-engine / ibis-server / wren-bootstrap + Wren 用 Qdrant）已下线。能力迁移：
-
-| 位置 | 职责 |
-|------|------|
-| `backend/packages/wren` | 引擎与记忆 |
-| `deerflow/community/wren_ai/*` | NL2SQL、聚合工具、护栏、图表 |
-| `app/gateway/dbquery/` | 管理面 REST |
-
-**SQL 安全四层**：单语句、SELECT-only、函数黑名单、行数 / `statement_timeout`。Apple Silicon 本地开发需注意 **amd64 wheel**。
-
-### 5.5 鉴权与治理（现状，不要美化）
-
-| 层级 | 现状 |
-|------|------|
-| **Nginx** | 只分流，**无鉴权** |
-| **Next.js** | **主鉴权**（JWT / 白名单 / Casbin）；Thread / Report / Persistence 绑 **X-Agent owner** |
-| **RAG / 上传** | 默认 **全局共享 corpus**（产品例外，非私有隔离） |
-| **Gateway 管理面** | Memory / MCP / Skills 安装等仍有「代码层弱鉴权」债；生产靠统一入口 + 内网不直连 |
-
-Workspace 多租户见 `workspace多租户与文件权限设计.md`，**尚未实现**。面试勿包装成「已零信任」。
-
-
-### 5.6 仓库拓扑（找代码）
-
-```text
-digital-control-tower/
-├── frontend/                 # UI + BFF + Prisma + Casbin
-├── backend/
-│   ├── app/gateway/          # FastAPI、dbquery、persistence
-│   └── packages/
-│       ├── harness/deerflow/ # Agent、dct、wren_ai、skills 运行时
-│       └── wren/             # in-process 引擎
-├── file-search-RAG/
-├── eval-service/
-├── skills/public/            # 产品 Skills（Q&A、toolbox、host）
-├── docker/                   # compose + nginx
-└── docs/
-```
-
-wren-ai-service/、wren-ui/ 若仍出现在旧文档或残留目录中，视为历史世代，不以它们为运行时真相。
-
-## 6. 端到端场景对照
-
-典型问法与 §3.3 三轨取数、§4.5 主路径对照：
-
-| 用户问题类型 | 产品模块 | 数据 | 技术路径 |
-|--------------|----------|------|----------|
-| 「各项目今年 Titer 怎么样」 | 跨项目报表 / Titer 分布 | Wren 业务汇总表 | Q&A → `database_query` → Vega |
-| 「这批为什么低，和 Lactate 有没有关」 | 风险归因 | 汇总表 + 可选文档 | 双路检索 + 证据分栏 |
-| 「cultureid 3228FX059 建议怎么调」 | 工艺推荐 | BioFoundry + PRC 模型 | `toolbox-batch-process-recommendation` 沙箱 |
-| 「方案里 acceptance criteria 怎么写的」 | 文档问答 | 上传 PDF/Office | file-search + 引用页码 |
-| 「把这张图钉到看板」 | Dashboard | `dct_chart` → dashboard_item | 前端 Prisma BFF |
-
-## 7. 风险、技术债与后续方向
-
-- **文档世代混乱**：V2 PRD 的外部 Wren / 自研编排器已过时；改代码先信 `ARCHITECTURE_AND_JOURNEY.md` 与 compose 实际服务列表。
-- **RAG 单租户共享**：上传即全员可检索/删除风险；workspace 是下一阶段治理重点。
-- **Gateway 管理面鉴权不均**：Memory/MCP/Skills 写接口需管理员收口。
-- **共库迁移**：Prisma 与 Wren/X-Agent 表同库，禁止后端擅自 `CREATE TABLE`。
-- **平台锁定**：`wren-core-py` 仅 linux/amd64。
-- **评测**：金标 SQL + 证据冲突标注应一起演进，避免只优化「能跑出 SQL」。
-
-**建议建设顺序**（产品 + 工程一致）：Gateway 二次校验与 workspace corpus 隔离 → 评测覆盖融合/冲突 → 再扩专项工作流模板。
 
 ## 8. 会被问到什么（项目向口述）
 
