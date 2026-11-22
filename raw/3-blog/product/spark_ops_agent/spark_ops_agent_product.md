@@ -5,7 +5,7 @@ category: 个人开源产品
 date: 2026-10-28
 readTime: 22 分钟
 icon: ⌁
-featured: false
+featured: true
 draft: false
 ---
 
