@@ -9,10 +9,10 @@ featured: false
 draft: false
 ---
 
-> **定位**：本文是最终产品 **HelixIQ**（项目目录：`A:\17-workspace\HelixIQ`）的算法设计总览。设计资料提供算法原理，产品代码、运行契约和金标准测试决定“当前实际能做什么”。  
-> **配套资料**：[算法原理上篇](./AntibodyKnowledge1.md) · [工具箱下篇](./AntibodyKnowledge2.md) · [Trastuzumab 金标准案例](./Trastuzumab.md) · [字段级速查](./study.md)
 
-HelixIQ 首版不是“输入 FASTA 后给一个答案”的脚本，而是一条可审计的研发链路：
+> **配套资料**：[设计概念与分类术语](./Antibody_design_basics.md) · [算法原理上篇](./AntibodyKnowledge1.md) · [工具箱下篇](./AntibodyKnowledge2.md) · [Trastuzumab 金标准案例](./Trastuzumab.md) · 
+
+HelixIQ 首版不是输入 FASTA 后给一个答案的脚本，而是一条可审计的研发链路：
 
 > 创建分子 → 冻结序列版本 → 发起异步分析 → 查看 Sequence / Structure / Developability → 检查证据与限制 → 导出绑定运行版本的报告
 
@@ -20,7 +20,6 @@ HelixIQ 首版不是“输入 FASTA 后给一个答案”的脚本，而是一�
 
 ## 1. 先统一三套视图
 
-文档中最容易混淆的是“13 个能力”“3 个引擎模块”和“15 步设想”。它们不是同一层级。
 
 | 视图 | 数量 | 用途 | 当前状态 |
 |------|------|------|----------|
@@ -63,7 +62,7 @@ flowchart LR
 
 关键工程边界：
 
-- 前端不计算科学指标，只展示 API 结果。
+- 前端不计算指标，只展示 API 结果。
 - FastAPI 路由只创建运行，不在请求线程执行 ANARCI/HMMER。
 - Worker 通过稳定 Python API 调用算法引擎。
 - 算法引擎不感知用户、项目、HTTP 或界面状态。
@@ -434,4 +433,3 @@ ModuleResult
 | [AntibodyKnowledge1](./AntibodyKnowledge1.md) | Annotation、Alignment、Disulfide、Topology、Fc 原理 |
 | [AntibodyKnowledge2](./AntibodyKnowledge2.md) | pI、链分类、信号肽、DNA 与副产物工具 |
 | [Trastuzumab](./Trastuzumab.md) | Golden Reference 与抗体学习矩阵 |
-| [study](./study.md) | 字段、规则和实现速查；草案内容需以产品代码为准 |

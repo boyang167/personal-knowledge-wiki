@@ -9,7 +9,7 @@ featured: false
 draft: false
 ---
 
-> **系列笔记**：[核心四层与 Fc 工程](./AntibodyKnowledge1.md) · [蛋白/DNA 工具箱](./AntibodyKnowledge2.md) · [Trastuzumab 案例](./Trastuzumab.md) · [字段级速查](./study.md)
+> **系列笔记**：[设计概念与分类术语](./Antibody_design_basics.md) · [核心四层与 Fc 工程](./AntibodyKnowledge1.md) · [蛋白/DNA 工具箱](./AntibodyKnowledge2.md) · [Trastuzumab 案例](./Trastuzumab.md) · [字段级速查](./study.md)
 
 抗体分析不是一个单独算法，而是由多类任务组成的有向依赖图
 
